@@ -1,0 +1,227 @@
+/* ============================================================
+   Sobre / "Quem somos" — ILHA CLARA + PINADA (exceção ao site dark).
+   A seção é alta; o .stage fica sticky (pinado) e cobre a viewport
+   enquanto se rola. O progresso do scroll (JS) dirige parágrafo, fotos
+   e marquee. Valores claros locais (única seção clara — se virar padrão,
+   promover p/ tokens.css).
+   ============================================================ */
+.section {
+  --local-ink: #1c1c1c;
+  --local-paper: #f4f4f2;
+  position: relative;
+  height: 210vh; /* altura extra = distância de scroll do pin (calibrável) */
+  background: var(--local-paper);
+  color: var(--local-ink);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden; /* clipa o marquee lateral e as fotos que sobem */
+}
+
+/* ---- Conteúdo (rótulo + parágrafo) — coluna central com largura máxima ---- */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* texto ABAIXO das fotos (ref: fotos passam por cima das letras) */
+  width: min(80rem, 92vw);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none; /* só texto; não bloqueia nada */
+}
+
+.head {
+  position: absolute;
+  top: 16vh;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+.label {
+  flex: none;
+  padding-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.index {
+  color: var(--local-ink);
+}
+
+.dot {
+  color: var(--accent);
+}
+
+.labelText {
+  color: var(--local-ink);
+}
+
+.body {
+  max-width: 40ch;
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.word {
+  display: inline;
+  color: var(--local-ink);
+}
+
+/* ---- Marquee (carrossel horizontal contínuo) — fundo ---- */
+.marquee {
+  position: absolute;
+  top: 44vh;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.marqueeText {
+  display: block;
+  white-space: nowrap;
+  padding-right: 0.25em;
+  /* Fonte script Birthstone (Victor, 2026-07-17) — só aqui. Já é cursiva, então
+     sem italic sintético e sem letter-spacing negativo (a script conecta). */
+  font-family: var(--font-script), cursive;
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(4rem, 13vw, 12rem);
+  line-height: 1;
+  letter-spacing: 0;
+  color: rgba(28, 28, 28, 0.12);
+}
+
+/* ---- Fotos em faixas (sobem escalonadas via scroll) — meio ---- */
+.photos {
+  position: absolute;
+  inset: 0;
+  z-index: 3; /* fotos ACIMA do texto, como na referência */
+}
+
+.lane {
+  position: absolute;
+  top: 0; /* âncora no topo do palco; TODO o vertical vem do parallax (y) */
+}
+
+/* Só distribuição horizontal + tamanho; o vertical é 100% via `y` (JS).
+   Insets maiores = fotos mais PRA DENTRO (longe das bordas), como a ref. */
+.lane[data-lane="1"] {
+  left: 16vw;
+  width: min(40vw, 290px);
+}
+
+.lane[data-lane="2"] {
+  right: 16vw;
+  width: min(40vw, 290px);
+}
+
+/* Foto 2 mais alta — aumenta só a altura mantendo a largura (Victor). */
+.lane[data-lane="2"] .photo {
+  aspect-ratio: 6 / 7;
+}
+
+.lane[data-lane="3"] {
+  left: 15vw;
+  width: min(62vw, 700px);
+}
+
+/* Foto grande (3) mais baixa — reduz só a altura mantendo a largura (Victor). */
+.lane[data-lane="3"] .photo {
+  aspect-ratio: 16 / 10;
+}
+
+.lane[data-lane="4"] {
+  right: 15vw;
+  width: min(42vw, 300px);
+}
+
+.lane[data-lane="4"] .photo {
+  aspect-ratio: 1 / 1.05;
+}
+
+.photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  will-change: transform;
+}
+
+.photoImg {
+  object-fit: cover;
+}
+
+/* Vídeo em loop no lugar da imagem — mesma moldura, mesmo recorte.
+   O <video> não é `fill` do next/image, então preenche o card na mão. */
+.photoVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Mobile: layout ainda precisa de um passe dedicado (flag). Por ora,
+   encolhe tipografia e reaproxima as faixas p/ não estourar. ---- */
+@media (max-width: 767px) {
+  .head {
+    flex-direction: column;
+    gap: 1.5rem;
+    top: 12vh;
+  }
+
+  .body {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .lane[data-lane="1"] {
+    width: 50vw;
+  }
+
+  .lane[data-lane="2"] {
+    width: 46vw;
+  }
+
+  .lane[data-lane="3"] {
+    left: 8vw;
+    width: 70vw;
+  }
+
+  .lane[data-lane="4"] {
+    width: 50vw;
+  }
+}
+
+/* Menos movimento: marquee estático (o freeze das demais animações é feito no
+   componente via useReducedMotion — palavras/fotos no estado final, legível). */
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    transform: none !important;
+  }
+}

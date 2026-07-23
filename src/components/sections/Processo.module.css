@@ -1,0 +1,213 @@
+/* ============================================================
+   Processo — empilhamento STICKY de cards (ref MetroRide "Numbers").
+   Título PINADO no topo; os 3 passos sobem e se empilham (cada card é
+   `position: sticky` com um `top` escalonado = peek). O blur/scale do card
+   coberto vem do JS (Framer). Cores no nosso tom: azul / claro / cinza.
+   ============================================================ */
+.section {
+  /* padding-top GENEROSO (Victor, 2026-07-17): afasta o título do fim das fotos
+     do catálogo, que estavam perto demais. */
+  padding: 11rem 1.5rem 5rem;
+  background: transparent;
+}
+
+.inner {
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+/* Título PINADO (sticky) ATRÁS dos cards. Fica parado enquanto os cards sobem
+   e passam por cima dele (z-index 0 = atrás; cards z-index 1). O blur vem do JS
+   (só o título borra). Pin em ~18vh = os cards cruzam essa faixa e o cobrem. */
+.head {
+  position: sticky;
+  top: 18vh;
+  z-index: 0;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+/* Coluna dos cards em FLUXO NORMAL (não grudam): sobem com o scroll, um após o
+   outro, passando POR CIMA do título pinado. O `gap` = espaço entre um card e o
+   próximo (o de cima sai pelo topo enquanto o de baixo entra). `margin-top` dá o
+   respiro inicial (título nítido antes do 1º card chegar); `padding-bottom`
+   deixa o último card cobrir o título antes da seção acabar. */
+.stack {
+  list-style: none;
+  margin: 12vh 0 0;
+  /* padding-bottom DÁ scroll extra com o título ainda PINADO, p/ o card ESCURO
+     (03) subir e COBRIR o título antes de a seção soltar — o fade termina SOB o
+     card, não "no vazio". Dimensionado por probe (card 03 alcança ~0.2vh no fim).
+     (Victor, 2026-07-17. Antes era 0 — o card parava ~150px abaixo do título.) */
+  padding: 0 0 22vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5vh; /* lever: espaço entre os cards no scroll */
+}
+
+.card {
+  /* position:relative OBRIGATÓRIO: ancora o grão (::after inset:0) ao PRÓPRIO
+     card. Sem isso (cards não são mais sticky), o ::after se ancorava no .stack
+     (position:relative) e o grão vazava pra seção inteira. (Victor, 2026-07-17.) */
+  position: relative;
+  z-index: 1; /* ACIMA do título pinado (.head z-index:0) — cards cobrem o título */
+  /* QUADRADO como a ref (Victor): largura travada + centrado. */
+  width: min(92vw, 34rem);
+  min-height: 30rem;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(2rem, 4vw, 3.25rem);
+  border-radius: 24px;
+  overflow: hidden;
+  isolation: isolate; /* contém o grão (::after z-index:-1) dentro do card */
+  box-shadow: 0 34px 70px -34px rgba(0, 0, 0, 0.7);
+}
+
+/* GRÃO por card (Victor): mesma cor, texturizado. Camada ACIMA da cor e ABAIXO
+   do texto (z-index:-1 dentro do stacking context do card). */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+/* Variantes de cor (nosso tom, no lugar do laranja/branco/preto da ref). */
+.card[data-variant="blue"] {
+  background: var(--accent);
+  color: #ffffff;
+}
+.card[data-variant="light"] {
+  background: #f4f4f2;
+  color: #1c1c1c;
+}
+.card[data-variant="dark"] {
+  background: #262626;
+  color: #ffffff;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 34px 70px -34px rgba(0, 0, 0, 0.7);
+}
+
+/* ---- Composição do card: DUAS ÂNCORAS ----------------------------------
+   Topo (.top) = número + título. Rodapé (.foot, `margin-top:auto`) = descrição
+   + checkpoints. A ref MetroRide já ancorava o texto embaixo, mas ali o bloco
+   de baixo tinha peso; aqui eram 2 linhas soltas num card de 30rem e sobrava um
+   VÃO MORTO no meio (Victor, 2026-07-22). A cura foi dar MASSA ao rodapé
+   (checkpoints), não aumentar/decorar o número.
+   Hairlines em `currentColor` via color-mix: a mesma regra serve as 3 variantes
+   (azul, clara e escura) sem hardcode por variante. */
+.num {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: currentColor;
+  opacity: 0.95;
+}
+
+.label {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: currentColor;
+}
+
+/* ⚠️ SEM régua de separação aqui (Victor, 2026-07-22): a linha cheia embaixo do
+   título foi recusada — a separação entre topo e rodapé já vem do espaço e da
+   mudança de escala. Hairline no card existe SÓ entre os checkpoints. */
+.foot {
+  margin-top: auto; /* mantém a âncora de rodapé da ref */
+  /* Respiro MÍNIMO garantido: com texto longo o `margin-top:auto` zera e a
+     descrição encostava no título (apareceu no card 01 com a copy nova). */
+  padding-top: 1.4rem;
+}
+
+.desc {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  font-weight: 300;
+  color: currentColor;
+  opacity: 0.82;
+}
+
+/* Checkpoints: língua de LISTA-CARDÁPIO (hairline entre linhas), a mesma da
+   rota /servicos/[slug]. Marcador = traço curto em currentColor, não bolinha
+   nem ícone — e nunca azul (azul só p/ o essencial; no card azul sumiria). */
+.checks {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+}
+
+.check {
+  display: grid;
+  grid-template-columns: 0.85rem 1fr;
+  align-items: start;
+  gap: 0.7rem;
+  padding: 0.72rem 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  font-weight: 400;
+  color: currentColor;
+}
+
+.check::before {
+  content: "";
+  width: 0.85rem;
+  height: 1px;
+  margin-top: 0.65rem; /* alinha o traço com a 1ª linha do texto */
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.check:last-child {
+  padding-bottom: 0;
+}
+
+/* Reduced-motion: título sem pin/blur, cards juntinhos em fluxo simples. */
+@media (prefers-reduced-motion: reduce) {
+  .head {
+    position: static;
+  }
+  .stack {
+    margin-top: 3rem;
+    gap: 1.5rem;
+    padding-bottom: 0;
+  }
+  .card {
+    min-height: 0;
+  }
+}

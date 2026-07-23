@@ -1,0 +1,202 @@
+/* ============================================================
+   Footer — ilha CLARA de fecho (2ª do site). Branco premium (#f4f4f2, não puro),
+   texto escuro. Marquee de convite no topo + colunas + faixa AZUL "MV Automotiva".
+   Marquees = CSS puro (decorativos). Cores hardcoded: os tokens são dark-mode;
+   aqui é ilha clara consciente (como a Sobre).
+   ============================================================ */
+.footer {
+  position: relative;
+  overflow: hidden;
+  background: #f4f4f2;
+  color: #1c1c1c;
+}
+
+/* ---- Marquee de convite (topo) ---- */
+.marquee {
+  overflow: hidden;
+  padding: clamp(2.5rem, 6vh, 4.5rem) 0 clamp(1.75rem, 4vh, 3rem);
+}
+
+.marqueeTrack {
+  display: inline-flex;
+  width: max-content;
+  /* Velocidade-alvo: ~58px/s, a MESMA percebida no marquee da Sobre (medido:
+     largura do span ÷ duração). Victor, 2026-07-17.
+     ⚠️ A duração acompanha o COMPRIMENTO do texto — o mesmo tempo sobre um span
+     mais largo = marquee mais rápido. Em 2026-07-22 o texto virou um PAR de
+     frases (~1,8× mais longo que "Vamos cuidar do seu carro"), então 110s → 200s
+     pra manter a mesma velocidade. Trocar a copy = recalcular na mesma
+     proporção (probe: `scratchpad/probe-marquee-speed.mjs`). */
+  animation: mvMarquee 200s linear infinite;
+  will-change: transform;
+}
+
+.marqueeText {
+  white-space: nowrap;
+  /* MESMA fonte do marquee da Sobre ("lá de cima") — script Birthstone. Já é
+     cursiva: peso 400, sem letter-spacing negativo. (Victor, 2026-07-17.) */
+  font-family: var(--font-script), cursive;
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #1c1c1c;
+}
+
+@keyframes mvMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- Corpo ---- */
+.inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vh, 4rem) 1.5rem clamp(2rem, 4vh, 3rem);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 4rem;
+  }
+}
+
+/* Bloco de marca (no lugar da newsletter) */
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Gap CURTO de propósito: nome + tagline formam UM bloco (a frase explica o
+     nome). A cidade se separa pelo `margin-top` do `.loc`, abaixo.
+     Era `1rem` uniforme, o que funcionava enquanto a tagline ocupava duas
+     linhas e se lia como massa. Com a tagline de uma linha só (2026-07-22), os
+     três viravam uma lista de itens de mesmo peso, sem hierarquia. */
+  gap: 0.5rem;
+  max-width: 24rem;
+}
+
+.brandName {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #1c1c1c;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: #6f6f6f;
+}
+
+.loc {
+  /* Afasta a cidade do par nome+tagline: é dado, não discurso. Somado ao `gap`
+     de 0.5rem da coluna, dá ~1.6rem de respiro contra 0.5rem acima. */
+  margin: 1.1rem 0 0;
+  font-size: 0.85rem;
+  color: #8a8a88;
+}
+
+.colTitle {
+  margin: 0 0 1.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a0a09e;
+}
+
+/* Item do grid = o invólucro de cascata do `FooterCascade`, não mais a coluna
+   em si. O `min-width:0` (contra estouro de item de grid) mora aqui. */
+.cascadeItem {
+  min-width: 0;
+}
+
+.navCol,
+.socialCol {
+  min-width: 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.link,
+.social {
+  color: #1c1c1c;
+  text-decoration: none;
+  font-size: 0.98rem;
+  font-weight: 400;
+  transition: color var(--duration-fast) var(--easing-out);
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.link:hover,
+.social:hover {
+  color: var(--accent);
+}
+
+.rule {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: clamp(2.5rem, 5vh, 4rem) 0 1.75rem;
+}
+
+.bottom {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.copy {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #8a8a88;
+}
+
+/* ---- Faixa azul gigante (embaixo) — ESTÁTICA, caixa-alta, cortada na base ---- */
+/* Faixa azul de fecho — só a cor da marca, sem texto, COM grão (Victor). */
+.band {
+  position: relative;
+  overflow: hidden;
+  height: clamp(80px, 12vh, 160px);
+  background: var(--accent);
+}
+
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.42;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+}

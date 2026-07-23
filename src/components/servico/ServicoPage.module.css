@@ -1,0 +1,789 @@
+/* ============================================================
+   Página de categoria /servicos/[slug] — template dark premium.
+   Ritmo: hero limpo (glow sutil) → blocos alternados foto|texto →
+   grade do container → passos → FAQ → fecho centrado no CTA.
+   Azul só no essencial: eyebrow, frase de destaque do H1, CTA, foco.
+   ============================================================ */
+
+.page {
+  background: var(--bg-0);
+}
+
+/* ---- HERO ------------------------------------------------- */
+/* PÓRTICO (Victor, 2026-07-18): a primeira tela é SÓ título + subtítulo, muito
+   ar, sem foto — impacto limpo. Ocupa ~a tela inteira (a seção da foto fica
+   claramente abaixo da dobra, revelada no scroll).
+   GLOW = MESMA LÍNGUA DO HERO DA HOME: elipse azul no TOPO, a maior parte acima
+   da tela, só a franja difusa DESCE de cima pra baixo sobre o título. NÃO é um
+   glow centrado no meio da frase (erro corrigido). Navbar absolute por cima. */
+.hero {
+  position: relative;
+  /* Tela cheia (Victor, 2026-07-18): a foto da seção seguinte NÃO pode espiar na
+     dobra — ela é a surpresa que dispara o efeito de entrada no scroll. */
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(8rem, 15vh, 11rem) clamp(1.5rem, 4vw, 3.5rem) clamp(5rem, 12vh, 8rem);
+  background:
+    radial-gradient(
+      125% 118% at 50% -22%,
+      rgba(57, 101, 200, 0.36) 0%,
+      rgba(57, 101, 200, 0.16) 44%,
+      transparent 82%
+    ),
+    var(--bg-0);
+}
+
+.heroInner {
+  max-width: 76rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 6.4vw, 4.75rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+}
+
+/* Linha 2 do H1 — frase de destaque no brilho do azul (acento essencial). */
+.titleAccent {
+  display: block;
+  color: var(--accent-glint);
+}
+
+.subtitle {
+  max-width: 46rem;
+  margin: 1.85rem auto 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* ---- BLOCOS ALTERNADOS foto|texto -------------------------- */
+.split {
+  max-width: 72rem;
+  margin: 0 auto;
+  /* Régua única de respiro entre seções (~4–6rem por lado da costura). */
+  padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 4vw, 3.5rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .split {
+    grid-template-columns: 1fr 1.05fr;
+  }
+}
+
+/* "O que é" (splitTall): foto retrato alta.
+   CASCATA (Victor, 2026-07-18): o TEXTO é sempre a coluna CENTRAL; a foto ocupa
+   UMA das laterais e o outro lado fica VAZIO. Aqui: foto ESQUERDA · texto centro
+   · direita vazia. A próxima seção ESPELHA (foto direita) com o texto no MESMO
+   centro — emendando as seções como uma cascata. Modelo em 3 colunas: as
+   laterais (1fr/spacer) seguram a foto de um lado e o vazio do outro; o texto
+   fica fixo no meio. */
+.splitTall {
+  max-width: 94rem;
+  padding-block: clamp(5rem, 10vh, 8rem);
+  /* Respiro extra embaixo: o card pequeno do par VAZA por transform (não gera
+     layout) — sem isso ele cola na seção seguinte. (Parte 1, 2026-07-18.) */
+  padding-bottom: clamp(8rem, 13vh, 10.5rem);
+}
+
+@media (min-width: 900px) {
+  /* Card GRANDE à esquerda (~2× o anterior) + texto à direita dele; a folga à
+     direita segura a cascata (a próxima seção espelha). Vertical -10% / horizontal
+     +15% sobre o retrato inicial → quase quadrado, levemente panorâmico. (Victor.) */
+  .splitTall {
+    grid-template-columns: minmax(0, 46rem) minmax(0, 30rem) 0.5fr;
+    column-gap: clamp(2.5rem, 4vw, 4.5rem);
+  }
+  .splitTall .splitMedia,
+  .splitTall .pair {
+    grid-column: 1;
+  }
+  .splitTall .splitCopy {
+    grid-column: 2;
+  }
+}
+
+/* 46×45 (largura 40→46rem = +15%; altura 50→45rem = −10%). */
+.splitTall .splitMedia,
+.splitTall .pairMain {
+  aspect-ratio: 46 / 45;
+}
+
+/* ---- PAR EMPILHADO (O que é; Benefícios espelha depois) ----- */
+/* Essência da ref. Glänzen traduzida pro idioma MV (Victor, 2026-07-18):
+   card grande = RESULTADO, card menor = PROCESSO sobrepondo o canto inferior
+   do lado do TEXTO, vazando pra fora do grande — a ponte visual foto→texto.
+   Profundidade por sobreposição + sombra mais funda no pequeno; SEM rotação
+   (inclinação é a parte scrapbook da ref e briga com o dark premium). */
+.pair {
+  position: relative; /* âncora do card pequeno; sem clip — o vazamento é o efeito */
+}
+
+/* Card grande: mesmo verniz do .splitMedia (grade unificado do site). */
+.pairMain {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 54px -26px rgba(0, 0, 0, 0.75);
+}
+
+/* Card pequeno: ~40% do grande, 4:3, vazando pro canto inferior direito.
+   Sombra mais funda = está "acima" do grande na pilha. */
+.pairSecondary {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 40%;
+  aspect-ratio: 4 / 3;
+  transform: translate(clamp(1rem, 2vw, 2rem), clamp(1.5rem, 2.5vw, 2.5rem));
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 34px 64px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* Moldura da foto — mesmo "verniz" dos cards de Serviços (grade unificado). */
+.splitMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 54px -26px rgba(0, 0, 0, 0.75);
+}
+
+.splitImg {
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.08) brightness(0.94);
+}
+
+.sectionTitle {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.bodyText {
+  margin: 0 0 1.1rem;
+  max-width: 40rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.bodyText:last-child {
+  margin-bottom: 0;
+}
+
+/* Lista de benefícios dentro do split — título curto + linha de apoio. */
+.benefitList {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.35rem;
+}
+
+.benefitList li {
+  padding-left: 1.15rem;
+  border-left: 2px solid var(--border-accent);
+}
+
+.benefitList h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.benefitList p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ---- COBERTURA DA CATEGORIA — grid de CARDS (Victor, 2026-07-23) -----------
+   Substitui a lista/menu. Cabeçalho no TOPO; abaixo, os itens como CARDS sem
+   foto num grid 3×2, e o 7º card (categoria relacionada = Bancos) CENTRALIZADO
+   e ISOLADO numa linha própria — a posição sozinha já diz "esse é outra porta,
+   não um item incluso". Card na língua da marca: fundo bg-2 + grão + moldura
+   fina; o GLOW AZUL só floresce no HOVER (azul = acento essencial, nunca parede
+   de azul no repouso — regra dura da paleta). */
+.cobre {
+  position: relative;
+  overflow: hidden; /* contém a luz de fundo borrada dentro da seção */
+  background: var(--bg-0);
+  /* Respiro AMPLO topo E base (Victor, 2026-07-23, 3ª passada): além de separar
+     as telas, a seção precisa de altura pra CONTER o glow — que agora é maior e
+     mais baixo. Sem isso o glow vaza e o overflow:hidden corta reto. */
+  padding: clamp(8rem, 16vh, 13rem) clamp(1.5rem, 4vw, 3.5rem) clamp(9rem, 16vh, 13rem);
+  scroll-margin-top: 6rem;
+}
+
+/* LUZ AMBIENTE azul atrás do grid (componente CoberturaGlow, reativa ao scroll).
+   z-index 0 = atrás dos cards; os cards (cor do fundo) tapam a luz e ela vaza só
+   pelos vãos. Centrada por x/y -50% (o Framer gerencia o transform: escala +
+   centralização juntas). Só opacity/scale animam — blur é estático (barato). */
+.cobreGlow {
+  position: absolute;
+  left: 50%;
+  /* Descido mas CONTIDO (Victor, 2026-07-23): baixo o bastante pra "aterrar" a
+     seção, mas com a cauda desvanecendo ANTES da borda (top 54% + height 100% +
+     transparent 80% → alcance vertical ~11%..97% da seção, dentro dos limites,
+     sem corte do overflow:hidden). */
+  top: 54%;
+  z-index: 0;
+  /* BEM MAIOR (Victor, 2026-07-23, 2ª passada): "aumenta esse azul bem mais, ele
+     destaca bonito na página". Poça de luz maior e mais presente, ainda com borda
+     bem macia (transparente em 84%) pra não virar bloco de azul chapado — o
+     falloff suave é o que mantém "acento", não "parede". */
+  width: min(122%, 96rem);
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 60% 54% at 50% 50%,
+    rgba(57, 101, 200, 0.42) 0%,
+    rgba(57, 101, 200, 0.22) 48%,
+    transparent 80%
+  );
+  filter: blur(76px);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.cobreInner {
+  position: relative;
+  z-index: 1; /* conteúdo acima da luz */
+  max-width: 82rem;
+  margin: 0 auto;
+}
+
+/* Cabeçalho no topo, CENTRALIZADO e com PESO de respeito (Victor, 2026-07-23):
+   título maior e centrado, subtítulo centrado numa medida de leitura. */
+.cobreHead {
+  max-width: 48rem;
+  margin: 0 auto clamp(3rem, 5.5vw, 4.25rem);
+  text-align: center;
+}
+
+.cobreHead .sectionTitle {
+  font-size: clamp(2.15rem, 4.2vw, 3rem);
+}
+
+.cobreHead .bodyText {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+/* GRID dos 6 cards: 1 col (mobile) → 2 (tablet) → 3 (desktop, o 3+3 do Victor). */
+.cobreGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Respiro maior (Victor, 2026-07-23): com sombra EXTERNA, gap apertado faz as
+     sombras dos cards vizinhos colidirem e sujarem o vão. */
+  gap: clamp(1.5rem, 2.4vw, 2.1rem);
+}
+
+@media (min-width: 600px) {
+  .cobreGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 940px) {
+  .cobreGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* CARD de cobertura — SEM foto (Victor, 2026-07-23). Presença pelo MATERIAL:
+   fundo bg-2, grão (::after), moldura fina + luz azul angular (::before) que só
+   acende no HOVER. `isolation` prende as duas camadas (z-index negativos) no
+   stacking do card, abaixo do texto. */
+.covCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Conteúdo CENTRALIZADO (Victor, 2026-07-23): título + descrição no meio, e o
+     card mais QUADRADO (menos horizontal). A altura é o que dá o formato — com
+     26rem de largura no desktop, ~18rem de altura já tira o ar de "faixa". */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* Altura calibrada à MASSA do conteúdo (Victor): antes o card gigante fazia a
+     tipografia parecer perdida. Menos altura + fonte maior = conteúdo preenche
+     o card com intenção, sem virar faixa nem virar buraco. */
+  min-height: clamp(12.5rem, 15vw, 15rem);
+  padding: clamp(1.9rem, 2.6vw, 2.5rem);
+  border-radius: 20px;
+  /* MESMA COR DA SEÇÃO (Victor, 2026-07-23): o card é `--bg-0`, igual ao fundo
+     de `.cobre`. É o que torna o emboss REAL — sem diferença de cor, o card é
+     ESCULPIDO do fundo (só o inner shadow o define), como na ref. Com contraste
+     de cor viraria "cartão colado", não relevo. */
+  background: var(--bg-0);
+  /* REPOUSO = Ref Figma 5:88: puro EMBOSS neumórfico — inner shadow CLARO no
+     topo-esquerda (highlight, #2d2d2d) + escuro no baixo-direita. A aresta azul
+     do 5:18 é o HOVER (abaixo): os dois retângulos são o mesmo card em 2 estados. */
+  /* Ref Figma FIEL = Rectangle 5 / 5:16 (Victor, 2026-07-23): DOIS drop shadows
+     EXTERNOS — luz #2D2D2D 25% no topo-esquerda + sombra #000 25% no baixo-direita
+     (offset 2.02, blur 4.05 num card de 149px). Escalado ~2,6× pro nosso tamanho,
+     cores e alpha (25%) idênticos. Card elevado, não gravado. */
+  box-shadow:
+    -5px -5px 11px 0 rgba(45, 45, 45, 0.25),
+    5px 5px 11px 0 rgba(0, 0, 0, 0.25);
+  transition:
+    transform var(--duration-base) var(--easing-out),
+    box-shadow var(--duration-base) var(--easing-out);
+}
+
+/* GRÃO REMOVIDO do card (Victor, 2026-07-23): a camada overlay pintava por cima
+   dos inner shadows e lavava o relevo. A ref 5:88 não tem grão — emboss limpo.
+   (Se quisermos o grão da marca de volta, ele tem que ir na SEÇÃO inteira, não
+   no card, pra não lavar o highlight nem denunciar o limite do card.) */
+
+@media (hover: hover) {
+  /* HOVER = Ref Figma 5:18: acende a aresta azul dura no canto inf-dir (offset,
+     blur zero) + leve spill azul, mantendo o emboss. O card levanta 3px. */
+  .covCard:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      -6px -6px 13px 0 rgba(45, 45, 45, 0.3),
+      8px 9px 20px 0 rgba(0, 0, 0, 0.42);
+  }
+}
+
+/* Feedback tátil no clique (taste-skill): afunda de volta ao repouso. */
+.covCard:active {
+  transform: translateY(-1px);
+}
+
+.covCard h3 {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2vw, 1.65rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.covCard p {
+  margin: 0 auto;
+  max-width: 24rem;
+  font-size: clamp(0.96rem, 1.05vw, 1.03rem);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* 7º CARD — categoria relacionada (Bancos): centralizado e ISOLADO numa linha
+   própria. A posição sozinha já o separa dos 6 (é outra porta, não um incluso).
+   É um <Link> que reusa a casca .covCard; ganha eyebrow + seta (↗ → →). */
+.cobreRelatedRow {
+  /* Um tico mais perto do bloco dos 6 (Victor) — estava flutuando longe. */
+  margin-top: clamp(0.9rem, 1.5vw, 1.35rem);
+  display: flex;
+  justify-content: center;
+}
+
+.covCardRelated {
+  width: 100%;
+  max-width: 26rem;
+  min-height: clamp(11rem, 14vw, 13rem);
+  text-decoration: none;
+  /* ILHA CLARA (Victor, 2026-07-23): este card é LINK p/ OUTRA categoria e está
+     isolado embaixo — vira predominantemente CLARO p/ se destacar dos 6 escuros.
+     Cores invertidas (fundo claro da marca, texto escuro). A sombra deixa de ser
+     o emboss dos escuros e vira elevação simples (afinamos depois). */
+  background: #f4f4f2;
+  /* Sombra com RESPINGO do azul da cena (Victor, 2026-07-23): o card claro passa
+     a pertencer ao ambiente em vez de parecer colado de fora. */
+  box-shadow:
+    0 22px 48px -22px rgba(0, 0, 0, 0.62),
+    0 12px 44px -14px rgba(57, 101, 200, 0.22);
+}
+
+.covCardRelated h3 {
+  color: #1c1c1c;
+}
+
+.covCardRelated p {
+  color: rgba(28, 28, 28, 0.7);
+}
+
+.covCardRelated .relEyebrow {
+  color: rgba(28, 28, 28, 0.5);
+}
+
+.covCardRelated .crossArrow {
+  color: #1c1c1c;
+}
+
+.relEyebrow {
+  display: block;
+  margin: 0 0 0.85rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Título + seta lado a lado, centralizados (o card relacionado também centra). */
+.relHead {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.covCardRelated h3 {
+  margin: 0;
+}
+
+.crossArrow {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--text-2);
+  transform: rotate(-45deg);
+  transition:
+    transform 0.45s var(--easing-out),
+    color var(--duration-base) var(--easing-out);
+}
+
+@media (hover: hover) {
+  /* Ilha clara: hover eleva mais (sombra própria sobrepondo o emboss escuro do
+     .covCard:hover) e a seta gira mantendo o tom escuro. */
+  .covCardRelated:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 30px 60px -24px rgba(0, 0, 0, 0.72),
+      0 16px 52px -14px rgba(57, 101, 200, 0.3);
+  }
+  .covCardRelated:hover .crossArrow {
+    transform: rotate(0deg);
+    color: #1c1c1c;
+  }
+}
+
+.covCardRelated:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ---- COMO FAZEMOS ------------------------------------------ */
+.processo {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.steps {
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem 1.75rem;
+  counter-reset: passo;
+}
+
+@media (min-width: 640px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Passo: número grande apagado (hierarquia por peso, não por cor) + hairline. */
+.step {
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.stepNum {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-4);
+}
+
+.step h3 {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.step p {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ---- FAQ — TRILHO À ESQUERDA (Victor, 2026-07-23) ------------
+   Respiro GENEROSO no topo (Victor): o FAQ é a PRÓXIMA tela depois dos Cases,
+   não uma continuação colada — cada seção domina a vista quando alcançada, e a
+   cascata de entrada reforça o foco. Título grande na coluna esquerda, alinhado
+   à MESMA margem dos Cases (container 92rem + gutter); accordion na direita. */
+.faq {
+  background: var(--bg-0);
+  padding: clamp(5rem, 10vh, 8rem) 0 clamp(4.5rem, 9vh, 7rem);
+}
+
+.faqInner {
+  max-width: 92rem; /* MESMO container dos Cases → as bordas esquerdas alinham */
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 4vw, 3.5rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+@media (min-width: 900px) {
+  .faqInner {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+  }
+  /* Trilho fixa enquanto as perguntas rolam — presença editorial (premium). */
+  .faqAside {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.faqTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  /* Mesma escala do título dos Cases pra as duas seções rimarem. */
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+/* Linha de apoio + CTA no trilho: transforma a coluna esquerda num painel
+   "ainda com dúvida? fala com a MV" (preenche o vazio, integra o botão). */
+.faqAsideText {
+  margin: 1rem 0 1.6rem;
+  max-width: 18rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.faqList {
+  max-width: 48rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.faqItem {
+  border-radius: var(--radius-md);
+  background: var(--bg-1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.faqItem summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.15rem 1.4rem;
+  cursor: pointer;
+  list-style: none; /* remove o marcador nativo */
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-1);
+  transition: color var(--duration-base) var(--easing-out);
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary:hover {
+  color: var(--accent-glint);
+}
+
+.faqItem summary:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+  border-radius: var(--radius-md);
+}
+
+/* Indicador +/− feito de dois traços; o vertical some quando aberto. */
+.faqIcon {
+  position: relative;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.faqIcon::before,
+.faqIcon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--text-3);
+  transition: transform var(--duration-base) var(--easing-out);
+}
+
+.faqIcon::before {
+  width: 14px;
+  height: 1.5px;
+}
+
+.faqIcon::after {
+  width: 1.5px;
+  height: 14px;
+}
+
+.faqItem[open] .faqIcon::after {
+  transform: rotate(90deg);
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 0 1.4rem 1.3rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+/* ---- CTA FINAL ---------------------------------------------- */
+/* Fecho centrado — clima do Contato da home: vinheta + único azul no CTA. */
+.ctaFinal {
+  padding: clamp(4.5rem, 9vh, 7rem) clamp(1.5rem, 4vw, 3.5rem);
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+  background:
+    radial-gradient(46% 55% at 50% 100%, rgba(57, 101, 200, 0.1) 0%, transparent 70%),
+    var(--bg-0);
+}
+
+.ctaTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-1);
+}
+
+.ctaBody {
+  max-width: 36rem;
+  margin: 1.15rem auto 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+.ctaWrap {
+  margin-top: 2.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+.trust {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+
+/* Pontinho separador entre reassurances (só entre itens). */
+.trust li + li::before {
+  content: "·";
+  margin-right: 1.75rem;
+  color: var(--text-4);
+}
+
+/* ---- VERSÃO RESUMO ------------------------------------------ */
+/* Foto única em faixa larga entre hero e CTA. */
+.resumoMedia {
+  position: relative;
+  max-width: 72rem;
+  margin: 0 auto;
+  aspect-ratio: 16 / 8;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 54px -26px rgba(0, 0, 0, 0.75);
+}
+
+@media (max-width: 78rem) {
+  .resumoMedia {
+    margin-inline: clamp(1.5rem, 4vw, 3.5rem);
+  }
+}

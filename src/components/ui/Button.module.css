@@ -1,0 +1,147 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  /* Presença de CTA principal (lapidação 2026-07-17): o elemento mais importante
+     da página merece uns px a mais. Usos menores (navbar) sobrescrevem. */
+  padding: 0.95rem 2.4rem;
+  border: 0;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--duration-fast) var(--easing-out),
+    box-shadow var(--duration-base) var(--easing-out),
+    background-color var(--duration-base) var(--easing-out);
+}
+
+/* Correção ÓPTICA (Victor, 2026-07-17): com padding simétrico, o lado da seta
+   parece mais vazio (glifo leve vs. texto). Encurta só o lado do ícone. */
+.hasArrow {
+  padding-right: 1.9rem;
+}
+
+/* Seta do CTA — MESMA língua dos cards de Serviços: repouso ↗ (inclinada,
+   rotate(-45deg)) e no hover gira pra → (aponta pra ação). Victor, 2026-07-17. */
+.arrow {
+  display: inline-flex;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  transition: transform var(--duration-base) var(--easing-out);
+}
+
+.btn:hover .arrow {
+  transform: rotate(0deg);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 3px;
+}
+
+.full {
+  width: 100%;
+}
+
+/* Primary — pílula chapada no azul da marca (ref. Figma: #3965C8 flat, sem gradiente).
+   O refinamento vem das camadas sutis, não de efeito:
+     · luz de topo 1px (a luz da cena bate em cima da pílula)
+     · hairline interna p/ definir a borda sobre o glow do hero
+     · sombra ESCURA de assentamento (halo azul foi cortado na lapidação
+       2026-07-17: botão emitindo glow azul debaixo do glow azul do hero era
+       redundante e puxava pro neon banido)
+     · text-shadow do label (Figma: 0 2.5px 5px preto 61%) — profundidade no texto
+   Hover = troca de MATERIAL (background → accent-glint), não filtro de brilho
+   (brightness() genérico clareava tudo uniforme, com cara de plástico). */
+.primary {
+  color: #ffffff;
+  background: var(--accent);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 30px -12px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.primary:hover {
+  transform: translateY(-1px);
+  background: var(--accent-glint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 16px 36px -12px rgba(0, 0, 0, 0.6),
+    0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.primary:active {
+  transform: translateY(0);
+  background: var(--accent-deep);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 6px 16px -10px rgba(0, 0, 0, 0.5),
+    0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light — pílula branca c/ texto escuro (Contato da navbar).
+   Mesmo craft do primary, com o esquema de luz INVERTIDO: numa superfície clara
+   a luz já está nela — o que define o volume é a meia-sombra na borda de baixo. */
+.light {
+  color: #111111;
+  background: #ffffff;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 12px 32px -12px rgba(255, 255, 255, 0.28),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.light:hover {
+  transform: translateY(-1px);
+  background: #f4f6fb;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 16px 40px -12px rgba(255, 255, 255, 0.34),
+    0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.light:active {
+  transform: translateY(0);
+  background: #e8ebf2;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 6px 18px -10px rgba(255, 255, 255, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Ghost — contorno sutil sobre fundo escuro */
+.ghost {
+  color: var(--text-primary);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.ghost:hover {
+  box-shadow: inset 0 0 0 1px var(--border-accent);
+  color: var(--accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .arrow {
+    transition: none;
+  }
+
+  .btn:hover .arrow {
+    transform: rotate(-45deg); /* fica em ↗, sem girar */
+  }
+}

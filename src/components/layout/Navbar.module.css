@@ -1,0 +1,285 @@
+.nav {
+  /* HERO: barra ABSOLUTA — fica no topo do hero e rola embora naturalmente ao
+     descer (não é fixa, não desliza). Victor, 2026-07-17. */
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  padding: 0.9rem 1.5rem;
+  will-change: transform;
+}
+
+/* REVELADA: ao rolar pra cima (fora do topo), a barra vira um card FIXO (pílula)
+   e desliza pra dentro a partir do topo. Ao descer/voltar ao topo, `revealed`
+   sai → volta ao modo hero (absoluta), sem animação de saída. */
+.revealed {
+  position: fixed;
+  /* Entrada leve/clean: fade suave + um settle bem curto (não "voa" de cima). */
+  animation: navReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes navReveal {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 80rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  /* Pílula flutuante: a forma (raio + respiro interno) fica sempre reservada;
+     o visual (fundo/grão/borda) só MATERIALIZA quando revelada (.revealed .inner).
+     No topo/hero a barra segue limpa e transparente. */
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  /* Fade suave do card ao aparecer E ao voltar pro topo (mesma curva/tempo da
+     entrada) — nada de "ligar/desligar" seco. */
+  transition:
+    background-color 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Ao rolar, a pílula materializa: dark + blur (desfoca o que passa embaixo) +
+   borda fina + sombra pra flutuar. O grão fica numa camada SEPARADA (.inner::after)
+   — ver abaixo. Este elemento carrega o backdrop-filter e precisa ficar LIMPO. */
+.revealed .inner {
+  /* SÓLIDO (Victor): sem opacidade/blur — o conteúdo atrás fica 100% coberto.
+     Cinza escuro (mais claro que a página) pra a pílula destacar. */
+  background-color: #2e2e2e;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Grão em camada PRÓPRIA (::after), separada do fundo que carrega o
+   backdrop-filter. ⚠️ Juntar grão (background-image + background-blend-mode) NO
+   MESMO elemento do blur impedia o desfoque de renderizar no Chrome — por isso o
+   blur "não pegava" por mais que eu aumentasse. z-index:-1 = grão sobre o tint,
+   atrás do texto. mix-blend-mode fica no ::after (não afeta o blur do .inner). */
+.inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.revealed .inner::after {
+  opacity: 1;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoImg {
+  height: 38px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1); /* logo toda branca (Victor, 2026-07-15) — o PNG original tem o azul cru */
+}
+
+.links {
+  display: none;
+  gap: 2.75rem;
+  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0;
+}
+
+/* HOVER dos links (2026-07-17, Victor): o hover antigo trocava a cor pro AZUL
+   (--accent-hover) — mas a barra vive sobre o glow azul do Hero, então o link
+   "apagava" no hover (azul sobre azul). Aqui cor NÃO pode ser o sinal.
+   Novo sinal, em dupla:
+   A) risquinho branco de 1px que se DESENHA da esquerda no hover e, ao sair,
+      RECOLHE pela direita (transform-origin trocada) — a linha "atravessa";
+   B) spotlight: os links irmãos recuam de opacidade, o hovered vai a 100%.
+   Azul segue reservado pro essencial (CTA). */
+.link {
+  position: relative;
+  display: inline-block;
+  /* Repouso = branco 100% (85% nascia "apagado" sobre o glow — Victor). O sinal
+     de hover vem do risquinho + do recuo dos irmãos, não de acender o texto. */
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: color 0.3s var(--easing-out);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.45rem;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: right; /* repouso: recolhe PELA DIREITA ao sair */
+  transition: transform 0.35s var(--easing-out);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: #fff;
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left; /* hover: desenha DA ESQUERDA */
+}
+
+/* B) Spotlight: com o mouse sobre a lista, quem NÃO está hovered recua. */
+.links:hover .link:not(:hover) {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .link::after {
+    transition: none;
+  }
+}
+
+.cta {
+  display: none;
+  margin-left: auto;
+}
+
+.ctaBtn {
+  padding: 0.6rem 1.6rem;
+  font-size: 0.95rem;
+}
+
+/* Hambúrguer */
+.burger {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: auto;
+  padding: 0.5rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.burgerTop,
+.burgerBottom {
+  display: block;
+  height: 1px;
+  transition: transform var(--duration-base) var(--easing-out), opacity var(--duration-fast) var(--easing-out);
+}
+
+.burgerTop {
+  width: 24px;
+  background: #fff;
+}
+
+.burgerTop[data-open="true"] {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+
+.burgerBottom {
+  width: 16px;
+  margin-left: auto;
+  background: var(--accent-primary);
+}
+
+.burgerBottom[data-open="true"] {
+  opacity: 0;
+}
+
+/* Drawer mobile */
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 16, 20, 0.97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-base) var(--easing-out), visibility var(--duration-base) var(--easing-out);
+}
+
+.drawerOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawerClose {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: 0;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.drawerList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.drawerLink {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--easing-out);
+}
+
+.drawerLink:hover {
+  color: var(--accent-hover);
+}
+
+@media (min-width: 768px) {
+  .links,
+  .cta {
+    display: flex;
+    align-items: center;
+  }
+
+  .burger,
+  .drawer {
+    display: none;
+  }
+}

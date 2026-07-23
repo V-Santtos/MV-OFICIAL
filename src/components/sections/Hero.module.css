@@ -1,0 +1,190 @@
+/* ============================================================
+   Cenário do Hero — réplica fiel do Figma ("Página", node 475:143).
+   TODO efeito é elipse + layer blur lidos do arquivo (valores exatos):
+     · glow azul  — 1652×982  #3965C8, blur 374px, noise preto 25%
+     · luz do chão — 2318×219  #919191 50%,  blur 134px
+     · sombra     — 1159×53   #0C0C0C,      blur 15.5px
+   Conversão: px do frame 1920 → vw  (1px = 0.05208vw).
+   ============================================================ */
+
+.hero {
+  position: relative;
+  z-index: 1; /* a luz do chão vaza POR CIMA da seção 2 (frame do Figma tem 1351px de altura) */
+  height: 100svh; /* UMA tela, como a referência — nada cai pra segunda dobra */
+  min-height: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* SEM overflow:hidden — o vazamento vertical (luz → seção 2) é intencional.
+     O corte horizontal fica em html/body (overflow-x: clip, globals.css). */
+}
+
+/* ---------- Cenário (carro + luzes) ---------- */
+
+.fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Grupo do cenário (carro + sombra + luz) — escala junto no mobile a partir da base central. */
+.carGroup {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+}
+
+/* Glow azul do topo (Figma: Ellipse 3 — x134 y-712 1652×982, #3965C8, blur 374px).
+   ~72% da elipse fica ACIMA da tela; só a franja difusa entra no quadro. */
+.glow {
+  position: absolute;
+  /* Alargado além do node do Figma (86vw): no render da ref os CANTOS superiores
+     ainda recebem azul — 104vw centrado reproduz esse banho de luz de borda a borda. */
+  left: -2vw;
+  top: -37.08vw;
+  width: 104vw;
+  height: 51.15vw;
+  border-radius: 50%;
+  background: #3965c8;
+  /* Figma layer blur 374px → CSS blur usa stdDeviation = radius/2 (187px @1920). */
+  filter: blur(9.74vw);
+  transform: translateZ(0);
+}
+
+/* Noise do glow (Figma: efeito NOISE monotone preto 25% sobre a Ellipse 3).
+   Grain em SVG limitado à área do glow via mask — também mata banding do gradiente. */
+/* Noise do glow (Figma: efeito NOISE monotone preto 25% sobre a Ellipse 3).
+   Grain restrito à área do glow via mask — fora dele o fundo fica limpo. */
+.grain {
+  position: absolute;
+  left: -2vw;
+  top: -37.08vw;
+  width: 104vw;
+  height: 51.15vw;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: soft-light;
+  opacity: 0.3;
+  -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 35%, transparent 75%);
+  mask-image: radial-gradient(50% 50% at 50% 50%, #000 35%, transparent 75%);
+}
+
+/* Luz branca do chão (Figma: Ellipse 2 — x-199 y939 2318×219, #919191 50%, blur 134px).
+   Ancorada no rodapé da dobra; o halo do blur atravessa p/ a seção 2. */
+.floorLight {
+  position: absolute;
+  left: -10.36vw;
+  bottom: -4.06vw;
+  width: 120.73vw;
+  height: 11.41vw;
+  border-radius: 50%;
+  background: rgba(145, 145, 145, 0.5);
+  /* Figma layer blur 134px → CSS radius/2 (67px @1920). */
+  filter: blur(3.49vw);
+  transform: translateZ(0);
+}
+
+/* Sombra de contato do carro (Figma: Ellipse 1 — x363 y1007 1159×53, #0C0C0C, blur 15.5px).
+   Estreita e nítida, POR CIMA da luz branca e POR BAIXO do carro. */
+.carShadow {
+  position: absolute;
+  left: 18.91vw;
+  bottom: 1.04vw;
+  width: 60.36vw;
+  height: 2.76vw;
+  border-radius: 50%;
+  background: #0c0c0c;
+  /* Figma layer blur 15.5px → CSS radius/2 (7.75px @1920). */
+  filter: blur(0.4vw);
+  transform: translateZ(0);
+}
+
+/* Carro (Figma: carr1 — x238 y464 1374×1215). O PNG tem espaço vazio embaixo
+   de propósito: a caixa desce 599px (31.2vw) além da dobra p/ as rodas
+   assentarem exatamente sobre a sombra, na borda da tela. */
+.car {
+  position: absolute;
+  left: 12.4vw;
+  bottom: -31.2vw;
+  width: 71.56vw;
+  aspect-ratio: 2748 / 2429;
+}
+
+.car img {
+  object-fit: contain;
+}
+
+/* Mobile: composição 1920 fica pequena — amplia o conjunto carro+sombras a
+   partir da base e alarga o glow p/ manter a presença do azul no topo. */
+@media (max-width: 48rem) {
+  .carGroup {
+    transform: scale(1.75);
+  }
+
+  .glow {
+    left: -37vw;
+    top: -62vw;
+    width: 174vw;
+    height: 103vw;
+    filter: blur(19.5vw);
+  }
+
+  .grain {
+    top: -62vw;
+    height: 165vw;
+  }
+}
+
+/* ---------- Texto ---------- */
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  /* Título em ~24% da altura da dobra (ref. Figma: headline y=258 no frame 1080).
+     Proporcional via svh — o bloco desce junto com telas mais altas. */
+  padding: clamp(5.5rem, 23.5svh, 16rem) 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.headline {
+  max-width: 27ch; /* coluna larga o bastante p/ a frase fechar em 2 linhas, como a ref (era 16ch) */
+  font-family: var(--font-display);
+  font-weight: 400; /* Inter Regular — peso exato do Figma (node 475:144); leve = premium */
+  font-size: clamp(2rem, 3.4vw, 4.1rem); /* 65px @1920 — tamanho exato da ref (era teto 52px) */
+  line-height: 1.02; /* quase colado, editorial — ref usa 0.84; 1.02 é o fiel seguro p/ web */
+  letter-spacing: 0.01em; /* ref não tem tracking; resquício mínimo p/ render de tela */
+  text-transform: uppercase; /* caixa alta como a ref */
+  color: var(--text-1);
+  white-space: pre-line; /* respeita a quebra de linha definida na copy (brand.ts) */
+}
+
+.subtitle {
+  /* Respiro título→subtítulo: a ref marca 54px @1080, mas com nosso título menor
+     a proporção pedia menos — 3.5svh mantém o subtítulo lendo como parte do grupo. */
+  margin-top: clamp(0.875rem, 3.5svh, 2.5rem);
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 1vw, 1.16rem); /* 18.6px @1920 — tamanho da ref */
+  line-height: 1.55;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.65); /* era 0.55 (ref) — subido na lapidação: 55% lia lamacento na zona de transição do glow */
+  text-wrap: balance;
+}
+
+.ctas {
+  /* Respiro subtítulo→CTA (lapidação: era 2.3svh, colado) — com o botão maior,
+     o CTA precisa se isolar como ponto final da composição. */
+  margin-top: clamp(1.25rem, 3.2svh, 2.25rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Selos de confiança REMOVIDOS (Victor, 2026-07-17 — decisão final). */

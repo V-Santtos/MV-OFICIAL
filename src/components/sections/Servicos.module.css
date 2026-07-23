@@ -1,0 +1,283 @@
+/* ============================================================
+   Serviços — catálogo em MOSAICO foto-led (ref Glänzen Detailing).
+   Emenda no fim do Círculo (dark). Cards entram PUROS (sem animação de
+   entrada); todo o movimento é HOVER em CSS:
+   - foto dá zoom;
+   - faixa azul entra na DIAGONAL (canto inferior-direito), cobrindo só PARTE;
+   - seta gira de ↗ (repouso) pra → (hover).
+   ============================================================ */
+.section {
+  /* ⚠️ position+z-index OBRIGATÓRIOS: a seção do Círculo é `position: relative`
+     (posicionada) e pintava POR CIMA desta se ela ficasse estática — o círculo
+     dark gigante cobria o título. Elevando a seção toda, título + cards pintam
+     acima do círculo. (Os cards já escapavam via `isolation` de cada card.) */
+  position: relative;
+  z-index: 1;
+  /* padding-top (B, lapidação 2026-07-17): 4.5→6rem — início de seção com respiro
+     próprio agora que o cabeçalho ANIMA na entrada (lever da "distância"). */
+  padding: 6rem clamp(1.5rem, 4vw, 3.5rem) 7rem;
+  background: var(--bg-0); /* dark: emenda limpa com o Círculo, sem flash */
+}
+
+.inner {
+  max-width: 100rem; /* ocupa bem mais tela — cards com presença (Victor) */
+  margin: 0 auto;
+}
+
+/* Título ESTÁTICO (sempre visível) — coerente com a entrada pura da seção. */
+.head {
+  margin-bottom: 7rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+/* Grade. Mobile = 1 coluna (empilhado); ganha colunas no tablet/desktop. */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.cell {
+  margin: 0;
+}
+
+/* Wrapper do reveal (motion.div): NÃO carrega o transform do mosaico (esse fica
+   no `.cell`) — só o y/opacity da entrada em stagger. Passa o tamanho adiante. */
+.cardReveal {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  /* Escalonamento do mosaico via TRANSFORM (não margin) — desloca a coluna
+     VISUALMENTE sem inflar a altura da linha, então NÃO abre buraco entre a
+     linha 1 e a linha 2 (o problema que o Victor apontou). Cada coluna desce
+     o mesmo tanto nas duas linhas, mantendo o gap constante. */
+  .cell:nth-child(3n + 2) {
+    transform: translateY(2.25rem);
+  }
+  .cell:nth-child(3n) {
+    transform: translateY(1rem);
+  }
+
+  /* PROPOSTA D — planos em profundidade: cada coluna tem um nível de elevação
+     (hairline + sombra) diferente. Coluna 1 = plano da FRENTE (borda mais viva,
+     sombra mais profunda); coluna 3 = meio; coluna 2 (a mais baixa no mosaico) =
+     plano do FUNDO (borda apagada, sombra rasa) — recua de verdade. */
+  .cell:nth-child(3n + 1) .card {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 30px 58px -26px rgba(0, 0, 0, 0.8);
+  }
+  .cell:nth-child(3n) .card {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 0 0 1px rgba(255, 255, 255, 0.065),
+      0 20px 44px -26px rgba(0, 0, 0, 0.68);
+  }
+  .cell:nth-child(3n + 2) .card {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.035),
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 12px 30px -24px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Hover continua sobrepondo qualquer tier (o `.card:hover` acima ganha por
+     especificidade? não — o tier é mais específico. Reforça aqui). */
+  .cell .card:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.13),
+      0 34px 64px -22px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Card = link. overflow hidden pra o zoom da foto acontecer por dentro. */
+.card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  aspect-ratio: 4 / 3; /* mobile/tablet */
+  background: var(--bg-2);
+  isolation: isolate;
+  /* Repouso definido (base p/ a proposta D): hairline branca (separa o card do
+     fundo dark, que a vinheta do grade faz "grudar") + luz de topo 1px (mesma
+     língua do botão) + sombra ambiente sutil. No desktop, cada COLUNA recebe um
+     nível diferente disso = planos em profundidades distintas (ver tiers abaixo). */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 16px 38px -24px rgba(0, 0, 0, 0.7);
+  transition: transform 0.5s var(--easing-out), box-shadow 0.5s var(--easing-out);
+}
+
+/* Cards PAISAGEM (horizontais) em todas as larguras, como a referência. */
+
+.img {
+  object-fit: cover;
+  z-index: 0;
+  /* GRADE UNIFICADO (2026-07-17): as fotos vêm de fontes diferentes (umas mais
+     quentes/saturadas, outras mais frias). Este filtro nivela a "intensidade de
+     edição" — puxa saturação pra baixo, sobe contraste e apara o brilho — pra
+     todas lerem como se tivessem sido tratadas na mesma leva. Calibrável. */
+  filter: saturate(0.82) contrast(1.08) brightness(0.94);
+  transition: transform 0.6s var(--easing-out);
+}
+
+/* Película de grade por cima de TODA a foto (uniforme + vinheta) — o "verniz"
+   que faz o conjunto parecer editado junto. Wash NEUTRO (não azul: azul é só
+   pro essencial). Fica acima da foto e abaixo do scrim/tint/rótulo. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(16, 18, 22, 0.2), rgba(16, 18, 22, 0.2)),
+    radial-gradient(135% 120% at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Scrim de baixo pra cima: garante leitura do rótulo sobre qualquer foto. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 6, 6, 0.62) 0%,
+    rgba(6, 6, 6, 0.12) 38%,
+    transparent 62%
+  );
+}
+
+/* Faixa azul DIAGONAL — só some/entra no hover, e cobre só PARTE do card
+   (forte no canto inferior-direito, some rumo ao topo-esquerdo), como o
+   vermelho da referência. 315deg = origem no canto inferior-direito.
+   Intensidade a calibrar com o Victor ao vivo. */
+.tint {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    315deg,
+    rgba(57, 101, 200, 0.92) 0%,
+    rgba(57, 101, 200, 0.5) 28%,
+    transparent 58%
+  );
+  opacity: 0;
+  transition: opacity 0.5s var(--easing-out);
+}
+
+/* Grupo topo-direito: título + seta logo ABAIXO dele, alinhados à direita,
+   como a referência. pointer-events none pra não competir com o link do card. */
+.meta {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.25rem;
+  left: 1.25rem;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  text-align: right;
+  pointer-events: none;
+}
+
+.label {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* Seta maior. Repouso = inclinada (↗) via rotate(-45deg); hover = aponta pra
+   direita (→) via rotate(0). */
+.arrow {
+  display: inline-flex;
+  color: #ffffff;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  transition: transform 0.45s var(--easing-out);
+}
+
+/* HOVER: card sobe/cresce por cima dos vizinhos, foto dá zoom, faixa entra,
+   seta gira pra horizontal. z-index sobe pra o card hovered ficar acima. */
+.card:hover {
+  transform: translateY(-6px);
+  /* Hover = plano MAIS à frente que qualquer tier: hairline e luz de topo mais
+     fortes + sombra profunda. É o "prêmio" da interação, igual pra todas. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.13),
+    0 34px 64px -22px rgba(0, 0, 0, 0.8);
+  z-index: 4;
+}
+.card:hover .img {
+  transform: scale(1.06);
+}
+.card:hover .tint {
+  opacity: 1;
+}
+.card:hover .arrow {
+  transform: rotate(0deg);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .img,
+  .arrow {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+  .card:hover .img {
+    transform: none;
+  }
+}

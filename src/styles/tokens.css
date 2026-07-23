@@ -1,0 +1,85 @@
+/* ============================================================
+   Design Tokens — MV Estética Automotiva  ·  FASE 2 (paleta validada)
+   Fonte única dos valores da marca. Mudou aqui, propaga pro site.
+
+   Direção travada (Victor, 2026-07-14 · paleta do print MAX COLOR confirmada 2026-07-15):
+   - Site 100% DARK, limpo, minimalista, tecnológico e eficiente.
+   - Paleta da ref: Eerie Black #1C1C1C + Royalblue #3965C8 + White #FFFFFF.
+   - Logo exibida BRANCA na navbar (filtro CSS); o PNG original continua com o azul cru.
+   - ⚠️ AZUL É ACENTO ESSENCIAL: usar com parcimônia, só p/ pontuar o que é
+     essencial (eyebrow, 1 palavra de destaque, CTA, foco/estado). NUNCA em
+     texto corrido nem como enfeite. Ritmo entre seções = níveis de escuro,
+     não cor. O "tecnológico" vem dos efeitos (GSAP), não da paleta.
+   ============================================================ */
+
+:root {
+  /* ---- Fundação: níveis de escuro NEUTROS (Eerie Black — ref. MAX COLOR, 2026-07-15) ----
+     Victor confirmou seguir o print da referência: dark neutro #1C1C1C, sem subtom azul. */
+  --bg-0: #1c1c1c; /* base da página / mais profundo (Eerie Black da ref) */
+  --bg-1: #212121; /* seção padrão */
+  --bg-2: #292929; /* card / superfície elevada */
+  --bg-3: #333333; /* input / hover / raised */
+
+  /* ---- Neutros de texto (neutros puros — branco da ref, sem subtom) ---- */
+  --text-1: #ffffff; /* título e texto principal (White da ref) */
+  --text-2: #b0b0b0; /* descrições, corpo, apoio */
+  --text-3: #757575; /* secundário, legendas suaves */
+  --text-4: #4f4f4f; /* detalhes, desabilitado */
+
+  /* ---- Azul: acento ESSENCIAL (parcimônia) ---- */
+  --accent: #3965c8;        /* azul essencial de UI (Royalblue — ref. MAX COLOR) */
+  --accent-glint: #6e93e6;  /* brilho / palavra de destaque */
+  --accent-deep: #274b99;   /* fim de gradiente / pressed */
+
+  /* ---- Bordas ---- */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-accent: rgba(57, 101, 200, 0.24);
+
+  /* ---- Efeitos ---- */
+  --glow-blue: rgba(57, 101, 200, 0.28);
+  --shadow-dark: rgba(0, 0, 0, 0.45);
+  --glass-blur: 12px;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* ---- Escala de espaçamento (8dp) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* ---- Motion ---- */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ============================================================
+     COMPAT temporário — nomes antigos apontando p/ a paleta nova.
+     Mantém as seções da Fase 1 coerentes enquanto lapidamos uma por
+     uma. Ao migrar cada seção p/ os nomes novos, remover a linha
+     correspondente. META: zerar este bloco no fim da Fase 2.
+     ============================================================ */
+  --bg-main: var(--bg-0);
+  --bg-deep: var(--bg-0);
+  --bg-section: var(--bg-1);
+  --bg-surface: var(--bg-2);
+  --bg-light: var(--bg-1);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --text-primary: var(--text-1);
+  --text-secondary: var(--text-2);
+  --text-muted: var(--text-3);
+  --text-dark: var(--text-1);
+  --accent-primary: var(--accent);
+  --accent-hover: var(--accent-glint);
+}

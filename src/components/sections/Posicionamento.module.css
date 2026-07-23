@@ -1,0 +1,101 @@
+.section {
+  background: var(--bg-deep);
+  padding: 0 1.5rem;
+}
+
+.layout {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  /* Bloco deslocado pra BAIXO (Victor, 2026-07-17): respiro transferido do
+     fundo pro topo — aproveita o vão entre o Hero e o conteúdo, sem mudar a
+     altura total da seção. */
+  padding: 9rem 0 9rem;
+}
+
+.eyebrow {
+  margin-bottom: 1.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.title {
+  margin-bottom: 2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.body {
+  max-width: 34ch;
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  font-weight: 300;
+  color: var(--text-secondary);
+}
+
+/* Stats (lapidação 2026-07-17): hierarquia interna corrigida (antes: número
+   gigante → rótulo minúsculo 0.8rem → desc apagada; o rótulo, que dá
+   significado ao número, era o elo mais fraco). A "régua editorial" no topo
+   de cada stat foi testada e REMOVIDA (Victor). */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem 2.5rem;
+}
+
+.statNumber {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.statPlus {
+  color: var(--accent-primary);
+}
+
+/* Rótulo = 2º elemento da hierarquia (era 0.8rem/600, o mais fraco do bloco). */
+.statBadge {
+  display: block;
+  margin: 1rem 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+.statDesc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--text-secondary); /* era --text-muted — subiu um degrau de leitura */
+  max-width: 30ch;
+  text-wrap: pretty; /* evita viúva ("precisão." sozinha na última linha — Victor) */
+}
+
+.accentLine {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+
+@media (min-width: 768px) {
+  .layout {
+    grid-template-columns: 1.1fr 1fr;
+    /* CENTRO ótico (lapidação): o bloco esquerdo (título+corpo) é mais baixo
+       que a grade de stats — alinhado ao topo, sobrava vazio morto embaixo
+       dele. Centralizado, o título ancora no meio da altura dos stats. */
+    align-items: center;
+    padding: 14rem 0 12rem; /* era 9/17 — bloco desce, total ~igual */
+  }
+}

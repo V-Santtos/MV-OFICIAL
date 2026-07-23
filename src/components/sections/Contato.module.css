@@ -1,0 +1,339 @@
+/* ============================================================
+   Contato — FECHO da página. Dark com clima próprio: vinheta + grão dão o
+   "destaque" por NÍVEL DE ESCURO (não por cor); o único azul é o HALO do CTA
+   (foco na ação — regra da paleta). Coluna única centralizada, sem formulário.
+   ============================================================ */
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(7rem, 14vh, 11rem) 1.5rem;
+  /* Base escura + vinheta suave nas bordas = clima de fecho, sem cor. */
+  background:
+    radial-gradient(130% 120% at 50% 42%, transparent 52%, rgba(0, 0, 0, 0.45)),
+    var(--bg-0);
+}
+
+/* Hairline no topo — emoldura a seção como um momento à parte (destaque). */
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+/* Grão sutil (mesma língua da navbar/cards) — textura, não ruído. */
+.section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.28;
+}
+
+.inner {
+  max-width: 68rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Bloco de texto do fecho — estreito e centrado (o mapa abaixo é mais largo). */
+.copy {
+  max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.body {
+  margin: 1.75rem 0 0;
+  max-width: 34rem;
+  font-size: 1.06rem;
+  line-height: 1.75;
+  font-weight: 300;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* Uma frase por linha (Victor, 2026-07-22): instrução em cima, garantia embaixo.
+   `display:block` em vez de `<br>` — no mobile cada frase continua quebrando
+   sozinha dentro do seu bloco, o que um `<br>` fixo não permitiria. */
+.bodyLine {
+  display: block;
+}
+
+/* Halo azul ATRÁS do botão = o único acento de cor (foco na ação). */
+.ctaWrap {
+  position: relative;
+  margin-top: 3rem;
+  isolation: isolate;
+}
+
+.ctaWrap::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 280px;
+  height: 130px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--glow-blue);
+  filter: blur(48px);
+  opacity: 0.75;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cta {
+  font-size: 1.02rem;
+}
+
+/* Linha de reassurance — dá o "completo" sem formulário; separadores em ponto. */
+.trust {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem 1.1rem;
+}
+
+.trustItem {
+  position: relative;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--text-3);
+}
+
+.trustItem:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--text-4);
+}
+
+/* ---- Mapa (janela) ---- */
+.mapWrap {
+  width: 100%;
+  margin-top: clamp(3rem, 6vh, 5rem);
+}
+
+.map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 8;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.85);
+  /* Placeholder: superfície escura + "malha de ruas" sutil sugerindo mapa.
+     Troca pelo embed/JS do Google Maps na Fase 2. */
+  background:
+    linear-gradient(115deg, transparent 0 49.6%, var(--border-subtle) 49.6% 50.4%, transparent 50.4%) 0 0 / 140px 140px,
+    linear-gradient(25deg, transparent 0 49.6%, var(--border-subtle) 49.6% 50.4%, transparent 50.4%) 0 0 / 190px 190px,
+    radial-gradient(120% 130% at 50% 0%, #2a2a2a, var(--bg-2) 70%);
+}
+
+/* Pino central (único ponto de azul = foco). */
+.mapPin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 6px rgba(57, 101, 200, 0.22),
+    0 0 22px 4px var(--glow-blue);
+}
+
+.mapPin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent-glint);
+}
+
+/* ---- Mapa REAL (iframe de compartilhamento, sem chave/faturamento) ---- */
+.mapLive {
+  /* Base sólida por baixo do iframe: enquanto ele carrega (lazy), a janela é
+     um retângulo escuro e não um buraco branco piscando na seção dark. */
+  background: var(--bg-2);
+  /* Moldura: anel interno de luz (dá espessura à borda sem engrossar o traço)
+     + sombra de profundidade + um respiro AZUL bem baixo, que amarra a janela
+     ao halo do CTA logo acima sem virar um segundo foco. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 40px 90px -50px rgba(0, 0, 0, 0.9),
+    0 0 70px -24px rgba(57, 101, 200, 0.3);
+}
+
+/* Luz superior deslizando na borda de cima — o mesmo gesto da navbar/cards.
+   Fica ACIMA do iframe, por isso precisa ser inerte ao clique. */
+.mapLive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.12) 0 1px,
+    transparent 1px
+  );
+}
+
+.mapFrame {
+  position: absolute;
+  display: block;
+  border: 0;
+  /* SEM RECORTE — o iframe ocupa a janela inteira (Victor, 2026-07-22).
+     Histórico pra não repetir as duas tentativas descartadas de esconder o
+     thumbnail de camadas do Google (canto inferior esquerdo, que o filtro de
+     inversão deixa esbranquiçado):
+      1. mancha de gradiente por cima → parecia borrão/sujeira na tela;
+      2. deslocar o iframe 90px pra esquerda → funcionou, MAS depois que a query
+         virou busca por NOME o Google passou a exibir o cartão da ficha nesse
+         mesmo canto superior esquerdo, e o recorte cortava o cartão.
+     O cartão da ficha vale mais que o thumbnail: ele mostra "MV ESTÉTICA
+     AUTOMOTIVA" + endereço + botões de rota. */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* CROSSFADE: todo iframe nasce invisível e só aparece com `.mapFrameReady`,
+     que o React aplica no `load`. Durante um reset, o mapa ANTIGO continua
+     pintado por baixo até o novo terminar de carregar — por isso a janela nunca
+     pisca preta. Fade por TEMPO FIXO não resolvia: terminava antes de o Google
+     desenhar (Victor, 2026-07-22: "vem uma faixa preta de uma vez").
+     ⚠️ A duração tem que bater com MAP_FADE no Contato.tsx. */
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  /* ARRASTO LIBERADO (Victor). O zoom segue exigindo Ctrl e não há como mudar:
+     `gestureHandling` só existe na Maps JavaScript API, que pede faturamento —
+     recusado. O modo cooperativo do Google NÃO trava a rolagem da página; só
+     estampa o aviso do Ctrl enquanto o ponteiro passa por cima. */
+  /* O embed do Google só existe no tema CLARO. `invert` escurece, e o
+     `hue-rotate(180deg)` devolve as matizes ao lugar (senão vias e vegetação
+     saem em cores invertidas). O resto ajusta o resultado ao #1c1c1c da seção.
+     ⚠️ Único jeito de escurecer sem a API — que exigiria faturamento (recusado
+     pelo Victor, 2026-07-22). Se um dia o mapa vier a ser estilizado de verdade,
+     este filtro sai inteiro. */
+  filter: invert(92%) hue-rotate(180deg) saturate(0.7) brightness(0.95) contrast(1.02);
+}
+
+.mapFrameReady {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapFrame {
+    transition: none;
+  }
+}
+
+/* Véu: vinheta que casa as bordas do mapa com a seção. `pointer-events:none` é
+   obrigatório — sem isso mataria o arrasto do iframe. */
+.mapVeil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 130% at 50% 45%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.mapLink {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  /* Acima do véu (1) e da luz de borda (2) — é o único elemento clicável da
+     janela, já que o iframe está com `pointer-events: none`. */
+  z-index: 3;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.78rem;
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(20, 20, 20, 0.72);
+  backdrop-filter: blur(8px);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.mapLink:hover {
+  color: var(--text-1);
+  border-color: var(--border-strong);
+}
+
+/* Selo flutuante com o nome/local. */
+.mapLabel {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-radius: var(--radius-md);
+  background: rgba(20, 20, 20, 0.72);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+}
+
+.mapLabel strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.mapLabel span {
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+/* Aviso discreto de placeholder (sai quando o mapa real entrar). */
+.mapNote {
+  position: absolute;
+  right: 1.25rem;
+  top: 1.25rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.25);
+}

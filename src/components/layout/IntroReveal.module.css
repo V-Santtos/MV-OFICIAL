@@ -1,0 +1,27 @@
+/* Intro de abertura — painel que cobre a tela e a logo MV que se desenha.
+   Fica acima de tudo (inclusive Navbar) até subir revelando o Hero. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-0);
+  will-change: transform, opacity;
+}
+
+.logo {
+  /* ~120px como a referência (portfólio), não gigante. */
+  width: clamp(92px, 11vw, 124px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  /* Invisível até o GSAP preparar o traço (evita flash da logo cheia no
+     1º paint). O GSAP revela via autoAlpha assim que o dash está pronto. */
+  opacity: 0;
+  visibility: hidden;
+  /* Sem glow (decisão do Victor: brilho puxa pro clichê neon). A revelação é
+     conduzida pelo TRAÇO ciano, chapado e limpo. */
+}

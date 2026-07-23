@@ -1,0 +1,88 @@
+/* ============================================================
+   Círculo — transição CLARO → DARK (ref "Round Section" / Drive Luxury).
+   Seção alta = distância de scroll. Palco sticky (pin) CLARO; o fundo da
+   seção é DARK, então quando o palco solta já aterrissa no escuro, emendando
+   na próxima seção. Um círculo dark cresce (scale via JS) até cobrir a tela.
+   ============================================================ */
+.section {
+  position: relative;
+  /* Rampa LONGA = segredo do "hold pequeno → expande" (pin 100vh; o resto é
+     scroll pro círculo crescer 0.1→cheio, então o começo é quase imperceptível).
+     300→260vh (B, lapidação 2026-07-17): encurta o trecho MORTO no fim (a
+     cobertura acontece em progresso ~0.985, então sobrava scroll parado antes da
+     emenda com Serviços). Progress-mapped: o formato do efeito se preserva, só
+     fica um tico mais rápido. Lever da "distância" Círculo→Serviços. */
+  height: 260vh;
+  background: var(--bg-0); /* dark: o que fica quando o palco solta */
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: visible; /* deixa o círculo crescer durante a entrada sem tampa reta */
+  isolation: isolate; /* mantém círculo e texto contidos no palco */
+  background: #f4f4f2; /* claro: continua a ilha clara (Quem somos) */
+}
+
+/* Círculo escuro que cresce. Base 150vmax → no scale cheio cobre a diagonal
+   da viewport em qualquer proporção.
+   ⚠️ Centralização por MARGENS NEGATIVAS (metade do tamanho), NÃO por transform:
+   o `scale` do Framer usa transform e sobrescreveria qualquer translate; e
+   `place-items:center` de grid empurra o centro pra fora quando o item é maior
+   que o palco. Com margens, o círculo fica cravado no centro e o `scale`
+   (transform-origin central) cresce a partir dali. */
+.circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  margin-top: -75vmax; /* metade da altura → centro vertical (peek vem do `y` no scroll) */
+  margin-left: -75vmax; /* metade da largura → centro horizontal */
+  border-radius: 50%;
+  background: var(--bg-0);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+/* Camada do texto — centraliza o heading via GRID (não por transform, que o
+   `y` do Framer sobrescreveria). O heading recebe o MESMO `y` do círculo, então
+   texto e círculo sobem/centralizam juntos e nunca desalinham. */
+.textLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* Texto branco por cima do círculo. O recorte circular vem do `clipPath` animado
+   no componente, então as letras só aparecem dentro do círculo. */
+.heading {
+  margin: 0;
+  width: min(90vw, 40rem);
+  text-align: center;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  will-change: clip-path, transform;
+}
+
+/* "ao resultado" na script Birthstone (Victor, 2026-07-17) — contraste com o
+   "Do cuidado" reto. Já é cursiva: sem italic. Sobe um pouco de tamanho e afrouxa
+   o line-height/letter-spacing porque a script tem ascendentes/descendentes
+   longos e conecta as letras (o -0.02em do heading apertaria demais). */
+.emphasis {
+  font-family: var(--font-script), cursive;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.35em;
+  letter-spacing: 0;
+  line-height: 0.9;
+}

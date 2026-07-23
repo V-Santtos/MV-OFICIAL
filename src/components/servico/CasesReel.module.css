@@ -1,0 +1,220 @@
+/* ============================================================
+   CASES — reel horizontal (ref. de layout gallery6, reconstruído MV).
+   Cabeçalho alinhado ao container; o track SANGRA pela direita (o próximo
+   card espia). Motor = scroll-snap nativo; setas = JS mínimo. Dark premium,
+   azul só no essencial (foco). Mesmo verniz de card do resto do site.
+   ============================================================ */
+
+.cases {
+  /* Container LARGO (Victor, 2026-07-23): alinhado ao "O que é" (~92rem) pra os
+     cards ocuparem mais a tela. As variáveis replicam o container centrado sem
+     prender o track — o track precisa vazar pela direita. */
+  --container: 92rem;
+  --gutter: clamp(1.5rem, 4vw, 3.5rem);
+  --edge: max(var(--gutter), calc((100% - var(--container)) / 2));
+
+  background: var(--bg-0);
+  /* Respiro GENEROSO (Victor, 2026-07-23): cada seção tem que dominar a tela —
+     com pouco espaço, dava pra ver "Alguns trabalhos" e "Perguntas frequentes"
+     ao mesmo tempo e o foco se perdia. Base grande empurra o FAQ pra baixo da
+     dobra; a cascata de entrada faz cada seção se revelar ao ser alcançada. */
+  padding-block: clamp(6rem, 12vh, 9rem) clamp(6rem, 12vh, 9rem);
+  overflow: hidden; /* segura o sangramento do track */
+}
+
+/* ---- Cabeçalho: título/subtítulo de um lado, setas do outro ---- */
+.head {
+  max-width: var(--container);
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
+  padding-inline: var(--gutter);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.headText {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.85rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 0.7rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* ---- Setas de navegação ---- */
+.nav {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-1);
+  cursor: pointer;
+  transition:
+    background var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out),
+    color var(--duration-base) var(--easing-out),
+    opacity var(--duration-base) var(--easing-out);
+}
+
+@media (hover: hover) {
+  .navBtn:not(:disabled):hover {
+    background: var(--bg-2);
+    border-color: var(--border-strong);
+  }
+}
+
+.navBtn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.navBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.navBtn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Viewport com scroll-snap ---- */
+.viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  /* primeiro card alinha com o texto do cabeçalho; sangra pela direita */
+  scroll-padding-left: var(--edge);
+  padding-left: var(--edge);
+  padding-right: var(--gutter);
+  /* respiro pra sombra funda dos cards não ser cortada em cima/baixo */
+  padding-block: 0.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+}
+
+.slide {
+  flex: 0 0 auto;
+  /* Escala A (Victor, 2026-07-23): card maior (~34rem) — no desktop aparecem
+     ~2,5 (2 inteiros + espiar forte), cada trabalho com mais presença. */
+  width: min(86vw, 34rem);
+  scroll-snap-align: start;
+}
+
+/* ---- Card ---- */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Moldura da foto — mesmo verniz do .splitMedia do template. */
+.media {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 26px 54px -26px rgba(0, 0, 0, 0.75);
+}
+
+.img {
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.08) brightness(0.94);
+  transition: transform var(--duration-slow) var(--easing-out);
+}
+
+/* Placeholder de marca (sem foto ainda) — parte do componente, NÃO "imagem
+   quebrada": leve degradê + sheen no canto + monograma MV bem apagado. */
+.mediaEmpty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 120% at 28% 18%, rgba(255, 255, 255, 0.055), transparent 58%),
+    linear-gradient(140deg, var(--bg-2) 0%, var(--bg-1) 100%);
+}
+
+.mono {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em; /* compensa o tracking p/ centrar de fato */
+  color: var(--text-4);
+  user-select: none;
+}
+
+@media (hover: hover) {
+  .slide:hover .img {
+    transform: scale(1.05);
+  }
+}
+
+.cardTitle {
+  margin: 1.15rem 0 0.45rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-1);
+}
+
+.cardText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* Mobile: setas somem (swipe é natural); cabeçalho empilha. */
+@media (max-width: 640px) {
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav {
+    display: none;
+  }
+}
