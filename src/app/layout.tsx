@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Birthstone } from "next/font/google";
 import { Navbar, Footer, IntroReveal, SmoothScroll } from "@/components/layout";
 import { brand } from "@/content";
@@ -64,6 +64,20 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+};
+
+/**
+ * `viewportFit: "cover"` é OBRIGATÓRIO no iPhone: sem ele o Safari NÃO estende a
+ * página atrás da status bar/Dynamic Island — a faixa do sistema fica com o
+ * fundo do site (#1C1C1C), lida como uma "barra preta" no topo (Victor viu no
+ * 14 Pro real, 2026-07-24). Com o cover a página vai edge-to-edge (o glow do
+ * Hero sobe até o topo) E o `env(safe-area-inset-top)` passa a valer de verdade,
+ * que é o que a Navbar usa pra assentar a logo logo abaixo do relógio.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

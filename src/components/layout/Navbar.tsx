@@ -102,13 +102,22 @@ export function Navbar() {
     };
   }, []);
 
+  // Com o menu aberto, o drawer cobre a navbar inteira. `inert` tira a logo e o
+  // hambúrguer cobertos da ordem de foco / leitor de tela (o X do drawer fecha).
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    if (open) nav.setAttribute("inert", "");
+    else nav.removeAttribute("inert");
+  }, [open]);
+
   const close = () => setOpen(false);
 
   return (
     <>
       <nav
         ref={navRef}
-        className={`${styles.nav} ${revealed ? styles.revealed : ""} ${open ? styles.menuOpen : ""}`}
+        className={`${styles.nav} ${revealed ? styles.revealed : ""}`}
         aria-label="Navegação principal"
       >
         <div className={styles.inner}>

@@ -52,6 +52,11 @@
    Victor viu. Não remover sem tirar antes o `overflow: hidden` do lenis. */
 html {
   scrollbar-gutter: stable;
+  /* Safe-area do topo (entalhe / Dynamic Island), exposta como variável com
+     fallback 0 fora do iPhone. Depende do `viewportFit: "cover"` (layout.tsx)
+     pra valer no Safari. A moldura de preview injeta um valor fixo aqui — o
+     iframe não recebe `env()` do sistema —, então o PC reproduz o iPhone. */
+  --safe-top: env(safe-area-inset-top, 0px);
 }
 
 /* Canvas base: fundação dark neutra (âncora #1C1C1C — Eerie Black, ref. MAX COLOR). */

@@ -89,6 +89,43 @@
   padding: 9rem 1.75rem 1.5rem;
 }
 
+/* ---- X de fechar — canto superior direito, alinhado com o hambúrguer ----
+   Fica dentro do painel (o drawer cobre a navbar). `var(--safe-top)` respeita o
+   entalhe/Dynamic Island, igual à navbar. */
+.fechar {
+  position: absolute;
+  top: calc(1.4rem + var(--safe-top));
+  right: 1.5rem;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.fechar svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* Feedback tátil (sem hover no toque). */
+.fechar:active {
+  opacity: 0.6;
+  transform: scale(0.92);
+}
+
+.fechar:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 /* Área que ROLA quando não cabe. `data-lenis-prevent` no elemento impede o
    Lenis de sequestrar essa rolagem interna. O rodapé fica FORA daqui. */
 .rolagem {
@@ -105,11 +142,20 @@
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* SEM barra de rolagem visível (Victor, 2026-07-24): o conteúdo cabe inteiro,
+     e o Chrome ainda pintava a barra clássica no PC (na moldura). Escondê-la NÃO
+     desliga o scroll — o toque segue rolando em telas menores, só não aparece a
+     calha. Mesma técnica do `CasesReel`. */
+  scrollbar-width: none; /* Firefox */
   display: flex;
   flex-direction: column;
   /* Separa navegação principal de "Serviços" — são dois pesos diferentes e
      precisam ler como dois blocos, não como uma lista só. */
   gap: 2.5rem;
+}
+
+.rolagem::-webkit-scrollbar {
+  display: none; /* WebKit (Chrome/Safari) */
 }
 
 /* ---- Blocos ---- */

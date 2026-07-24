@@ -4,22 +4,25 @@
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 50;
-  /* `env(safe-area-inset-top)`: no iPhone a faixa do relógio/Dynamic Island é
-     área do sistema. Sem reservar, a logo nasce colada no horário (Victor viu
-     isso na moldura). Em telas sem entalhe o `env()` vale 0 e o fallback de
-     0.9rem manda — desktop inalterado. */
-  padding: calc(0.9rem + env(safe-area-inset-top, 0px)) 1.5rem 0.9rem;
+  /* `var(--safe-top)` = `env(safe-area-inset-top)` (globals.css), a faixa do
+     sistema (relógio / Dynamic Island). Reserva essa altura + 0.9rem de respiro
+     visual, então a logo assenta logo abaixo do relógio. Fora do iPhone vale 0
+     e sobra só o 0.9rem — desktop inalterado. */
+  padding: calc(0.9rem + var(--safe-top)) 1.5rem 0.9rem;
   will-change: transform;
 }
 
-/* No celular a barra ganha respiro próprio: 0.9rem era valor de desktop e
-   deixava logo e hambúrguer grudados no topo do aparelho — no iPhone a logo
-   encostava no relógio. 3.4rem (~54px) reserva a faixa do sistema (status bar /
-   Dynamic Island) mesmo onde `env()` não resolve, e ainda soma o `env()` real
-   nos aparelhos que o expõem. */
+/* 🐞 CORREÇÃO (Victor, 2026-07-24): o `3.2rem` daqui era uma GAMBIARRA da época
+   em que faltava `viewportFit: "cover"` — sem o cover, `env()` valia 0 e essa
+   reserva fixa "substituía" a status bar. Só que no iPhone real o Safari JÁ
+   empurra o conteúdo abaixo da faixa do sistema, então o 3.2rem contava em
+   dobro e jogava a logo lá pra baixo (ele apontou: "logo muito longe do topo").
+   Com o cover ligado, `var(--safe-top)` (= env real, ~59px no 14 Pro) faz a
+   reserva, e o mobile usa o MESMO respiro do desktop (0.9rem). Muda só o padding
+   horizontal (1.25rem, mais apertado que os 1.5rem do desktop). */
 @media (max-width: 767px) {
   .nav {
-    padding: calc(3.2rem + env(safe-area-inset-top, 0px)) 1.25rem 0.9rem;
+    padding: calc(0.9rem + var(--safe-top)) 1.25rem 0.9rem;
   }
 }
 
@@ -109,6 +112,15 @@
   width: auto;
   display: block;
   filter: brightness(0) invert(1); /* logo toda branca (Victor, 2026-07-15) — o PNG original tem o azul cru */
+}
+
+/* No mobile a logo vinha grande demais frente ao hambúrguer (Victor, 2026-07-24)
+   — 38px pesava muito mais que os traços de 22px. 30px equilibra os dois lados
+   da barra. Desktop mantém 38px. Fácil de nudge se ainda parecer grande. */
+@media (max-width: 767px) {
+  .logoImg {
+    height: 30px;
+  }
 }
 
 .links {
@@ -243,7 +255,9 @@
 .burgerMid,
 .burgerBottom {
   display: block;
-  width: 22px;
+  /* 26px (era 22): equilibra o peso do hambúrguer com a logo à esquerda, que
+     encolheu pra 30px no mobile (Victor, 2026-07-24). */
+  width: 26px;
   height: 2px;
   border-radius: 2px;
   background: #ffffff;
@@ -267,26 +281,12 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* ---- Barra com o menu ABERTO ----
-   Sobe acima do painel (z-index 55 no `MobileMenu`) pra logo e botão ficarem
-   visíveis e clicáveis sobre a cortina — o enquadramento do print do Victor:
-   logo à esquerda, hambúrguer à direita.
-   A pílula é DESMATERIALIZADA junto: se o usuário abriu o menu depois de rolar,
-   `revealed` está ligado e o card `#2e2e2e` flutuaria por cima da cortina. */
-.menuOpen {
-  z-index: 70;
-}
-
-.menuOpen .inner,
-.menuOpen.revealed .inner {
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.menuOpen .inner::after {
-  opacity: 0;
-}
+/* ---- Menu ABERTO ----
+   O drawer (`MobileMenu`, z-index 55) COBRE a navbar inteira (z-index 50): a
+   logo e o hambúrguer somem porque ficam ATRÁS da cortina — jeito certo (Victor,
+   2026-07-24). Nada de flutuar a barra por cima nem apagar a logo do hero. O
+   fechar mora dentro do próprio drawer (o X). A navbar vira `inert` enquanto
+   aberta (Navbar.tsx) pra sair da ordem de foco enquanto está coberta. */
 
 @media (min-width: 768px) {
   .links,

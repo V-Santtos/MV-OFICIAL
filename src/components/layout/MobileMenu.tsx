@@ -177,6 +177,20 @@ export function MobileMenu({ open, onClose, botaoRef }: Props) {
     >
       <div ref={panelRef} className={styles.panel}>
         <div className={styles.inner}>
+          {/* Fechar: o drawer cobre a navbar inteira, então o X mora AQUI dentro
+              (não é mais o hambúrguer flutuando por cima). Canto superior direito,
+              onde o hambúrguer estava — a troca lê como o mesmo botão. */}
+          <button
+            type="button"
+            className={styles.fechar}
+            onClick={onClose}
+            aria-label="Fechar menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+
           {/* Só ESTA área rola. O rodapé com o CTA fica fora dela, sempre à
               vista — a lista de navegação + 6 serviços passava da altura útil
               do Safari e empurrava o botão pra baixo da dobra.

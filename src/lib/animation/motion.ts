@@ -284,8 +284,13 @@ export const heroCascade = {
  * diferentes pra manter em sincronia.
  */
 export const menuOverlay = {
-  /** Painel deslizando da direita. Curva idêntica ao `intro.lift`. */
-  panel: { duration: 0.55, ease: "power3.inOut" },
+  /** Painel deslizando da direita.
+      🐞 Era `power3.inOut` (curva da intro) — mas o ease-IN segurava o painel
+      ~150ms quase parado antes de deslizar, e no toque isso lê como "o menu
+      travou/demora a abrir" (Victor, 2026-07-24, no 14 Pro real). `power3.out`
+      arranca na hora e desacelera no fim: responde ao dedo no mesmo instante.
+      Menu é utilidade, não cena — snappy ganha do cinematográfico aqui. */
+  panel: { duration: 0.45, ease: "power3.out" },
   /**
    * Itens entram em cascata, começando ANTES de a cortina assentar (overlap).
    *
