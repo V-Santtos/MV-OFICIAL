@@ -35,6 +35,18 @@ export function OQueEBlock({ block }: { block: SplitBlock }) {
       className={`${styles.split} ${styles.splitTall}`}
       aria-labelledby="oque-heading"
     >
+      {/* Título hasteado ACIMA das fotos — SÓ no mobile (Victor, 2026-07-24): a
+          seção empilhada entrava mostrando só foto. No desktop este é
+          display:none e o título "de verdade" segue dentro de .splitCopy. */}
+      <motion.h2
+        className={`${styles.sectionTitle} ${styles.titleHoist}`}
+        variants={revealAfter}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+      >
+        {block.title}
+      </motion.h2>
+
       <motion.div
         className={styles.pair}
         // custom = distância/sentido do deslize; 0 quando reduced-motion.

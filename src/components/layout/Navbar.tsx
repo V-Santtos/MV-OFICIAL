@@ -6,12 +6,14 @@ import gsap from "gsap";
 import { assets, brand, navLinks } from "@/content";
 import { introDelay, navCascade, onIntroReveal } from "@/lib/animation";
 import { Button } from "@/components/ui";
+import { MobileMenu } from "./MobileMenu";
 import styles from "./Navbar.module.css";
 
 export function Navbar() {
   const [revealed, setRevealed] = useState(false);
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
 
   // Navbar "inteligente" (Victor, 2026-07-17): no topo/hero a barra é ABSOLUTA —
   // rola junto e some NATURALMENTE ao descer (não desliza pra cima). Só ao rolar
@@ -64,12 +66,10 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  // ⚠️ A trava de rolagem NÃO fica mais aqui. Ela mudou de `body.overflow` pra
+  // `lenis.stop()` e vive dentro do `MobileMenu`, junto do resto do ciclo de
+  // abertura — com o Lenis rodando, `overflow:hidden` no body não basta: ele
+  // mantém o próprio loop de rAF e segue processando o scroll por baixo.
 
   // Cascata de entrada (GSAP), encadeada à intro: é a PRIMEIRA a animar quando
   // o painel sobe (sinal `onIntroReveal`) — logo → links → CTA/burger caem do
@@ -108,7 +108,7 @@ export function Navbar() {
     <>
       <nav
         ref={navRef}
-        className={`${styles.nav} ${revealed ? styles.revealed : ""}`}
+        className={`${styles.nav} ${revealed ? styles.revealed : ""} ${open ? styles.menuOpen : ""}`}
         aria-label="Navegação principal"
       >
         <div className={styles.inner}>
@@ -144,7 +144,10 @@ export function Navbar() {
             </Button>
           </div>
 
+          {/* Fica ACIMA do painel do menu (z-index no CSS) pra virar X e fechar
+              sem precisar de um segundo botão dentro da cortina. */}
           <button
+            ref={burgerRef}
             type="button"
             onClick={() => setOpen((v) => !v)}
             className={styles.burger}
@@ -154,39 +157,13 @@ export function Navbar() {
             data-reveal
           >
             <span className={styles.burgerTop} data-open={open} />
+            <span className={styles.burgerMid} data-open={open} />
             <span className={styles.burgerBottom} data-open={open} />
           </button>
         </div>
       </nav>
 
-      <div
-        id="mobile-drawer"
-        className={`${styles.drawer} ${open ? styles.drawerOpen : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menu de navegação"
-        aria-hidden={!open}
-      >
-        <button type="button" onClick={close} className={styles.drawerClose} aria-label="Fechar menu">
-          ✕ fechar
-        </button>
-        <nav>
-          <ul className={styles.drawerList}>
-            {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <a href={href} className={styles.drawerLink} onClick={close} tabIndex={open ? 0 : -1}>
-                  {label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <Button href="/#contato" onClick={close} tabIndex={open ? 0 : -1}>
-                Contato
-              </Button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <MobileMenu open={open} onClose={close} botaoRef={burgerRef} />
     </>
   );
 }

@@ -17,7 +17,13 @@
 .stage {
   position: sticky;
   top: 0;
-  height: 100vh;
+  /* `svh` (small viewport height) e NÃO `vh`: no celular o `vh` do CSS equivale
+     ao `lvh` — a altura com a barra do navegador ESCONDIDA. Com a barra visível
+     o palco fica mais alto que a área útil e o rodapé da cena é cortado.
+     `dvh` acompanharia a barra, mas reflui a cada recolhimento e faria o palco
+     pinado tremer no meio do scroll. `svh` é estável e nunca corta.
+     Em desktop os quatro são idênticos — mudança sem efeito lá. */
+  height: 100svh;
   overflow: hidden; /* clipa o marquee lateral e as fotos que sobem */
 }
 
@@ -215,6 +221,20 @@
 
   .lane[data-lane="4"] {
     width: 50vw;
+  }
+
+  /* Marquee "Quem somos" no mobile (Victor, 2026-07-24):
+     +15% maior e +15% mais rápido percebido. A duração é global (compartilhada
+     com o desktop, aprovado) — então NÃO se mexe nela; o ganho de velocidade vem
+     do tamanho: fonte 15% maior no mesmo tempo = passa 15% mais rápido em px/s.
+     E desce pra fora do corpo do parágrafo (antes cruzava as últimas linhas). */
+  .marquee {
+    top: 60vh;
+  }
+
+  .marqueeText {
+    /* 13vw → 15vw e min 4rem → 4.6rem = +15% em ambas as pontas do clamp. */
+    font-size: clamp(4.6rem, 15vw, 12rem);
   }
 }
 

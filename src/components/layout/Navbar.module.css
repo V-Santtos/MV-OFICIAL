@@ -4,8 +4,23 @@
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 50;
-  padding: 0.9rem 1.5rem;
+  /* `env(safe-area-inset-top)`: no iPhone a faixa do relógio/Dynamic Island é
+     área do sistema. Sem reservar, a logo nasce colada no horário (Victor viu
+     isso na moldura). Em telas sem entalhe o `env()` vale 0 e o fallback de
+     0.9rem manda — desktop inalterado. */
+  padding: calc(0.9rem + env(safe-area-inset-top, 0px)) 1.5rem 0.9rem;
   will-change: transform;
+}
+
+/* No celular a barra ganha respiro próprio: 0.9rem era valor de desktop e
+   deixava logo e hambúrguer grudados no topo do aparelho — no iPhone a logo
+   encostava no relógio. 3.4rem (~54px) reserva a faixa do sistema (status bar /
+   Dynamic Island) mesmo onde `env()` não resolve, e ainda soma o `env()` real
+   nos aparelhos que o expõem. */
+@media (max-width: 767px) {
+  .nav {
+    padding: calc(3.2rem + env(safe-area-inset-top, 0px)) 1.25rem 0.9rem;
+  }
 }
 
 /* REVELADA: ao rolar pra cima (fora do topo), a barra vira um card FIXO (pílula)
@@ -174,101 +189,103 @@
   font-size: 0.95rem;
 }
 
-/* Hambúrguer */
+/* ---- Hambúrguer -------------------------------------------------------
+   Vira X ao abrir. O painel do menu (`MobileMenu`) cobre a tela mas a barra
+   fica POR CIMA (ver `.menuOpen` abaixo), então este mesmo botão abre e fecha —
+   sem um segundo "✕ fechar" dentro da cortina. */
+/* Botão QUADRADO ARREDONDADO BRANCO com três traços PRETOS (Victor,
+   2026-07-23). A caixa sólida resolve de vez o contraste: antes os traços
+   viviam soltos sobre o glow azul do Hero, e o de baixo, que era
+   `--accent-primary`, SUMIA — azul sobre azul apaga (mesmo motivo que tirou a
+   cor do hover dos links, ver bloco `.link`). Branco sobre o dark do site é o
+   contraste máximo possível e não depende do que estiver atrás. */
+/* SEM PASTILHA — só os três traços brancos (Victor, 2026-07-23).
+   Histórico, pra não voltar em círculo: a caixa existiu porque o traço de baixo
+   era `--accent-primary` e SUMIA sobre o glow (azul sobre azul apaga). Isso foi
+   resolvido na fonte quando os três viraram `#ffffff` — branco sobre o glow dá
+   ~5,4:1, muito acima do 3:1 pedido pra elemento gráfico. A caixa virou cicatriz
+   de um problema que não existe mais, e criava um desequilíbrio visível: a logo
+   à esquerda é marca nua, o botão à direita era um bloco sólido com borda e
+   sombra — dois pesos diferentes na mesma linha.
+   🔑 A moldura pertence ao estado ROLADO (o card `#2e2e2e` da pílula). Topo nu,
+   chrome ao sair do Hero. Não repor fundo aqui.
+   ⚠️ A caixa de 44px CONTINUA — some o visual, não o alvo de toque. */
 .burger {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
   margin-left: auto;
-  padding: 0.5rem;
-  background: transparent;
+  /* 44px = alvo de toque mínimo confortável (agora invisível). */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
   border: 0;
   cursor: pointer;
+  transition:
+    opacity var(--duration-base) var(--easing-out),
+    transform var(--duration-fast) var(--easing-out);
 }
 
+/* Feedback tátil: no toque não há hover, então o estado que importa é o
+   `:active`. Sem caixa, quem responde é o próprio ícone — some o degrau de cor
+   de fundo, entra afundamento + leve perda de opacidade. */
+.burger:active {
+  opacity: 0.6;
+  transform: scale(0.92);
+}
+
+/* Traços um pouco mais presentes que na versão com caixa (eram 18×1,5): sem a
+   pastilha sustentando, 18px finos ficavam frágeis na cena. */
 .burgerTop,
+.burgerMid,
 .burgerBottom {
   display: block;
-  height: 1px;
-  transition: transform var(--duration-base) var(--easing-out), opacity var(--duration-fast) var(--easing-out);
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: #ffffff;
+  transition:
+    transform var(--duration-base) var(--easing-out),
+    opacity var(--duration-fast) var(--easing-out);
 }
 
-.burgerTop {
-  width: 24px;
-  background: #fff;
-}
-
+/* Aberto: vira X. O traço do meio some e os das pontas se juntam no centro —
+   `translateY` de meia distância (gap 4px + 2px de traço = 6px).
+   ⚠️ Este 6 acompanha a ALTURA do traço; mudou a espessura, refaz a conta. */
 .burgerTop[data-open="true"] {
-  transform: rotate(45deg) translate(4px, 4px);
+  transform: translateY(6px) rotate(45deg);
 }
 
-.burgerBottom {
-  width: 16px;
-  margin-left: auto;
-  background: var(--accent-primary);
+.burgerMid[data-open="true"] {
+  opacity: 0;
 }
 
 .burgerBottom[data-open="true"] {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ---- Barra com o menu ABERTO ----
+   Sobe acima do painel (z-index 55 no `MobileMenu`) pra logo e botão ficarem
+   visíveis e clicáveis sobre a cortina — o enquadramento do print do Victor:
+   logo à esquerda, hambúrguer à direita.
+   A pílula é DESMATERIALIZADA junto: se o usuário abriu o menu depois de rolar,
+   `revealed` está ligado e o card `#2e2e2e` flutuaria por cima da cortina. */
+.menuOpen {
+  z-index: 70;
+}
+
+.menuOpen .inner,
+.menuOpen.revealed .inner {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.menuOpen .inner::after {
   opacity: 0;
-}
-
-/* Drawer mobile */
-.drawer {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 16, 20, 0.97);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--duration-base) var(--easing-out), visibility var(--duration-base) var(--easing-out);
-}
-
-.drawerOpen {
-  opacity: 1;
-  visibility: visible;
-}
-
-.drawerClose {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: transparent;
-  border: 0;
-  color: var(--text-secondary);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.drawerList {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.5rem;
-  list-style: none;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-.drawerLink {
-  font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--easing-out);
-}
-
-.drawerLink:hover {
-  color: var(--accent-hover);
 }
 
 @media (min-width: 768px) {

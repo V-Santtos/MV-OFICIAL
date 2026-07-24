@@ -12,6 +12,16 @@
   margin: 0 auto;
 }
 
+/* Mobile: o respiro de topo (13vh) rende px demais no celular e soma ao vão que
+   vem do fim do Processo. Encolhe pra ~6vh — a cascata das colunas é que dá o
+   "não-tudo-de-uma-vez", não o espaço vazio (o próprio comentário acima).
+   (Victor, 2026-07-24.) */
+@media (max-width: 767px) {
+  .section {
+    padding-top: 6vh;
+  }
+}
+
 /* Respiro justo entre o título e o mural — generoso, NÃO um vão de tela cheia. */
 .beat {
   margin-bottom: 7vh;

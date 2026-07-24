@@ -32,7 +32,11 @@ export function ServicoHero({
     <header className={styles.hero}>
       <motion.div className={styles.heroInner} initial="hidden" animate="visible">
         <motion.h1 className={styles.title} variants={variants} custom={0}>
-          {title}
+          {/* Espaço EXPLÍCITO: no mobile o acento vira `inline` (ver
+              ServicoPage.module.css) e sem isto "carro" colaria em "como". No
+              desktop o acento é `display:block`, então o espaço é colapsado — sem
+              efeito lá. */}
+          {title}{" "}
           <span className={styles.titleAccent}>{titleAccent}</span>
         </motion.h1>
         <motion.p className={styles.subtitle} variants={variants} custom={1}>

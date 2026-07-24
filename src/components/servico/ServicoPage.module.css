@@ -67,6 +67,16 @@
   color: var(--accent-glint);
 }
 
+/* Mobile: acento INLINE (Victor, 2026-07-24). Com `block` o título quebrava em 4
+   linhas deixando "carro" órfão. Inline, a frase flui e a quebra gulosa cai em 3:
+   "O interior do seu" / "carro como no" / "primeiro dia". O azul começa em "como"
+   (linha 2, ao lado do "carro" branco), como pedido. Desktop mantém o `block`. */
+@media (max-width: 767px) {
+  .titleAccent {
+    display: inline;
+  }
+}
+
 .subtitle {
   max-width: 46rem;
   margin: 1.85rem auto 0;
@@ -199,6 +209,23 @@
   letter-spacing: 0.01em;
   color: var(--text-1);
   text-wrap: balance;
+}
+
+/* Título hasteado (mobile) — desktop não vê. Ver OQueEBlock.tsx. */
+.titleHoist {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .titleHoist {
+    display: block;
+    margin-bottom: clamp(1.25rem, 4vw, 1.75rem);
+    text-align: center;
+  }
+  /* No mobile o título de dentro da cópia some (o hasteado o substitui). */
+  .splitTall .splitCopy .sectionTitle {
+    display: none;
+  }
 }
 
 .bodyText {

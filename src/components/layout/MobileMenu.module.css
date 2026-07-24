@@ -1,0 +1,250 @@
+/* ============================================================
+   Menu MOBILE de tela cheia (GSAP). Painel que ENTRA PELA DIREITA — o lado do
+   hambúrguer, então o menu sai de onde o dedo tocou. (Antes descia como
+   cortina, espelhando a intro; trocado a pedido do Victor em 2026-07-23.)
+   Só existe abaixo de 768px; no desktop a pílula com os links segue mandando.
+
+   O painel é `fixed` e cobre tudo; a moldura visual (grão + poça azul no
+   topo) repete a língua do Hero pra o menu pertencer à cena.
+   ============================================================ */
+.root {
+  position: fixed;
+  inset: 0;
+  /* Acima da página (navbar em repouso = 50) e ABAIXO da navbar com o menu
+     aberto (`.menuOpen` = 70): logo e hambúrguer ficam visíveis e clicáveis
+     sobre a cortina — o enquadramento do print do Victor. */
+  z-index: 55;
+  /* Estado fechado. O GSAP dirige `autoAlpha` (opacity + visibility) —
+     `visibility` é o que impede o painel fechado de capturar toque. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Painel. Fica em elemento próprio (não no `.root`) porque o `.root` carrega
+   o autoAlpha e o painel carrega o `xPercent` — misturar os dois num só nó faz
+   a timeline reversa brigar consigo mesma. */
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-0);
+  /* Altura pequena de viewport: no celular o `100vh` é a altura SEM a barra do
+     navegador, e o menu ficaria mais alto que a área útil. */
+  height: 100svh;
+  /* ⚠️ O PAINEL não rola — quem rola é a `.rolagem` lá dentro. Assim o CTA do
+     rodapé fica SEMPRE visível, em vez de ser empurrado pra baixo da dobra.
+     No Safari do iPhone a área útil é ~691px (844 − 47 da status bar − 106 da
+     barra de endereço), e a lista de navegação + 6 serviços passava disso. */
+  overflow: hidden;
+}
+
+/* Poça azul no topo — mesmo gesto do glow do Hero, em dose menor. É o ÚNICO
+   azul ambiental do menu (o CTA é o outro, e é acento de ação).
+   ⚠️ Contido de propósito: a cauda do degradê morre dentro do próprio elemento,
+   senão o `overflow` do painel corta o glow numa linha reta (lição do glow da
+   seção de cobertura, 2026-07-23). */
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -28%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 62%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 50% 54% at 50% 50%,
+    rgba(57, 101, 200, 0.34),
+    transparent 78%
+  );
+  filter: blur(38px);
+  pointer-events: none;
+}
+
+/* Grão da marca, na camada acima da cor e abaixo do conteúdo. */
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* ⚠️ O TOPO RESERVA A FAIXA DA NAVBAR — a logo e o X flutuam POR CIMA desta
+     cortina, então o primeiro link tem que começar abaixo deles.
+     A logo termina em ~111px; com `6.5rem` (104px) o "Início" nascia
+     literalmente atrás dela (foi o que o Victor apontou). `9rem` (144px) abre
+     ~43px de respiro entre a base da logo e a primeira linha.
+     Só coube porque o CTA saiu do rodapé e devolveu ~90px. */
+  padding: 9rem 1.75rem 1.5rem;
+}
+
+/* Área que ROLA quando não cabe. `data-lenis-prevent` no elemento impede o
+   Lenis de sequestrar essa rolagem interna. O rodapé fica FORA daqui. */
+.rolagem {
+  flex: 1 1 auto;
+  min-height: 0; /* sem isto o filho flex não encolhe e a rolagem nunca aparece */
+  /* 🐞 `overflow-x: hidden` é OBRIGATÓRIO aqui, não é redundância.
+     Declarar só `overflow-y: auto` faz o `overflow-x` computar pra `auto`
+     sozinho (regra do CSS: com um eixo diferente de `visible`, o outro deixa de
+     ser `visible`). A cascata de entrada desloca os itens 26px no eixo x, isso
+     transborda por um instante e o navegador PISCA UMA BARRA DE ROLAGEM
+     HORIZONTAL branca no pé do menu. Foi o que o Victor viu em 2026-07-23.
+     Não trocar por `clip`: combinado com `auto` no outro eixo, `clip` degrada
+     pra `hidden` de qualquer jeito. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  /* Separa navegação principal de "Serviços" — são dois pesos diferentes e
+     precisam ler como dois blocos, não como uma lista só. */
+  gap: 2.5rem;
+}
+
+/* ---- Blocos ---- */
+.bloco {
+  display: flex;
+  flex-direction: column;
+}
+
+.rotulo {
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- Navegação principal — tipografia grande, com índice editorial ---- */
+.item + .item {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  /* Alvo de toque confortável: a linha inteira é clicável, não só o texto.
+     Voltou de 0.6 pra 0.85rem quando o CTA saiu do rodapé e devolveu espaço —
+     o aperto anterior existia só pra caber nos ~691px úteis do Safari. */
+  padding: 0.85rem 0;
+  min-height: 48px;
+  color: var(--text-1);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 6.2vw, 1.8rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.indice {
+  flex: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-4);
+  font-family: var(--font-body);
+}
+
+/* Feedback TÁTIL: no toque não existe hover, então o estado que importa é o
+   `:active`. Recuo curto + apagada leve = a linha "afunda" sob o dedo. */
+.link:active {
+  opacity: 0.6;
+  transform: translateX(3px);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---- Serviços — lista secundária, menor ---- */
+.servico {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  /* Subiu pros 44px de alvo confortável (era 36) — deu pra pagar depois que o
+     CTA saiu do rodapé. */
+  padding: 0.5rem 0;
+  min-height: 44px;
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.servicoItem + .servicoItem {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.servico:active {
+  color: var(--text-1);
+  opacity: 0.7;
+}
+
+.servico:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Seta discreta — indica "leva pra outra página", não decora. */
+.seta {
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+  color: var(--text-4);
+}
+
+/* ---- Rodapé do menu: só a localidade (o CTA saiu — ver MobileMenu.tsx) ---- */
+.rodape {
+  flex: none; /* fora da área que rola — fica sempre visível no pé */
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.local {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-4);
+  text-align: center;
+}
+
+/* ---- Acima de 768px o menu não existe: a pílula com os links assume. ---- */
+@media (min-width: 768px) {
+  .root {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link:active,
+  .servico:active {
+    transform: none;
+  }
+}

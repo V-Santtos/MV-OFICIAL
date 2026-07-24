@@ -59,7 +59,11 @@ export function Hero() {
               src={assets.heroCar}
               alt=""
               fill
-              sizes="(max-width: 48rem) 125vw, 72vw"
+              /* Casa com a largura real do `.car` em cada faixa: 84vw no
+                 mobile (era 125vw, herdado do `scale(1.75)` que saiu) e 72vw
+                 no desktop. Errar aqui faz o Next servir um arquivo maior que
+                 o necessário no LCP. */
+              sizes="(max-width: 48rem) 94vw, 72vw"
               quality={90}
               priority
             />

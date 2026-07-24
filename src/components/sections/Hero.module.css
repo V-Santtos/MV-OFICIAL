@@ -115,27 +115,6 @@
   object-fit: contain;
 }
 
-/* Mobile: composição 1920 fica pequena — amplia o conjunto carro+sombras a
-   partir da base e alarga o glow p/ manter a presença do azul no topo. */
-@media (max-width: 48rem) {
-  .carGroup {
-    transform: scale(1.75);
-  }
-
-  .glow {
-    left: -37vw;
-    top: -62vw;
-    width: 174vw;
-    height: 103vw;
-    filter: blur(19.5vw);
-  }
-
-  .grain {
-    top: -62vw;
-    height: 165vw;
-  }
-}
-
 /* ---------- Texto ---------- */
 
 .inner {
@@ -188,3 +167,109 @@
 }
 
 /* Selos de confiança REMOVIDOS (Victor, 2026-07-17 — decisão final). */
+
+/* ============================================================
+   MOBILE (Victor, 2026-07-23) — referência: frame do Figma que ele passou.
+   Carro INTEIRO, apoiado, com chão embaixo; logo à esquerda e hambúrguer à
+   direita no topo; texto respirando no meio.
+
+   🐞 ESTE BLOCO FICA NO FIM DO ARQUIVO — NÃO MOVER PRA CIMA.
+   Ele já esteve no meio (antes das regras de `.inner`/`.headline`/`.subtitle`)
+   e, com a MESMA especificidade, a regra posterior vencia: os ajustes de texto
+   do mobile NUNCA aplicavam. O título renderizava com a conta de desktop
+   (`23.5svh`, fonte 32px) e mexer aqui não mudava nada na tela — foi o que
+   travou a validação de 2026-07-23. Media query sem especificidade extra
+   depende da ORDEM.
+
+   🚫 O `transform: scale(1.75)` no `.carGroup` FOI REMOVIDO. Era ele que
+   espremia e cortava o carro: ampliava o conjunto a partir da base, jogando o
+   pára-choque dianteiro pra fora da tela e afundando as rodas abaixo da dobra.
+   Agora o carro é dimensionado direto, com `bottom` calculado.
+
+   🔑 A CONTA DO `bottom`: o PNG tem espaço vazio na base de propósito (é assim
+   que as rodas assentam na sombra). A linha das rodas fica a ~51% da altura da
+   CAIXA, medida a partir da base dela. Então:
+       folga_abaixo_das_rodas = 0.51 × altura_da_caixa + bottom
+   Com `width: 94vw`, a caixa tem 83vw de altura → rodas a 42,3vw da base.
+   `bottom: -21vw` deixa ~21,3vw (~83px em 390) de chão visível — folga que a
+   barra do Safari ocupa no aparelho real, então o carro não fica atrás dela.
+   ============================================================ */
+@media (max-width: 48rem) {
+  .car {
+    left: 3vw;
+    width: 94vw;
+    bottom: -21vw;
+  }
+
+  /* Sombra de contato acompanha a linha das rodas (~21,3vw da base). */
+  .carShadow {
+    left: 9vw;
+    width: 82vw;
+    height: 3.8vw;
+    bottom: 20.5vw;
+  }
+
+  /* Luz do chão logo abaixo do carro, alargada — mantém o "assoalho" iluminado
+     que a referência tem, sem vazar pra seção seguinte com força demais. */
+  .floorLight {
+    left: -14vw;
+    width: 128vw;
+    height: 16vw;
+    bottom: 13vw;
+    filter: blur(7vw);
+  }
+
+  /* Glow azul mais alto e MAIS BAIXO: no frame do Figma o azul desce até ~65%
+     da tela; com os valores de desktop ele morria perto de 20% e a dobra virava
+     um retângulo escuro. */
+  .glow {
+    left: -30vw;
+    top: -58vw;
+    width: 160vw;
+    height: 128vw;
+    filter: blur(20vw);
+  }
+
+  .grain {
+    left: -30vw;
+    top: -58vw;
+    width: 160vw;
+    height: 128vw;
+  }
+
+  /* ---- RITMO VERTICAL (medido em 390×790, o viewport da moldura) ----
+     O problema não era o título estar alto: 23,5% é o valor da referência.
+     Era a DISTRIBUIÇÃO — título/subtítulo/CTA colados entre si (28px e 25px)
+     e 122px de vão morto sobrando entre o botão e o teto do carro. O ar estava
+     todo empoçado num lugar só.
+     Cura: abrir o respiro INTERNO do bloco e descer o conjunto um pouco, para
+     o vão abaixo do CTA virar descanso de composição, não buraco.
+     O carro não entra na conta — posição dele é travada. */
+  .inner {
+    padding-top: 24.5svh;
+  }
+
+  /* ⚠️ TETO DE 8.4vw: a copy quebra em 2 linhas por `white-space: pre-line`,
+     e "MERECE O MELHOR" é a linha longa. Em 390px de tela sobram 342px úteis;
+     acima de ~8.6vw a linha estoura e o título vira 3 linhas, empurrando o
+     bloco inteiro pra cima do carro. O valor antigo (9.2vw) fazia exatamente
+     isso — só não aparecia porque a regra nunca aplicava. */
+  .headline {
+    font-size: clamp(2rem, 8.4vw, 2.35rem);
+  }
+
+  /* 🔑 O BLOCO TEM QUE AGRUPAR, não distribuir igual.
+     Título + subtítulo são UMA unidade (a afirmação); o CTA é OUTRA (a ação).
+     Com vãos parecidos (estavam 34px e 41px) os três liam como itens de uma
+     lista e o botão virava "terceiro parágrafo". A razão de ~1:2 abaixo é o
+     que faz o olho ler dois grupos em vez de três coisas soltas.
+     Não igualar estes dois valores de novo. */
+  .subtitle {
+    max-width: 32ch;
+    margin-top: clamp(1.15rem, 3.3svh, 2rem);
+  }
+
+  .ctas {
+    margin-top: clamp(2.5rem, 7.8svh, 4.5rem);
+  }
+}

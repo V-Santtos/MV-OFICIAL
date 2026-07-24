@@ -19,7 +19,10 @@
 .stage {
   position: sticky;
   top: 0;
-  height: 100vh;
+  /* `svh`, não `vh` — mesma razão do palco da Sobre: no celular o `vh` é a
+     altura SEM a barra do navegador, então com a barra visível o palco
+     transborda. `dvh` refluiria durante o scroll e faria o círculo tremer. */
+  height: 100svh;
   overflow: visible; /* deixa o círculo crescer durante a entrada sem tampa reta */
   isolation: isolate; /* mantém círculo e texto contidos no palco */
   background: #f4f4f2; /* claro: continua a ilha clara (Quem somos) */
@@ -85,4 +88,18 @@
   font-size: 1.35em;
   letter-spacing: 0;
   line-height: 0.9;
+}
+
+/* Mobile: a rampa de 260vh foi calibrada no DESKTOP (widescreen). No retrato o
+   círculo cobre a tela mais cedo (scale ~0.73, progresso ~0.93), então sobra
+   scroll morto — e o começo (bolinha minúscula) rende tela vazia. Encolher a
+   altura comprime TODA a rolagem proporcionalmente: o efeito é progress-mapped,
+   então o formato se preserva (mesma lógica da lapidação 300→260 do desktop) e a
+   cobertura segue acontecendo antes do release. NÃO toca na Sobre (fotos pinadas
+   dependem da altura DELA) — só nesta seção. Valor de calibração; ajustar no
+   olhômetro. (Victor, 2026-07-24.) */
+@media (max-width: 767px) {
+  .section {
+    height: 180vh;
+  }
 }

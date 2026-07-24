@@ -62,6 +62,22 @@
   gap: 3rem;
 }
 
+/* Mobile: "Navegação" e "Redes" LADO A LADO (Victor, 2026-07-24). A marca
+   (1º item) ocupa a linha inteira; as duas colunas de links dividem a linha de
+   baixo. O 1º filho é o invólucro `.cascadeItem` (modo animado) ou o próprio
+   `.brandCol` (reduced-motion) — o seletor pega os dois. */
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+    row-gap: 2.5rem;
+  }
+
+  .grid > *:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: 1.5fr 1fr 1fr;

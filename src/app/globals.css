@@ -40,6 +40,20 @@
   --radius-lg: 16px;
 }
 
+/* 🐞 RESERVA FIXA DA BARRA DE ROLAGEM — conserta o "flick" ao abrir o menu.
+   Abrir o menu chama `travarRolagem()` → `lenis.stop()` → `.lenis-stopped
+   { overflow: hidden }` (regra mais abaixo). Sem esta reserva, esconder o
+   overflow FAZ A BARRA SUMIR, o viewport fica ~15px mais largo e tudo que
+   depende da largura recalcula no mesmo frame: o título do Hero é `8.4vw`, e
+   ele saltava de tamanho junto com o subtítulo e o botão.
+   `stable` mantém a calha reservada mesmo sem barra, então travar a rolagem
+   deixa de mudar a largura. Não afeta o iPhone (lá a barra é sobreposta e não
+   ocupa largura) — mas afeta a moldura de preview e o desktop, que é onde o
+   Victor viu. Não remover sem tirar antes o `overflow: hidden` do lenis. */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Canvas base: fundação dark neutra (âncora #1C1C1C — Eerie Black, ref. MAX COLOR). */
 body {
   background: var(--bg-0);

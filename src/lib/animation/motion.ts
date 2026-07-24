@@ -267,6 +267,48 @@ export const heroCascade = {
 } as const;
 
 /**
+ * Menu MOBILE de tela cheia — GSAP (Victor, 2026-07-23).
+ *
+ * 3ª exceção em GSAP, junto de `intro` e das cascatas de entrada. Entra em GSAP
+ * de propósito: é uma CORTINA, exatamente o mecanismo da intro, e reusar a mesma
+ * linguagem faz o menu parecer da mesma casa em vez de um componente importado.
+ *
+ * ⚠️ ENTRA PELA LATERAL, não de cima (Victor, 2026-07-23). A versão anterior
+ * descia como cortina (`yPercent: -100 → 0`), espelhando a intro. Foi trocada:
+ * o painel desliza da DIREITA (`xPercent: 100 → 0`), que é o lado onde está o
+ * hambúrguer — o menu sai de onde o dedo tocou, em vez de cair sobre a página.
+ * Eixo diferente da intro, mas a curva segue a mesma (`power3.inOut`).
+ *
+ * A timeline é construída UMA vez e dirigida por `play()`/`reverse()`; fechar é
+ * literalmente a abertura de trás pra frente, então nunca há dois tempos
+ * diferentes pra manter em sincronia.
+ */
+export const menuOverlay = {
+  /** Painel deslizando da direita. Curva idêntica ao `intro.lift`. */
+  panel: { duration: 0.55, ease: "power3.inOut" },
+  /**
+   * Itens entram em cascata, começando ANTES de a cortina assentar (overlap).
+   *
+   * ⚠️ `opacity`, NUNCA `autoAlpha`. Um `fromTo` renderiza o estado inicial já
+   * na construção da timeline (mesmo pausada), então `autoAlpha: 0` carimbaria
+   * `visibility: hidden` nos itens desde o mount — e aí `.focus()` no primeiro
+   * link falha EM SILÊNCIO ao abrir, porque elemento invisível não entra na
+   * ordem de foco. Quem impede o menu FECHADO de capturar toque é a
+   * `visibility` do `.root`, não a dos itens.
+   */
+  items: {
+    /* Deslocamento no MESMO eixo do painel (x, não y): a cascata continua o
+       gesto lateral em vez de brigar com ele. */
+    from: { opacity: 0, x: 26 },
+    to: { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", stagger: 0.06 },
+    /** Sobreposição com o fim da cortina (segundos, negativo = antecipa). */
+    overlap: -0.28,
+  },
+  /** `prefers-reduced-motion`: sem cortina, só um fade curto. */
+  reduced: { duration: 0.2, ease: "power1.out" },
+} as const;
+
+/**
  * Reveal de texto palavra por palavra dirigido pelo SCROLL — seção "Quem somos"
  * (ilha clara). Réplica do componente `Text_reveal` da ref MetroRide: o parágrafo
  * é quebrado em palavras e cada uma vai de opacidade baixa → cheia conforme o
@@ -330,6 +372,25 @@ export const circuloReveal = {
    *  sobra morto) → sobe o output (ex. 0.80) OU o input mais pra 1.0. */
   scaleInput: [0, 0.11, 0.34, 0.985, 1.0] as [number, number, number, number, number],
   scaleOutput: [0.1, 0.1, 0.28, 0.775, 0.95] as [number, number, number, number, number],
+  /** MOBILE (retrato) — trava do estado inicial (Victor, 2026-07-24). No desktop
+   *  o círculo começa minúsculo (0.1) e cresce imperceptível; no celular esse
+   *  trecho vira VÃO BRANCO. Aqui o círculo já ENTRA GRANDE (scale 0.5 — proposta
+   *  do Victor, o "print 2" cheio) e SEGURA nesse tamanho durante TODA a entrada.
+   *  Círculo grande = preenche o branco da entrada (menos vão visível) e, por já
+   *  estar perto de cobrir, exige POUCA expansão depois de pinar (menos scroll pra
+   *  dar continuidade). Lê como intenção, não como efeito super-otimizado.
+   *  A expansão só começa em ~0.55 — o ponto onde o palco `sticky` trava em TELA
+   *  CHEIA (com a seção em 180vh, o pin acontece em progresso V/H ≈ 0.55). Antes
+   *  disso a pílula fica travada e imóvel (y=0, sem peek — ver Circulo.tsx) e sobe
+   *  junto com a página, mas NÃO expande. Cobre o RETRATO em ~0.73 (diagonal do
+   *  retrato em vmax é maior que a widescreen), ancorado no fim (0.97) pra não
+   *  sobrar scroll morto, com margem até 0.85. Selecionado por viewport no
+   *  componente (matchMedia) — NÃO afeta o desktop (scaleInput/Output acima).
+   *  ⚠️ O 0.55 é casado com os 180vh da seção (Circulo.module.css). Mudar a altura
+   *  mobile move o ponto de pin → recalcular este 2º ponto junto.
+   *  Lever do "tamanho parado": os DOIS primeiros pontos do Output (hoje 0.5). */
+  scaleInputMobile: [0, 0.55, 0.97, 1.0] as [number, number, number, number],
+  scaleOutputMobile: [0.5, 0.5, 0.73, 0.85] as [number, number, number, number],
   /** Deslocamento vertical (px) do círculo E do texto, amarrado ao scroll.
    *  NEGATIVO = pra cima. O círculo ENTRA deslocado pra cima (peek — a
    *  "beiradinha" que aparece ao entrar na seção; Victor: essencial) e RETORNA

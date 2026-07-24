@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# moldura de preview local — NUNCA vai pro deploy (ver ANEXO-REGRAS §8)
+/public/preview-mobile.html
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

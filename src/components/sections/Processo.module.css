@@ -197,6 +197,21 @@
   padding-bottom: 0;
 }
 
+/* Mobile: o padding-top de 11rem foi calibrado no DESKTOP (afastar o título do
+   fim das fotos do catálogo). No celular rende vão preto demais entre Serviços e
+   o cabeçalho "Como trabalhamos" (Victor, 2026-07-24). Encolhe SÓ o topo — o
+   padding-bottom (22vh) e o margin-top do .stack (12vh), que governam o fade do
+   título SOB o card escuro, ficam intactos. */
+@media (max-width: 767px) {
+  .section {
+    padding-top: 6rem;
+    /* Fundo da seção (fora do mecanismo do fade — o `.stack` padding-bottom:22vh,
+       load-bearing, NÃO é tocado aqui). Encolher corta parte do vão até o
+       cabeçalho dos Depoimentos sem risco ao sumiço do título. */
+    padding-bottom: 2rem;
+  }
+}
+
 /* Reduced-motion: título sem pin/blur, cards juntinhos em fluxo simples. */
 @media (prefers-reduced-motion: reduce) {
   .head {

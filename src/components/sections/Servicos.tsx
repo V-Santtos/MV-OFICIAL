@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
@@ -32,7 +32,25 @@ export function Servicos() {
   // tela, com a frase do Círculo ("Do cuidado ao resultado") já fora de cena —
   // assim não se vê os dois títulos juntos NEM a galeria antes do título.
   const revealRef = useRef<HTMLElement>(null);
-  const inView = useInView(revealRef, { once: true, margin: "0px 0px -45% 0px" });
+
+  // Mobile aperta o gatilho (Victor, 2026-07-24): no desktop o -45% é OBRIGATÓRIO
+  // — segura o título até "Do cuidado ao resultado" sair de cena (lá a frase sai
+  // só por scroll). No mobile a frase agora dá FADE+BLUR de saída no Círculo, então
+  // ela já sumiu visualmente cedo; o título pode entrar bem antes (-15%) sem os dois
+  // se cruzarem, encurtando o vão escuro da emenda.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const inView = useInView(revealRef, {
+    once: true,
+    margin: isMobile ? "0px 0px -15% 0px" : "0px 0px -45% 0px",
+  });
 
   return (
     <section id="servicos" className={styles.section} aria-labelledby="serv-heading">
