@@ -90,6 +90,7 @@ export default function RootLayout({
     // Silencia só os ATRIBUTOS deste elemento — não mascara erro de componente.
     <html
       lang="pt-BR"
+      data-booting=""
       className={`${inter.variable} ${birthstone.variable} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -98,6 +99,15 @@ export default function RootLayout({
           gerando um mismatch falso-positivo. Silencia SÓ os atributos deste
           elemento (1 nível) — não mascara erros reais dos componentes. */}
       <body className="min-h-full" suppressHydrationWarning>
+        {/* Boot skeleton (SÓ MOBILE). O Safari iOS colore a status bar amostrando
+            os PIXELS da 1ª pintura e só re-amostra em scroll — sem isto ela nasce
+            do fundo escuro (#1C1C1C) e CONGELA preta no topo (mesmo com
+            viewport-fit cover). Este painel pinta o azul do Hero na 1ª pintura,
+            então a barra nasce azul; some logo após o paint (o script abaixo tira
+            `data-booting`). Na 1ª visita a cortina da intro (z 9999) cobre este
+            painel → a barra nasce escura, casando com o loader (técnica validada
+            no case "Site Victor"). Regra herdada: NUNCA setar theme-color. */}
+        <div id="__boot" aria-hidden="true" />
         {/* Script de PRÉ-PAINT. Inline e síncrono de propósito: um componente
             client chegaria depois do primeiro paint, quando o estrago já é
             visível. Faz três coisas:
@@ -115,7 +125,7 @@ export default function RootLayout({
                Par: `IntroReveal`. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if('scrollRestoration' in history)history.scrollRestoration='manual';var n=performance.getEntriesByType('navigation')[0];if(n&&n.type==='reload'&&location.hash)history.replaceState(null,'',location.pathname+location.search);if(sessionStorage.getItem('mv:intro-played')==='1')document.documentElement.setAttribute('data-intro-done','')}catch(e){}`,
+            __html: `try{if('scrollRestoration' in history)history.scrollRestoration='manual';var n=performance.getEntriesByType('navigation')[0];if(n&&n.type==='reload'&&location.hash)history.replaceState(null,'',location.pathname+location.search);if(sessionStorage.getItem('mv:intro-played')==='1')document.documentElement.setAttribute('data-intro-done','')}catch(e){}requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.removeAttribute('data-booting')})});`,
           }}
         />
         <SmoothScroll />

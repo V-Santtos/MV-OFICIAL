@@ -103,3 +103,24 @@ html.lenis body {
 html[data-intro-done] .mv-intro-overlay {
   display: none !important;
 }
+
+/* Boot skeleton (SÓ MOBILE) — cor da status bar do iOS. Ver comentário no
+   `layout.tsx`. O Safari amostra os PIXELS da 1ª pintura pra colorir a barra do
+   topo e só re-amostra em scroll — sem isto ela nasce do #1C1C1C e CONGELA preta
+   (mesmo com viewport-fit cover). Este painel pinta o azul do Hero (#3965C8 →
+   var(--bg-0)) na 1ª pintura, então a barra nasce azul; some após o paint (o
+   script tira `data-booting`). z 100 = ABAIXO da cortina da intro (9999) e ACIMA
+   da navbar (50). Técnica validada no case "Site Victor". */
+#__boot {
+  display: none;
+}
+@media (max-width: 767px) {
+  html[data-booting] #__boot {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    background: linear-gradient(to bottom, #3965c8 0%, #3965c8 6%, var(--bg-0) 48%);
+  }
+}
