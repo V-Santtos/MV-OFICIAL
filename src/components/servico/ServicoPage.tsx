@@ -16,7 +16,7 @@
  */
 
 import Image from "next/image";
-import { contact, contactSection } from "@/content";
+import { contact, contactSection, casesPublicaveis } from "@/content";
 import type { Servico, ServicoDetalhe } from "@/content";
 import { Button, WhatsAppIcon } from "@/components/ui";
 import { ServicoHero } from "./ServicoHero";
@@ -62,6 +62,8 @@ export function ServicoDetalhePage({
   detalhe: ServicoDetalhe;
 }) {
   const { hero, oQueE, cobre, cases, faq } = detalhe;
+  // Cases que de fato vão pro ar nesta categoria (ver a regra em servico-detalhe.ts).
+  const casesVisiveis = cases ? casesPublicaveis(cases.items) : [];
 
   return (
     <article className={styles.page}>
@@ -89,12 +91,19 @@ export function ServicoDetalhePage({
           As seções "Por que higienizar o interior" (Benefícios) e "Como fazemos"
           saíram pra a página não pesar. Client component isolado — o resto do
           template segue Server Component estático. Sem foto ainda: placeholder
-          de marca no card. */}
-      {cases && (
+          de marca no card.
+
+          🚩 PUBLICAÇÃO (Victor, 2026-08-01): a seção só existe se sobrar case
+          pra mostrar. `casesPublicaveis` some com os cards de enchimento quando
+          `MOSTRAR_CASES_PLACEHOLDER` for `false`; se a categoria ficar sem
+          nenhum, o `.length` zera e NADA é renderizado — nem título, nem setas,
+          nem o padding da seção. É de propósito que a checagem seja aqui fora e
+          não dentro do CasesReel: assim não sobra um vão vazio na página. */}
+      {cases && casesVisiveis.length > 0 && (
         <CasesReel
           heading={cases.heading}
           subheading={cases.subheading}
-          items={cases.items}
+          items={casesVisiveis}
         />
       )}
 

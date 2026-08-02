@@ -1,6 +1,18 @@
 /**
- * 9 depoimentos. Migrado as-is do case congelado.
- * ⚠️ Depoimentos FICTÍCIOS — substituir por reais (com permissão) na Fase 2.
+ * 9 depoimentos — todos REAIS (clientes de verdade, mandados pelo Victor via
+ * WhatsApp). Os 4 placeholders fictícios do case congelado foram substituídos.
+ *
+ * Texto: palavras do cliente preservadas (inclusive regionalismo e voz falada).
+ * Só acento e pontuação foram ajustados, e o vocativo "Mateus" removido — o
+ * nome dele não aparece em nenhum outro lugar do site.
+ *
+ * ⚠️ ORDEM IMPORTA: Depoimentos.tsx fatia o array em 3 colunas fixas —
+ * slice(0,3) / slice(3,6) / slice(6,9). Mauriane (Nivus, "15 dias") está no
+ * índice 4 e Thayná (Nivus, "15 em 15 dias") no 8 de propósito: em colunas
+ * diferentes, pra não rolarem coladas repetindo carro e frase.
+ *
+ * `real`: campo INTERNO, nunca renderizado — marca se o depoimento é de
+ * cliente de verdade. Hoje todos true; serve pra barrar placeholder futuro.
  */
 
 export type Depoimento = {
@@ -8,62 +20,73 @@ export type Depoimento = {
   name: string;
   role: string;
   initials: string;
+  /** true = depoimento real (cliente de verdade). false = ainda placeholder fictício. */
+  real: boolean;
 };
 
 export const depoimentos: readonly Depoimento[] = [
   {
-    text: "Levei meu Corolla para higienização interna e fiquei impressionado com o resultado. O carro saiu como se fosse zero, cheiro e visual impecáveis.",
-    name: "Rafael Souza",
-    role: "Toyota Corolla — Higienização Interna",
-    initials: "RS",
+    text: "O carro ficou top, top mesmo. Depois do serviço ele virou outro: parou de rinchar, nem bate bate mais. Perfeito, nota mil pro seu trabalho.",
+    name: "José Langames",
+    role: "Toyota Hilux — Vitrificação e Higienização Interna",
+    initials: "JL",
+    real: true,
   },
   {
-    text: "Polimento técnico muito bem executado. Os riscos superficiais sumiram completamente e a pintura ficou com um brilho que eu não via desde que comprei o carro.",
-    name: "Camila Ferreira",
-    role: "Honda Civic — Polimento Técnico",
-    initials: "CF",
+    text: "Ficou top demais. O pessoal até perguntou se eu tinha pintado o carro, de tanto que ele tá brilhando. Já vou marcar uma higienização também.",
+    name: "Cleomar Bertolace",
+    role: "Toyota Corolla — Vitrificação",
+    initials: "CB",
+    real: true,
   },
   {
-    text: "Vitrificação aplicada com muita atenção ao detalhe. Atendimento honesto, sem enrolação. Recomendo sem hesitar.",
-    name: "Thiago Martins",
-    role: "Volkswagen Golf — Vitrificação",
-    initials: "TM",
+    text: "Peguei a Toro aqui agora, ficou top demais, cê tá doido. Tava precisando fazer essa estética nela, aqueles arranhões tavam me incomodando demais. Ficou show, valeu!",
+    name: "Silas Perigolo",
+    role: "Fiat Toro — Vitrificação",
+    initials: "SP",
+    real: true,
   },
   {
-    text: "Meu farol estava completamente amarelado. Depois da restauração ficou transparente de novo. Serviço rápido e resultado excelente.",
-    name: "Patrícia Lima",
-    role: "Jeep Renegade — Restauração de Faróis",
-    initials: "PL",
+    text: "Carro ficou luxo demais!",
+    name: "Gerson",
+    role: "Volkswagen Saveiro Cross — Limpeza Técnica Detalhada",
+    initials: "G",
+    real: true,
   },
   {
-    text: "Trouxe meu carro sujo de barro após uma viagem longa. A limpeza técnica foi cirúrgica — não sobrou nada na pintura. Profissionalismo acima do esperado.",
-    name: "Bruno Almeida",
-    role: "Ford Ranger — Limpeza Técnica",
-    initials: "BA",
+    text: "Tô pegando meu carro aqui, o serviço ficou impecável. Pode já marcar pra lavar de novo daqui 15 dias. Muito obrigada, ficou muito bom mesmo!",
+    name: "Mauriane Perigolo",
+    role: "Volkswagen Nivus — Higienização Interna e Limpeza de Motor",
+    initials: "MP",
+    real: true,
   },
   {
-    text: "Transparência no diagnóstico, prazo cumprido e entrega com registro fotográfico de tudo. É exatamente assim que eu espero ser atendido.",
-    name: "Gustavo Mendonça",
-    role: "Mercedes-AMG C43 — PPF + Higienização",
-    initials: "GM",
+    text: "O carro virou outro, cê tá doido. Sumiu aquele cheiro forte de poeira. Tava realmente precisando desmontar pra lavar tudo, agora dá até gosto de andar nele novamente.",
+    name: "Magno Alves",
+    role: "Fiat Palio — Higienização Interna Completa",
+    initials: "MA",
+    real: true,
   },
   {
-    text: "Fiz limpeza de motor e fiquei surpreso com o nível de cuidado. Usaram produtos corretos, sem molhar o que não podia. Nota 10.",
-    name: "Eduardo Costa",
-    role: "BMW 320i — Limpeza de Motor",
-    initials: "EC",
+    text: "Que brilho incrível que você deixou esse carro. Muito obrigado, meu amigo, pelo capricho. Deus abençoe seu trabalho.",
+    name: "Sabrina",
+    role: "RAM Rampage — Vitrificação Premium",
+    initials: "S",
+    real: true,
   },
   {
-    text: "Atendimento diferenciado desde o primeiro contato. Me explicaram tudo que seria feito antes de começar. Voltarei com certeza.",
-    name: "Aline Rocha",
-    role: "Audi A3 — Higienização + Polimento",
-    initials: "AR",
+    text: "Top demais seu trabalho, cara. Continue caprichoso e atencioso assim que você vai longe, meu amigo!",
+    name: "Cleuber",
+    role: "Chevrolet Astra — Higienização Interna",
+    initials: "C",
+    real: true,
   },
   {
-    text: "Resultado do polimento superou minhas expectativas. A equipe realmente entende do serviço e não corta caminho no processo.",
-    name: "Marcelo Dias",
-    role: "Chevrolet Onix — Polimento de Faróis",
-    initials: "MD",
+    text: "Nossa, entrei no carro aqui agora, ficou muito bom. Quero ver com você pra manter o carro limpo de 15 em 15 dias!",
+    name: "Thayná Rodrigues",
+    role: "Volkswagen Nivus — Limpeza Técnica Detalhada",
+    initials: "TR",
+    real: true,
   },
 ] as const;
 

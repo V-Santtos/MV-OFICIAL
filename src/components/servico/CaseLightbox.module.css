@@ -1,0 +1,196 @@
+/* ============================================================
+   LIGHTBOX de case — galeria em tela cheia.
+   A foto aparece INTEIRA (contain), nunca cortada: é o contrário do card,
+   que recorta em 3:4. Fundo quase opaco pra a foto ser a única coisa na tela.
+   ============================================================ */
+
+.overlay {
+  position: fixed;
+  /* NÃO usar `inset: 0` aqui. O `<html>` tem `scrollbar-gutter: stable`
+     (globals.css), e elemento fixo é posicionado dentro do bloco que EXCLUI a
+     calha — medido: o overlay cobria 375px de um viewport de 390px, sobrando
+     uma faixa de 15px na direita por onde a página aparecia. `100vw` inclui a
+     calha e fecha a tela inteira. (Mesma faixa que o menu mobile tem em aberto
+     no ANEXO — aqui já fica resolvida.) */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 120; /* acima da navbar (50) e do drawer do menu (55) */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  /* Quase opaco de propósito: a 0.94 a navbar aparecia por baixo do blur e
+     poluía o topo da galeria. Verificado que NÃO era z-index — o hit-test em
+     (60,60) já devolvia o overlay; era só transparência. */
+  background: rgba(6, 7, 9, 0.985);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.overlay:focus {
+  outline: none; /* o overlay recebe foco só pra capturar o teclado */
+}
+
+/* Fundo clicável — cobre tudo, fica ATRÁS do conteúdo. */
+.fundo {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-out;
+}
+
+/* ---- Barra de topo: contador à esquerda, fechar à direita ---- */
+.barra {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.6rem) clamp(1rem, 3vw, 2rem);
+}
+
+.contador {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums; /* o número não "pula" ao trocar de foto */
+  letter-spacing: 0.04em;
+  color: var(--text-1);
+}
+
+.contadorSep {
+  margin: 0 0.15rem;
+  color: var(--text-4);
+}
+
+.fechar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-1);
+  cursor: pointer;
+  transition:
+    background var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out);
+}
+
+@media (hover: hover) {
+  .fechar:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-strong);
+  }
+}
+
+.fechar:focus-visible,
+.seta:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ---- Palco da foto ---- */
+.palco {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 0; /* deixa o 1fr do grid encolher de verdade */
+  padding-inline: clamp(1rem, 3vw, 2rem);
+  pointer-events: none; /* o clique atravessa pro fundo; a figura reativa abaixo */
+}
+
+.figura {
+  position: relative;
+  margin: 0;
+  pointer-events: auto;
+  /* A foto define o tamanho pela ALTURA disponível — é montagem vertical (9:16),
+     então limitar pela altura é o que a mantém inteira sem estourar a tela. */
+  height: min(100%, 82vh);
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+  touch-action: pan-y; /* deixa o swipe horizontal pro framer, o vertical pro sistema */
+}
+
+.img {
+  /* CONTAIN, não cover: a montagem antes/depois tem que aparecer COMPLETA.
+     Nenhum filtro aqui de propósito — o card dessatura, a galeria mostra a
+     foto como ela é, que é onde a sujeira do "antes" precisa bater forte. */
+  object-fit: contain;
+  user-select: none;
+}
+
+/* ---- Setas laterais ---- */
+.seta {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: rgba(12, 14, 18, 0.72);
+  color: var(--text-1);
+  cursor: pointer;
+  transition:
+    background var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out);
+}
+
+@media (hover: hover) {
+  .seta:hover {
+    background: rgba(28, 32, 40, 0.92);
+    border-color: var(--border-strong);
+  }
+}
+
+.setaPrev {
+  left: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.setaNext {
+  right: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* ---- Legenda ---- */
+.legenda {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: clamp(0.9rem, 2vw, 1.4rem) clamp(1rem, 3vw, 2rem) clamp(1.2rem, 3vw, 1.8rem);
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-2);
+}
+
+/* Celular: setas menores e coladas nas bordas — o swipe é o gesto principal,
+   as setas ficam só como affordance de que dá pra trocar. */
+@media (max-width: 640px) {
+  .seta {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .figura {
+    height: min(100%, 74vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .figura {
+    transition: none;
+  }
+}

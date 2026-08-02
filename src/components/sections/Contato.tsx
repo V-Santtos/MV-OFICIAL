@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { motion } from "framer-motion";
 import { brand, contact, contactSection } from "@/content";
 import { revealHeading, revealUp } from "@/lib/animation";
@@ -168,6 +169,17 @@ export function Contato() {
   // durante a renderização.
   const { frames, wrapRef, onFrameReady, onPointerDown, onPointerEnter, onPointerLeave } =
     useMapaReset();
+
+  // Esquenta a conexão com o Google ANTES de o iframe pedir o load — o mapa é
+  // lazy (só carrega perto da viewport), mas o handshake de DNS+TLS não
+  // precisa esperar isso: preconnect durante o render é dedupado pelo React,
+  // então chamar em todo render não tem custo. Só ganho de latência, sem
+  // baixar nenhum byte a mais (Victor, 2026-07-31: mapa "demorando a carregar",
+  // pior no celular).
+  if (contact.mapsEmbedUrl) {
+    ReactDOM.preconnect("https://www.google.com");
+    ReactDOM.preconnect("https://maps.gstatic.com");
+  }
 
   return (
     <section id="contato" className={styles.section} aria-labelledby="cta-heading">

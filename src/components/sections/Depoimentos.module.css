@@ -78,6 +78,22 @@
   color: var(--text-primary);
 }
 
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.stars {
+  display: flex;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.star {
+  color: #f5b400;
+}
+
 .role {
   margin-top: 0.15rem;
   font-size: 0.775rem;

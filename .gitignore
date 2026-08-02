@@ -39,6 +39,11 @@ yarn-error.log*
 # moldura de preview local — NUNCA vai pro deploy (ver ANEXO-REGRAS §8)
 /public/preview-mobile.html
 
+# probes = ferramenta de DEV LOCAL, fica FORA do repo (ver regras/02-git-deploy-vercel.md).
+# Motivo: o pacote `playwright` baixa ~130MB de browser no postinstall, e a Vercel instala
+# devDependencies no build. Por isso `playwright` também não entra no package.json.
+/probes/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

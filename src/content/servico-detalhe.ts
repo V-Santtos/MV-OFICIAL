@@ -16,6 +16,34 @@
  * desc + CTA) — clicar no card não dá mais 404.
  */
 
+/* ============================================================
+   CASES — regra de publicação (Victor, 2026-08-01)
+   ============================================================
+   Regra dele, textual: "depois vai sair e ficar somente os preenchidos, e
+   quando não tiver case a sessão não aparece."
+
+   Hoje os 5 cards da Higienização são de ENCHIMENTO (`placeholder: true`) e
+   estão no ar SÓ pra validar o visual do reel — decisão consciente dele.
+   Quando o primeiro case real fotografado entrar, basta virar o switch abaixo
+   pra `false`: o reel passa a mostrar só os cases de verdade e, se não sobrar
+   nenhum na categoria, a seção inteira some da página (guarda em ServicoPage).
+   ============================================================ */
+
+/** `true` = mostra os cards de enchimento (validação visual). Virar pra `false`
+ *  quando houver case real. NÃO apagar os placeholders: o switch já os esconde. */
+export const MOSTRAR_CASES_PLACEHOLDER = true;
+
+/**
+ * Cases que podem ir pro ar numa categoria. Com o switch ligado devolve tudo;
+ * desligado, filtra os de enchimento. Devolver array VAZIO é o sinal de "não
+ * renderiza a seção" — quem consome tem que checar `.length`.
+ */
+export function casesPublicaveis<T extends { placeholder?: boolean }>(
+  items: readonly T[],
+): readonly T[] {
+  return MOSTRAR_CASES_PLACEHOLDER ? items : items.filter((c) => !c.placeholder);
+}
+
 export type SplitBlock = {
   title: string;
   /** Parágrafos do corpo (cada string = um <p>). */
@@ -82,8 +110,10 @@ export type ServicoDetalhe = {
       id: string;
       title: string;
       summary: string;
-      image?: string;
-      alt?: string;
+      /** Galeria; a PRIMEIRA é a capa do card. Sem fotos = placeholder de marca. */
+      fotos?: readonly { src: string; alt: string }[];
+      /** Interno, nunca renderizado — card de enchimento. Ver `casesPublicaveis`. */
+      placeholder?: boolean;
     }[];
   };
   faq: {
@@ -125,14 +155,20 @@ const higienizacaoInterna: ServicoDetalhe = {
       "A higienização interna vai atrás dela. É uma limpeza técnica e profunda de todo o interior do veículo: a sujeira impregnada nos tecidos, a poeira nas frestas e nos dutos do ar, os ácaros e micro-organismos que se instalam com o uso diário. Remover na origem — não disfarçar com perfume.",
       "É o serviço certo pra quem passa boa parte do dia no carro, transporta a família, ou quer preparar o veículo pra venda com o interior impecável.",
     ],
-    image: "/assets/servicos/higienizacao-interna-v2.jpg",
-    imageAlt: "Higienização interna em andamento — limpeza profunda do interior do veículo",
-    // ⚠️ PLACEHOLDER: polimento.jpg é stand-in (única foto do acervo com
-    // trabalho acontecendo). Quando as fotos reais chegarem: grande =
-    // resultado (interior pronto), pequeno = processo (mãos/extratora).
+    // Fotos geradas (Victor, 2026-08-02) — assinatura visual travada em
+    // regras/foto-assinatura.md. Saíram no lugar de duas stock: a grande
+    // anterior e a polimento.jpg, que era POLIMENTO EXTERNO nesta rota de
+    // higienização INTERNA e ainda repetia a foto do card "Polimento" da home
+    // (servicos.ts) — mesma imagem com dois significados na mesma visita.
+    // Semântica preservada: grande = RESULTADO, pequeno = DETALHE.
+    // 🚩 Dimensões casadas com o CSS: console 1472×1440 (ratio 1.022 = o 46/45
+    // do .pairMain), volante 800×600 (4/3 do .pairSecondary). Zero corte.
+    // Mexeu no aspect-ratio do CSS, regera a imagem junto.
+    image: "/assets/servicos/higienizacao-console.jpg",
+    imageAlt: "Console central e painel de um veículo após higienização interna, sem poeira nas frestas e nos comandos",
     imagePair: {
-      src: "/assets/servicos/polimento.jpg",
-      alt: "Detalhamento em andamento — trabalho técnico da MV (foto provisória)",
+      src: "/assets/servicos/higienizacao-volante.jpg",
+      alt: "Detalhe dos comandos do volante limpos, sem sujeira acumulada nos vãos dos botões",
     },
   },
 
@@ -245,11 +281,40 @@ const higienizacaoInterna: ServicoDetalhe = {
     heading: "Alguns trabalhos",
     subheading: "Interiores tratados na MV — cada um no seu estado de origem.",
     items: [
-      { id: "hi-1", title: "Sedan · interior completo", summary: "Bancos, forro e tapetes tratados na origem." },
-      { id: "hi-2", title: "SUV · bancos e estofados", summary: "Extração profunda nos assentos e no carpete." },
-      { id: "hi-3", title: "Hatch · pós-obra e pet", summary: "Pelos e poeira fina removidos de todos os vãos." },
-      { id: "hi-4", title: "Picape · uso pesado", summary: "Carpete e plásticos recuperados após meses de estrada." },
-      { id: "hi-5", title: "Sedan · manutenção", summary: "Higienização de rotina pra manter o interior em ponto." },
+      /* CASE 1 — REAL (Victor, 2026-08-01). Toyota Hilux de estrada de terra.
+         As 4 fotos são montagens ANTES/DEPOIS já empilhadas, 900×1600 (9:16).
+         A CAPA é a da cabine de propósito: o assoalho tomado de barro seco é a
+         imagem mais forte do conjunto e é ela que faz a pessoa abrir a galeria.
+         ⚠️ Placa do cliente aparece na foto do exterior — Victor decidiu manter
+         (2026-08-01). Copy do `summary` ainda é RASCUNHO, não escolhida por ele. */
+      {
+        id: "hilux-poeira",
+        title: "Toyota Hilux · interior completo",
+        summary: "Poeira de estrada de terra impregnada no assoalho, no painel e nos bancos.",
+        fotos: [
+          {
+            src: "/assets/cases/hilux-poeira/cabine.jpg",
+            alt: "Cabine da Toyota Hilux antes e depois da higienização: em cima, assoalho e banco cobertos de barro seco; embaixo, o mesmo assoalho e banco limpos.",
+          },
+          {
+            src: "/assets/cases/hilux-poeira/painel.jpg",
+            alt: "Painel e volante da Hilux antes e depois: em cima, poeira vermelha impregnada nos difusores e no quadro de instrumentos; embaixo, tudo limpo.",
+          },
+          {
+            src: "/assets/cases/hilux-poeira/multimidia.jpg",
+            alt: "Central multimídia e comandos do ar da Hilux antes e depois: em cima, tela e botões tomados de poeira; embaixo, limpos e legíveis.",
+          },
+          {
+            src: "/assets/cases/hilux-poeira/exterior.jpg",
+            alt: "Toyota Hilux branca antes e depois: em cima, lataria e rodas encardidas de barro; embaixo, o veículo limpo.",
+          },
+        ],
+      },
+      { id: "hi-1", title: "Sedan · interior completo", summary: "Bancos, forro e tapetes tratados na origem.", placeholder: true },
+      { id: "hi-2", title: "SUV · bancos e estofados", summary: "Extração profunda nos assentos e no carpete.", placeholder: true },
+      { id: "hi-3", title: "Hatch · pós-obra e pet", summary: "Pelos e poeira fina removidos de todos os vãos.", placeholder: true },
+      { id: "hi-4", title: "Picape · uso pesado", summary: "Carpete e plásticos recuperados após meses de estrada.", placeholder: true },
+      { id: "hi-5", title: "Sedan · manutenção", summary: "Higienização de rotina pra manter o interior em ponto.", placeholder: true },
     ],
   },
 

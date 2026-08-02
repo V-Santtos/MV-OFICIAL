@@ -127,6 +127,12 @@ export function Navbar() {
             className={styles.logo}
             data-reveal
           >
+            {/* ⚠️ PNG de propósito, NÃO trocar pelo SVG de `ui/logo.ts`
+                (tentado e revertido em 2026-08-01). O vetor NÃO é fiel ao
+                original: no PNG existe um respiro entre o chevron e o corpo do
+                "M", e no traçado vetorizado as duas formas se encostam. O SVG
+                serve pra intro (onde o contorno é desenhado), não pra marca
+                parada. Ver ANEXO-MEMORIA antes de mexer. */}
             <Image
               src={assets.logo}
               alt={brand.name}

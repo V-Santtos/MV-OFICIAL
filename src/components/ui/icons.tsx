@@ -29,6 +29,14 @@ export function FacebookIcon({ size = 16, className }: IconProps) {
   );
 }
 
+export function StarIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M12 2.5l2.917 6.4 6.998.62-5.31 4.66 1.6 6.87L12 17.35l-6.205 3.7 1.6-6.87-5.31-4.66 6.998-.62L12 2.5z" />
+    </svg>
+  );
+}
+
 /** Resolve o ícone social pelo identificador salvo em content/brand. */
 export const socialIcons = {
   whatsapp: WhatsAppIcon,

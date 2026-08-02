@@ -4,8 +4,19 @@ import { Fragment, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { depoimentos, depoimentosMeta, type Depoimento } from "@/content";
 import { SectionHeading, Avatar } from "@/components/ui";
+import { StarIcon } from "@/components/ui/icons";
 import { columnCascade } from "@/lib/animation";
 import styles from "./Depoimentos.module.css";
+
+function Stars() {
+  return (
+    <div className={styles.stars} aria-label="Avaliação 5 de 5 estrelas">
+      {Array.from({ length: 5 }, (_, i) => (
+        <StarIcon key={i} size={12} className={styles.star} />
+      ))}
+    </div>
+  );
+}
 
 const col1 = depoimentos.slice(0, 3);
 const col2 = depoimentos.slice(3, 6);
@@ -48,7 +59,10 @@ function Column({
                 <figcaption className={styles.person}>
                   <Avatar initials={initials} label={name} />
                   <div>
-                    <p className={styles.name}>{name}</p>
+                    <div className={styles.nameRow}>
+                      <p className={styles.name}>{name}</p>
+                      <Stars />
+                    </div>
                     <p className={styles.role}>{role}</p>
                   </div>
                 </figcaption>
