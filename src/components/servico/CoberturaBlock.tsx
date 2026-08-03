@@ -29,6 +29,7 @@ export function CoberturaBlock({
     intro: string;
     items: readonly CobreItem[];
     note?: string;
+    cortesia?: { label: string; text: string };
     crossLink?: { label: string; desc: string; slug: string };
   };
 }) {
@@ -79,13 +80,35 @@ export function CoberturaBlock({
           ))}
         </motion.ul>
 
+        {/* 🎁 FAIXA DE CORTESIA — o brinde do flyer da categoria. Entra na
+            cascata logo DEPOIS do 6º card (custom = items.length) e empurra o
+            crossLink pro passo seguinte, então a ordem de leitura fica: cobre →
+            dá de brinde → categoria vizinha. Chave ausente = nada renderiza. */}
+        {cobre.cortesia && (
+          <motion.div
+            className={styles.cobreCortesia}
+            initial="hidden"
+            animate={cardsState}
+            variants={staggerFadeIn}
+            custom={cobre.items.length}
+          >
+            <div className={styles.cortesiaFaixa}>
+              <span className={styles.cortesiaFilete} aria-hidden="true" />
+              <span className={styles.cortesiaTexto}>
+                <span className={styles.cortesiaLabel}>{cobre.cortesia.label}</span>
+                <p className={styles.cortesiaFrase}>{cobre.cortesia.text}</p>
+              </span>
+            </div>
+          </motion.div>
+        )}
+
         {cobre.crossLink && (
           <motion.div
             className={styles.cobreRelatedRow}
             initial="hidden"
             animate={cardsState}
             variants={staggerFadeIn}
-            custom={cobre.items.length}
+            custom={cobre.items.length + (cobre.cortesia ? 1 : 0)}
           >
             <Link
               href={`/servicos/${cobre.crossLink.slug}`}

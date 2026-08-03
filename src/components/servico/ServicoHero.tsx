@@ -16,10 +16,13 @@ export function ServicoHero({
   title,
   titleAccent,
   subtitle,
+  accentInline,
 }: {
   title: string;
   titleAccent: string;
   subtitle: string;
+  /** Ver o comentário em `ServicoDetalhe.hero.accentInline` (servico-detalhe.ts). */
+  accentInline?: boolean;
 }) {
   const reduce = useReducedMotion();
   // reduced-motion: mantém o fade, remove o y (a variante herda o custom, mas a
@@ -37,7 +40,15 @@ export function ServicoHero({
               desktop o acento é `display:block`, então o espaço é colapsado — sem
               efeito lá. */}
           {title}{" "}
-          <span className={styles.titleAccent}>{titleAccent}</span>
+          <span
+            className={
+              accentInline
+                ? `${styles.titleAccent} ${styles.titleAccentInline}`
+                : styles.titleAccent
+            }
+          >
+            {titleAccent}
+          </span>
         </motion.h1>
         <motion.p className={styles.subtitle} variants={variants} custom={1}>
           {subtitle}

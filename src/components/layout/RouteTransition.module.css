@@ -1,0 +1,34 @@
+/* Cortina de transição entre rotas — irmã da intro (IntroReveal.module.css).
+   Mesmo painel, mesma logo, mesmo z-index de "cobre tudo", só que ela ENTRA por
+   baixo e sai pelo topo, e volta a esperar fora da tela depois de cada uso. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Um degrau ABAIXO da intro (9999): se as duas existissem no mesmo instante
+     — abertura ainda subindo e um clique já disparado — quem manda é a intro. */
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-0);
+  /* Estacionada fora da tela, por baixo. O GSAP assume daqui (yPercent). */
+  transform: translateY(100%);
+  /* ⚠️ `visibility` (não só o transform): painel fora da tela ainda captura
+     toque em alguns navegadores e entra na ordem de foco. O componente liga e
+     desliga isto à mão, no mesmo frame do início/fim da timeline. */
+  visibility: hidden;
+  will-change: transform;
+}
+
+.logo {
+  /* Mesmo tamanho da logo da abertura — é a mesma marca, mesma presença. */
+  width: clamp(92px, 11vw, 124px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  /* Invisível até o GSAP preparar o traço; sem isto a logo cheia pisca no
+     primeiro frame de cada transição. O componente revela via autoAlpha. */
+  opacity: 0;
+  visibility: hidden;
+}

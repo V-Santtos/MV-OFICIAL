@@ -79,6 +79,7 @@ export function ServicoDetalhePage({
         title={hero.title}
         titleAccent={hero.titleAccent}
         subtitle={hero.subtitle}
+        accentInline={hero.accentInline}
       />
 
       {/* O QUE É — foto grande à esquerda (desliza e assenta), texto à direita. */}

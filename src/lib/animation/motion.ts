@@ -237,6 +237,47 @@ export const intro = {
 } as const;
 
 /**
+ * Transição entre ROTAS — a mesma cortina com o "M" da abertura, em ritmo de
+ * navegação (Victor, 2026-08-03). Home → categoria e categoria → home passam
+ * pela logo se desenhando, em vez do flash branco da recarga.
+ *
+ * É a irmã rápida da `intro`: mesma técnica (`strokeDashoffset` + timeline),
+ * mesma paleta, mesma DIREÇÃO de movimento — o painel entra por baixo e sai
+ * pelo topo, sempre subindo, como a cortina da abertura. Só o tempo muda:
+ * ~1,6s contra os ~2,4s da intro. A abertura é cena e acontece uma vez por aba;
+ * a transição acontece a cada clique, e a 2,4s ela viraria pedágio.
+ *
+ * Onde não dá pra cortar: o `draw`. Abaixo de ~0,5s o traço deixa de ser lido
+ * como desenho e vira um piscar. O que saiu foi o `hold` da intro (a pausa com
+ * a logo cheia) — aqui a navegação acontece nesse lugar.
+ *
+ * Orquestração em `components/layout/RouteTransition`.
+ */
+export const routeTransition = {
+  /** Painel entra POR BAIXO cobrindo a tela (yPercent 100 → 0). */
+  cover: { duration: 0.45, ease: "power3.inOut" },
+  /** Traço do contorno — as duas formas em stagger, como na intro. */
+  draw: { duration: 0.6, ease: "power2.inOut", stagger: 0.1 },
+  /** Preenche e apaga o traço. A rota troca no fim disto, com a tela coberta. */
+  fill: { duration: 0.25, ease: "power1.in", stagger: 0.06 },
+  /** Sobreposição fill↔draw. ⚠️ STRING: número é tempo ABSOLUTO na timeline do
+   *  GSAP e inverteria a ordem — foi o bug do delay de 280ms no menu mobile
+   *  (ver `menuOverlay.items.overlap`). */
+  fillOverlap: "-=0.1",
+  /** Painel sai PELO TOPO revelando a rota nova (yPercent 0 → -100). */
+  reveal: { duration: 0.5, ease: "power3.inOut" },
+  /**
+   * Teto de espera pela rota nova (ms), contado de quando a tela fica coberta.
+   *
+   * A revelação normalmente espera o `pathname` virar o destino de verdade — as
+   * 6 rotas são estáticas e o `<Link>` já as prefetcha, então isso é imediato.
+   * Numa conexão ruim, porém, ficar preso atrás de uma cortina é pior que ver a
+   * página montando: passado este teto, revela de qualquer jeito.
+   */
+  esperaMaxima: 2500,
+} as const;
+
+/**
  * Cascata de entrada do Hero — GSAP, disparada pelo sinal `onIntroReveal`
  * (introSignal) no instante em que o painel da intro sobe. Título → subtítulo →
  * CTA sobem em stagger enquanto a "cortina" revela a cena, então o visitante

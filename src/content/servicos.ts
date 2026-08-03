@@ -29,8 +29,11 @@ export type Servico = {
 
 export const servicos: readonly Servico[] = [
   {
-    title: "Higienização Interna",
-    slug: "higienizacao-interna",
+    // Renomeado de "Higienização Interna" (Victor, 2026-08-03): a categoria
+    // passou a comunicar interior + exterior. Slug mudou junto — redirect
+    // permanente da rota antiga em next.config.ts.
+    title: "Higienização Completa",
+    slug: "higienizacao-completa",
     desc: "Limpeza profunda de painel, carpetes, teto e superfícies internas, devolvendo frescor e conservação ao interior do veículo.",
     image: "/assets/servicos/higienizacao-interna-v2.jpg",
     alt: "Higienização interna do veículo — limpeza de superfícies internas",
@@ -50,7 +53,7 @@ export const servicos: readonly Servico[] = [
     alt: "Limpeza do compartimento do motor",
   },
   {
-    title: "Polimento",
+    title: "Polimento Detalhado",
     slug: "polimento",
     desc: "Correção de riscos, oxidação e imperfeições da pintura e dos faróis, restaurando brilho e profundidade ao acabamento.",
     image: "/assets/servicos/polimento.jpg",

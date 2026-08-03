@@ -2,18 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { assets, brand, navLinks } from "@/content";
 import { introDelay, navCascade, onIntroReveal } from "@/lib/animation";
 import { Button } from "@/components/ui";
 import { MobileMenu } from "./MobileMenu";
+import { ehCliqueSimples, useRouteTransition } from "./RouteTransition";
 import styles from "./Navbar.module.css";
+
+/** Destino de "Início" e da logo. Fora da home é troca de rota; na home, âncora. */
+const HOME_HREF = "/#hero";
 
 export function Navbar() {
   const [revealed, setRevealed] = useState(false);
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const { transitionTo } = useRouteTransition();
+
+  /**
+   * Volta pra home (logo e "Início").
+   *
+   * ESTANDO NUMA ROTA DE SERVIÇO isso é troca de rota, e passa pela cortina da
+   * logo (Victor, 2026-08-03) — antes era recarga completa, com o flash branco
+   * no meio. NA PRÓPRIA HOME segue sendo âncora nativa: o `<a href="/#hero">`
+   * rola até o topo como sempre fez, comportamento já validado que não vale a
+   * pena trocar por navegação client-side só pra uniformizar.
+   */
+  const voltarPraHome = (e: React.MouseEvent) => {
+    if (pathname === "/" || !ehCliqueSimples(e)) return;
+    e.preventDefault();
+    transitionTo("/");
+  };
 
   // Navbar "inteligente" (Victor, 2026-07-17): no topo/hero a barra é ABSOLUTA —
   // rola junto e some NATURALMENTE ao descer (não desliza pra cima). Só ao rolar
@@ -122,9 +144,10 @@ export function Navbar() {
       >
         <div className={styles.inner}>
           <a
-            href="/#hero"
+            href={HOME_HREF}
             aria-label={`${brand.name} — início`}
             className={styles.logo}
+            onClick={voltarPraHome}
             data-reveal
           >
             {/* ⚠️ PNG de propósito, NÃO trocar pelo SVG de `ui/logo.ts`
@@ -146,7 +169,13 @@ export function Navbar() {
           <ul className={styles.links}>
             {navLinks.map(({ href, label }) => (
               <li key={href} data-reveal>
-                <a href={href} className={styles.link}>
+                {/* Só "Início" passa pela cortina (e só fora da home). Os
+                    demais são ÂNCORAS da home e seguem como estavam. */}
+                <a
+                  href={href}
+                  className={styles.link}
+                  onClick={href === HOME_HREF ? voltarPraHome : undefined}
+                >
                   {label}
                 </a>
               </li>

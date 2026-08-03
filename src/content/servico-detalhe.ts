@@ -115,6 +115,13 @@ export type ServicoDetalhe = {
     /** Linha 2 do H1 — frase de destaque (acento controlado). */
     titleAccent: string;
     subtitle: string;
+    /** 🚩 Escape hatch (Victor, 2026-08-03, Bancos e Estofados): quando uma
+     *  palavra do `title` (branca) precisa continuar na MESMA linha visual do
+     *  `titleAccent` (azul) — ex. "tratados" branco colado em "de acordo"
+     *  azul. Sem isto o `titleAccent` sempre abre linha própria no desktop
+     *  (`display:block`), o que impede cor mista na mesma linha. Default
+     *  (`undefined`) preserva o comportamento das outras 5 rotas. */
+    accentInline?: boolean;
   };
   /** Seção "O que é / o que resolve" — foto de um lado, texto do outro. */
   oQueE: SplitBlock;
@@ -126,6 +133,15 @@ export type ServicoDetalhe = {
     items: readonly CobreItem[];
     /** Linha de fecho reforçando a flexibilidade (avulso | pacote). */
     note?: string;
+    /** 🎁 BÔNUS declarado no flyer real da categoria (Victor, 2026-08-03):
+     *  serviço que entra junto, sem custo. Renderiza como FAIXA PRÓPRIA entre o
+     *  grid e o `crossLink`, não como 7º card — o grid é de 3 colunas, e um card
+     *  a mais ficaria órfão sozinho na 3ª linha. A faixa também é o lugar certo
+     *  semanticamente: os 6 cards são o que a categoria COBRE; isto é o que ela
+     *  DÁ. 🚩 Está no ar aguardando validação do dono da estética (ele ainda vai
+     *  reler as copies e pode recuar da cortesia) — se cair, some a chave e a
+     *  faixa desaparece sozinha, sem tocar em componente. */
+    cortesia?: { label: string; text: string };
     /** Cruzamento com outra categoria (ex.: bancos têm página própria). */
     crossLink?: { label: string; desc: string; slug: string };
   };
@@ -174,27 +190,32 @@ const higienizacaoInterna: ServicoDetalhe = {
     "Higienização interna em Simonésia, MG: painel, carpetes, teto, ar-condicionado e odores tratados na origem. Avaliação gratuita antes do serviço.",
   hero: {
     eyebrow: "Estética automotiva · Interior",
-    title: "O interior do seu carro",
-    titleAccent: "como no primeiro dia",
-    // Pórtico da página (Victor, 2026-07-18): a primeira tela é só título +
-    // subtítulo, MUITO ar, sem foto e sem "aula". O subtítulo CONVERSA sobre o
-    // valor (frescor/conforto/sensação), não ensina o que é a higienização — a
-    // definição técnica desce pro "O que é". Placeholder (refinar em conjunto).
+    // Título e subtítulo lapidados em conjunto com o Victor (2026-08-03):
+    // categoria renomeada de "Higienização Interna" pra "Completa" — o título
+    // já entrega a ideia de interior+exterior sem precisar de seção própria
+    // pra parte externa (que aparece em detalhe só no "O que cobre").
+    // 🚩 O `\n` é a quebra de linha ESCOLHIDA pelo Victor (2026-08-03): sem ele
+    // o navegador quebrava em "…do seu / carro como", com a 2ª linha curta
+    // demais. Só vale no desktop (`white-space: pre-line` no .title); no mobile
+    // vira espaço comum e a frase flui sozinha. Ver ServicoPage.module.css.
+    title: "O interior e o exterior\ndo seu carro como",
+    titleAccent: "no primeiro dia.",
+    // Registro revisado (Victor, 2026-08-03): a versão anterior foi apontada
+    // como "melosa" — queria linguagem fácil e benefício direto, não cena
+    // emocional nem tom de venda.
     subtitle:
-      "Mais do que limpar o que se vê: o frescor, o conforto e a sensação de carro novo de volta — toda vez que você abre a porta.",
+      "Limpeza de verdade por dentro, sem cheiro nem poeira escondida,\ncom mais conforto no seu dia a dia.",
   },
 
   oQueE: {
-    // Copy problema→solução (Parte 1 do passe de estrutura/copy, 2026-07-18):
-    // título nomeia o SINTOMA (não o serviço — visitante de anúncio se
-    // reconhece antes da definição); §1 = sintomas reconhecíveis; §2 = a
-    // definição técnica + linha-âncora da categoria ("remover na origem");
-    // §3 = o texto anterior, que já estava validado.
+    // Corpo reescrito com o Victor (2026-08-03), no lugar dos 3 parágrafos de
+    // cena+definição+público-alvo: ele pediu linguagem fácil e foco em
+    // benefício, sem tom de venda. Texto entregue por ele, só lapidado por mim
+    // (paralelismo da lista + troca de "limpeza técnica" por "processo
+    // técnico", que já é eco do título).
     title: "O que a limpeza comum não alcança",
     body: [
-      "Aquele cheiro que volta mesmo depois de lavar. A mancha no banco que já virou parte do carro. O que as crianças — e o pet — deixam pra trás e ninguém vê. Se você se reconheceu, não é falta de limpeza: é sujeira acumulada onde a limpeza comum não chega.",
-      "A higienização interna vai atrás dela. É uma limpeza técnica e profunda de todo o interior do veículo: a sujeira impregnada nos tecidos, a poeira nas frestas e nos dutos do ar, os ácaros e micro-organismos que se instalam com o uso diário. Remover na origem — não disfarçar com perfume.",
-      "É o serviço certo pra quem passa boa parte do dia no carro, transporta a família, ou quer preparar o veículo pra venda com o interior impecável.",
+      "A higienização completa trata o interior do carro em profundidade: os tecidos, os bancos, o painel, o ar-condicionado e as frestas onde a sujeira se acumula. É um processo técnico que pode ser feito por dentro, por fora ou nos dois, num cuidado único.",
     ],
     // Fotos geradas (Victor, 2026-08-02) — assinatura visual travada em
     // regras/foto-assinatura.md. Saíram no lugar de duas stock: a grande
@@ -233,12 +254,12 @@ const higienizacaoInterna: ServicoDetalhe = {
         desc: "Higienização do volante, manopla e botões — os pontos de mais contato do dia a dia.",
       },
       {
-        title: "Carpetes e tapetes",
-        desc: "Extração profunda da sujeira impregnada no assoalho e nos tapetes.",
-      },
-      {
-        title: "Teto e forros",
-        desc: "Limpeza cuidadosa do teto, colunas e forros, respeitando cada material.",
+        // FUNDIDO (Victor, 2026-08-03): eram dois cards, "Carpetes e tapetes" e
+        // "Teto e forros". Viraram um só — as duas são as superfícies de tecido
+        // do carro — pra abrir o slot do card de lavagem externa, sem o site
+        // deixar de comunicar o teto (que o catálogo da MV entrega de fato).
+        title: "Carpetes, teto e forros",
+        desc: "Extração profunda no assoalho e nos tapetes, e limpeza do teto e das colunas respeitando cada material.",
       },
       {
         // Sem "perfume por cima" aqui: a tese vive na linha-âncora do "O que é"
@@ -251,6 +272,14 @@ const higienizacaoInterna: ServicoDetalhe = {
         // (Parte 1) — repetir aqui enfraqueceria os dois.
         title: "Frestas e detalhes",
         desc: "Saídas de ar, botões, trilhos e os cantos onde a sujeira se esconde.",
+      },
+      {
+        // Card que sustenta o "Completa" do nome da categoria (Victor,
+        // 2026-08-03): é o único item da lista que sai do interior. Entrou no
+        // slot aberto pela fusão de "Carpetes e tapetes" + "Teto e forros".
+        // Texto escrito pelo Victor, itens vindos do catálogo real da MV.
+        title: "Lavagem externa",
+        desc: "Pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e maçanetas.",
       },
     ],
     // Nota com trabalho PRÓPRIO (a versão anterior repetia a intro): fecha a
@@ -363,8 +392,15 @@ const higienizacaoInterna: ServicoDetalhe = {
     title: "Perguntas frequentes",
     items: [
       {
-        q: "Quanto tempo leva uma higienização interna?",
+        q: "Quanto tempo leva uma higienização completa?",
         a: "Depende do estado do veículo. Na avaliação gratuita a gente te passa o prazo certo antes de começar — sem surpresa.",
+      },
+      {
+        // Adicionada (Victor, 2026-08-03): a categoria virou "Completa" e o
+        // corpo do "O que é" agora diz que dá pra escolher interior, exterior
+        // ou os dois — sem essa pergunta, nenhum FAQ confirmava isso na prática.
+        q: "Dá pra fazer só a parte interna ou só a externa?",
+        a: "Dá sim. A higienização completa cobre as duas frentes, mas você escolhe o que faz sentido pro seu carro — só o interior, só a lavagem externa, ou os dois juntos.",
       },
       {
         q: "Remove qualquer mancha ou odor?",
@@ -411,26 +447,41 @@ const polimento: ServicoDetalhe = {
     "Polimento em Simonésia, MG: correção de riscos, teias de lavagem, oxidação e faróis amarelados. Avaliação gratuita antes de qualquer serviço.",
   hero: {
     eyebrow: "Estética automotiva · Pintura",
-    title: "A pintura do seu carro",
+    // 🔑 2ª rodada (2026-08-03, pedido do Victor): a rota passa a FUNDIR dois
+    // serviços — polimento de pintura e polimento de farol — mesmo molde da
+    // Higienização Completa (interior+exterior numa rota só). "E o farol"
+    // entra direto no título em vez de ficar só escondido no card 4 do "O que
+    // cobre"; o accent "de volta ao brilho" segue valendo pros dois, sem
+    // precisar reescrever (brilho da pintura, transparência do farol — a
+    // frase não afirma nada técnico demais pra quebrar com o farol).
+    // 🚩 `\n` trava a quebra ANTES do navegador orfanizar "carro" sozinho numa
+    // linha (aconteceu na 1440 antes deste ajuste — ver
+    // `quebra-de-linha-titulos-hero`, ler antes de mexer aqui de novo).
+    title: "A pintura e o farol\ndo seu carro",
     titleAccent: "de volta ao brilho",
-    // Mesma função do subtítulo da Higienização: fala do VALOR, não ensina o
-    // que é polimento (a definição técnica desce pro "O que é"). A imagem do
-    // reflexo "que está debaixo das marcas" é o gancho: diz que o brilho não
-    // acabou, está coberto — que é exatamente o que o serviço resolve.
+    // Nomeia os dois sintomas explicitamente, com o mesmo verbo espelhado
+    // ("perdeu"/"perdeu") pra não parecer dois textos colados. `\n` marca a
+    // quebra no fim da 1ª oração, mesma receita do resto da rota.
     subtitle:
-      "O reflexo que a pintura perdeu não foi embora de vez. Ele está debaixo das marcas que o tempo deixou no verniz.",
+      "O reflexo que a pintura perdeu não sumiu.\nNem a transparência que o farol perdeu por baixo do amarelado.",
   },
 
   oQueE: {
-    // Título nomeia o SINTOMA, não o serviço (mesma regra da Higienização):
-    // quem chega de anúncio se reconhece antes de saber o nome do serviço.
-    // "Só aparecem no sol" é a descrição literal de teia de lavagem, e é o
-    // momento exato em que o dono repara no problema.
-    title: "As marcas que só aparecem no sol",
+    // 🐞 Título trocado (2026-08-03): "As marcas que só aparecem no sol" era
+    // exato pra teia de lavagem (some em luz difusa, só aparece em luz direta
+    // e rasante), mas NÃO é verdade pro farol — o amarelado é visível em
+    // qualquer luz. Manter a frase cobrindo os dois seria afirmar sem
+    // critério (o defeito que já custou caro na rota de Motor — ver
+    // `copy-nao-afirmar-sem-criterio`). Título novo nomeia os dois sintomas em
+    // espelho, mesmo molde de "Couro e tecido não se limpam igual" (Bancos).
+    title: "Pintura sem brilho, farol sem transparência",
+    // Corpo reescrito pra encaixar os dois: mesma causa (sol, ao longo dos
+    // anos, sobre dois materiais diferentes — verniz e policarbonato) →
+    // tratamento próprio pra cada um, na construção "cada um sai de um jeito:
+    // X; Y" que já funcionou em Bancos e Estofados (couro por pH+hidratação,
+    // tecido por extração) → benefício dos dois juntos no fecho.
     body: [
-      "Aquelas teias finas que surgem quando o sol bate na porta. O risco de anel em volta do puxador. A cor que já não devolve reflexo nenhum. Se você se reconheceu, não é falta de lavagem: são anos de marca acumulada no verniz.",
-      "O polimento vai atrás delas. É a correção da camada de verniz por abrasão controlada, com máquina, boina e composto escolhidos pelo estado de cada pintura, nivelando o risco em vez de preencher. Corrigir a pintura, não encobrir com cera.",
-      "É o serviço certo pra quem vai vender o veículo, pra quem pretende vitrificar depois (a proteção pede pintura corrigida antes) ou pra quem cansou de olhar o carro e não enxergar mais a cor.",
+      "Teias finas na lataria, o risco de anel no puxador e o farol amarelado têm a mesma origem: anos de sol sobre o verniz e sobre o policarbonato. Cada um sai de um jeito — na pintura, por abrasão controlada que nivela o risco em vez de disfarçar com cera; no farol, removendo a camada oxidada até a luz voltar a passar limpa. Nos dois casos, o serviço fecha com uma proteção por cima, pra segurar o resultado por mais tempo.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito
     // (ver o cabeçalho deste objeto). `polimento.jpg` é a foto do card da home.
@@ -443,36 +494,59 @@ const polimento: ServicoDetalhe = {
   },
 
   cobre: {
-    // Mesma construção do "Do volante ao carro inteiro": vai do PONTO pro TODO,
-    // comunicando que dá pra contratar avulso ou completo.
-    title: "Do risco isolado à pintura inteira",
-    intro: "É isto que entra quando você faz o polimento completo.",
+    // 🐞 Título trocado (2026-08-03, pedido do Victor): era "Do risco isolado à
+    // pintura inteira" — a mesma fôrma "do PONTO pro TODO" que ele já cortou em
+    // Bancos ("soa gíria de quem já entende de carro") e em Motor. Título vira
+    // rótulo funcional (mesmo molde de Motor: "O que a limpeza completa
+    // cobre") e a faixa ponto-a-ponto desce pro subtítulo — aqui não é a ordem
+    // real do serviço (isso é o campo `processo`, não renderizado), é o
+    // primeiro e o último item da lista abaixo.
+    title: "O que o polimento completo cobre",
+    intro: "Da correção da pintura à proteção do resultado.",
     items: [
       {
+        // 🐞 Era "Remoção de riscos superficiais, teias de lavagem e marcas do
+        // uso diário" — só listava o que some, sem dizer como nem por quê (o
+        // defeito genérico que o Victor pediu pra caçar nesta rota). Agora diz
+        // o que muda entre um painel e outro, sem prometer corrigir risco
+        // fundo (o FAQ já é honesto que isso não sai no polimento).
         title: "Correção da pintura",
-        desc: "Remoção de riscos superficiais, teias de lavagem e marcas do uso diário.",
+        desc: "Cada painel recebe o corte que o estado do verniz pede, sem aplicar a mesma agressividade no carro inteiro.",
       },
       {
         title: "Oxidação e opacidade",
-        desc: "Recuperação da cor em pinturas apagadas pelo sol e pelo tempo.",
+        // Mecanismo: o que o sol faz e o que o polimento reverte.
+        desc: "O sol resseca a camada externa do verniz até ela embaçar; o polimento remove essa camada e expõe a cor viva por baixo.",
       },
       {
+        // Diferencia do card de Correção: aqui o composto é mais fino, é outra
+        // etapa (refino corrige o que o corte deixa), não o mesmo passo citado
+        // no "O que é".
         title: "Refino e lustro",
-        desc: "Passes finais que fecham o verniz e devolvem profundidade ao reflexo.",
+        desc: "O corte inicial pode deixar microrrisco no verniz; o refino usa boina e composto mais finos até o reflexo voltar nítido.",
       },
       {
-        title: "Faróis",
-        desc: "Polimento dos faróis amarelados, devolvendo transparência ao facho de luz.",
+        // 🐞 Era "Polimento dos faróis amarelados..." — repetia a palavra do
+        // título logo na abertura. Título ganhou o sintoma ("amarelados"), a
+        // desc virou o porquê: é oxidação do policarbonato pelo UV, mesma
+        // lógica da pintura, mecanismo diferente.
+        // 🔑 2ª rodada (2026-08-03): acréscimo da proteção final, que o flyer
+        // real da MV lista como parte do serviço ("Aplicação de proteção na
+        // lente"). Sem inventar prazo — a durabilidade específica vive no FAQ.
+        title: "Faróis amarelados",
+        desc: "O amarelado é oxidação do policarbonato pelo sol; o polimento desgasta essa camada e devolve transparência ao facho, com uma proteção aplicada por cima pra segurar o resultado.",
       },
       {
+        // Porquê a descontaminação existe como etapa própria, não só lista de
+        // resíduo: protege o verniz de ser arranhado durante o corte.
         title: "Descontaminação",
-        desc: "Retirada do resíduo ferroso, da seiva e do respingo que ficam agarrados na pintura.",
+        desc: "Resíduo ferroso, seiva e respingo de asfalto não saem na lavagem comum — e arranham o verniz se o polimento passar por cima sem removê-los antes.",
       },
       {
         // A tese "corrigir, não encobrir" já vive no "O que é" — aqui a proteção
         // aparece só como o que ela é: o passo que segura o resultado.
         title: "Proteção do resultado",
-        desc: "Acabamento final que segura o brilho por mais tempo depois da correção.",
+        desc: "Sem uma camada de proteção por cima, a pintura corrigida volta a marcar já nas primeiras lavagens — o acabamento final atrasa isso.",
       },
     ],
     // 🚩 ÓRFÃO: `note` existe no tipo mas o CoberturaBlock não renderiza (o
@@ -568,6 +642,16 @@ const polimento: ServicoDetalhe = {
         a: "Depende do estado da pintura. Na avaliação gratuita a gente te passa o prazo certo antes de começar — sem surpresa.",
       },
       {
+        // Adicionada (2026-08-03, mesmo motivo da pergunta equivalente na
+        // Higienização Completa): a rota fundiu pintura+farol, e sem essa
+        // pergunta nenhum FAQ confirmava que dá pra pedir só um dos dois.
+        // 🔑 2ª rodada: o flyer real da MV vende o farol EM PAR ("R$ 250 -
+        // Par"), então a resposta precisa deixar isso claro pra não
+        // desalinhar expectativa quando o cliente chegar no WhatsApp.
+        q: "Dá pra polir só o farol, sem polir o carro inteiro?",
+        a: "Dá sim. São processos independentes — você pode pedir só os faróis, só a pintura, ou os dois juntos. O polimento dos faróis é feito no par, não em um farol solto.",
+      },
+      {
         // Honestidade técnica no lugar de promessa: o limite do serviço é
         // verificável e dizê-lo constrói mais confiança do que prometer tudo.
         q: "O polimento tira qualquer risco?",
@@ -576,6 +660,15 @@ const polimento: ServicoDetalhe = {
       {
         q: "Polir desgasta a pintura?",
         a: "O polimento trabalha o verniz, então não é serviço pra repetir toda semana. Avaliamos a condição da pintura antes e usamos só a correção que o caso pede.",
+      },
+      {
+        // Mesma honestidade da pergunta acima, agora pro farol.
+        // 🔑 2ª rodada: o "2 a 3 anos" veio do flyer real da MV (bloco
+        // "Resultado Final") — é o dado deles, não prazo inventado. Regra de
+        // `.agents/product-marketing.md` sobre "sem número/prazo" vale pra
+        // invenção; fato real da MV pode e deve entrar.
+        q: "O farol volta a amarelar depois do polimento?",
+        a: "Com o tempo, sim — é o mesmo sol que causou o amarelado da primeira vez. A proteção que aplicamos por cima do polimento ajuda a segurar a transparência por 2 a 3 anos, em média, dependendo da exposição do carro.",
       },
       {
         q: "Preciso vitrificar depois?",
@@ -615,27 +708,39 @@ const bancosEEstofados: ServicoDetalhe = {
     "Tratamento de bancos em Simonésia, MG. Couro e tecido com processos próprios: extração, limpeza com pH adequado e hidratação. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Bancos e estofados",
-    title: "Os bancos do seu carro",
-    // O destaque nomeia o DIFERENCIAL da categoria em vez de prometer um estado.
-    // "Material por material" é verificável e é exatamente o que a higienização
-    // geral não faz — resolve a dúvida do cliente sem precisar comparar preço.
-    titleAccent: "tratados material por material",
+    // Lapidado com o Victor (2026-08-03): "tratados material por material"
+    // repetia a palavra e soava estranho; a 1ª correção ("cada material, seu
+    // processo") resolvia a repetição mas quebrava a gramática — lido corrido
+    // faltava o verbo ligando as duas partes do H1 (padrão das outras rotas:
+    // "A pintura do seu carro, de volta ao brilho"). "Corretamente" saiu por
+    // ser autoafirmação sem prova (mesma categoria vetada de
+    // "qualidade"/"excelência").
+    // 🚩 3ª rodada (Victor, 2026-08-03): ele queria a MESMA quebra de 3 linhas
+    // ("Os bancos do seu carro" / "tratados de acordo" / "com o material") MAS
+    // só "de acordo com o material" em azul — ou seja, "tratados" branco e
+    // "de acordo" azul precisam dividir a mesma linha 2. Isso exigiu o
+    // `accentInline` abaixo (ver comentário no tipo `ServicoDetalhe.hero`).
+    // O `\n` aqui fecha "Os bancos do seu carro" na linha 1 antes de "tratados"
+    // começar a linha 2.
+    title: "Os bancos do seu carro\ntratados",
+    titleAccent: "de acordo\ncom o material",
+    // Sem isto, o `titleAccent` abriria linha própria (comportamento padrão
+    // das outras 5 rotas) e "tratados" ficaria sozinho na linha 2.
+    accentInline: true,
+    // Registro revisado (Victor, 2026-08-03): a versão anterior era a cena
+    // "encosta em você o tempo inteiro" — mesma queixa de "meloso" da
+    // Higienização. Troca por linguagem fácil e benefício direto.
     subtitle:
-      "É a parte do carro que encosta em você o tempo inteiro. E a primeira que alguém repara ao abrir a porta.",
+      "Bancos limpos de verdade, com o processo certo pra cada material, seja couro ou tecido.",
   },
 
   oQueE: {
-    // Título nomeia os DOIS sintomas, um por material. Deliberadamente diferente
-    // da fôrma do título da Higienização ("O que a limpeza comum não alcança")
-    // pra as rotas irmãs não lerem como a mesma página com palavra trocada.
-    title: "O couro que resseca, o tecido que encardiu",
+    // Registro revisado (Victor, 2026-08-03): a versão anterior era a fôrma
+    // recusada (cena + aforismo + público-alvo), mesma queixa de "meloso" da
+    // Higienização. Corpo escolhido por ele entre 3 opções apresentadas.
+    title: "Couro e tecido não se limpam igual",
     body: [
-      // 🚩 Teste do eco: a Higienização já usa "a mancha no banco que já virou
-      // parte do carro" no §1 dela. Aqui os sintomas são OUTROS de propósito:
-      // desgaste por contato e ressecamento, não mancha.
-      "O brilho gasto onde as costas encostam todo dia. A lateral do banco do motorista, que sofre em toda entrada e saída. O couro que perdeu a maciez e começou a marcar. Isso não é sujeira de superfície: é o material pedindo tratamento próprio.",
-      "O tratamento de bancos vai atrás disso. Couro e tecido são materiais diferentes e pedem processos diferentes: extração no tecido, limpeza com pH adequado e hidratação no couro, revitalização no acabamento dos dois. Tratar o material, não só limpar a superfície.",
-      "É o serviço certo pra quem tem banco de couro começando a ressecar, pra quem transporta criança ou pet, ou pra quem vai vender o veículo e sabe que o comprador senta antes de olhar qualquer outra coisa.",
+      "O tratamento alcança a sujeira que ficou presa dentro da trama do tecido e o encardido que o uso deixa no couro. Cada um sai de um jeito: no tecido, por extração; no couro, com limpeza de pH adequado e hidratação para repor a maciez. Entram junto as laterais de entrada, os cintos e as costuras, e a impermeabilização.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
     image: "/assets/servicos/bancos-e-estofados.jpg",
@@ -647,27 +752,42 @@ const bancosEEstofados: ServicoDetalhe = {
   },
 
   cobre: {
-    // Mesma construção das rotas irmãs: do PONTO pro TODO.
-    title: "Do banco do motorista ao jogo inteiro",
-    intro: "É isto que entra quando você faz o tratamento completo.",
+    // Registro revisado (Victor, 2026-08-03): a fôrma "do PONTO pro TODO" das
+    // rotas irmãs ("Do banco do motorista ao jogo inteiro") não comunicava —
+    // ele apontou que soa gíria de quem já entende de carro. Título+subtítulo
+    // escolhidos entre várias rodadas de opções: foco no BENEFÍCIO (a lista é
+    // completa), não na jornada sujo→limpo (óbvio demais, ele cortou de cara).
+    title: "O que o tratamento completo cobre",
+    intro: "Do assento aos cintos de segurança.",
     items: [
       {
+        // Copy revisada (Victor, 2026-08-03): a versão anterior só repetia o
+        // parágrafo do "O que é" ("extração") com outra roupagem. Agora nomeia
+        // o mecanismo (a extratora) e contrasta com o que o aspirador não
+        // alcança — sem "costuras", que já é do card 6.
         title: "Higienização do tecido",
-        desc: "Extração da sujeira que penetrou no tecido e ficou presa nas costuras.",
+        desc: "Uma extratora tira a sujeira de dentro da fibra, não só a da superfície.",
       },
       {
-        title: "Couro: limpeza e hidratação",
-        desc: "Limpeza com pH adequado e reposição da maciez que o uso e o sol tiram.",
+        // Título sem dois-pontos (era o único do site com essa pontuação),
+        // espelhando "Higienização do tecido". Desc troca a frase quase
+        // idêntica à do "O que é" pelo PORQUÊ da hidratação (risco de rachar).
+        title: "Limpeza e hidratação do couro",
+        desc: "Sem hidratação regular o couro resseca e racha, por isso limpeza e hidratação vêm sempre juntas.",
       },
       {
         title: "Áreas de contato",
-        desc: "Tratamento das faixas que escurecem primeiro: encosto, assento e lateral de entrada.",
+        // "porta do motorista" no lugar de "lateral de entrada" — a mesma
+        // frase literal já apareceu no parágrafo do "O que é" logo acima.
+        desc: "Encosto, assento e porta do motorista escurecem primeiro, porque são os pontos que mais recebem contato.",
       },
       {
-        // 🚩 Teste do eco: "sem brilho artificial" já é o fecho do card "Painel e
-        // plásticos" da Higienização. Aqui a mesma ideia sai com outra palavra.
-        title: "Revitalização do acabamento",
-        desc: "Recuperação do aspecto e da cor do material, sem deixar aparência plastificada.",
+        // Título trocado: "Revitalização do acabamento" não dizia nada
+        // verificável. 🚩 Teste do eco: "sem brilho artificial" já é o fecho do
+        // card "Painel e plásticos" da Higienização — aqui a ideia continua
+        // saindo com outra palavra ("plastificado"), só que também no título.
+        title: "Sem acabamento plastificado",
+        desc: "A cor volta ao normal e o material recupera o toque natural, que o desgaste tinha apagado.",
       },
       {
         title: "Impermeabilização",
@@ -831,26 +951,45 @@ const limpezaDeMotor: ServicoDetalhe = {
     title: "O motor do seu carro",
     // O destaque responde a objeção em vez de prometer aparência. Descreve o que
     // é feito, não garante resultado — a diferença que mantém a frase honesta.
-    titleAccent: "limpo sem molhar o que não pode",
+    // 🐞 Era "limpo sem molhar o que não pode" e o Victor cortou (2026-08-03):
+    // a IDEIA é boa, mas "o que não pode" é subordinada mole, não fecha a
+    // frase. "a elétrica" nomeia a coisa e o destaque para de escorregar.
+    titleAccent: "limpo sem molhar a elétrica",
+    // Registro revisado (2026-08-03), duas correções do Victor no mesmo passe:
+    // (1) a versão original abria em "Muita gente nunca lavou o motor com medo
+    // de dar problema" — falava dos OUTROS, não do que o cliente ganha;
+    // (2) o meio de caminho fechava em "protegida antes de começar", e ele
+    // cortou: antes de começar O QUÊ? Fecho solto, sem referente. Agora a frase
+    // termina num estado concreto. 🚩 "elétrica" saiu daqui pra não ecoar o
+    // título, que já é dono da palavra.
     subtitle:
-      "Muita gente nunca lavou o motor com medo de dar problema. O cuidado está em saber o que proteger antes de começar.",
+      "Graxa, poeira e barro fora do cofre,\ne o carro pronto pra levar em qualquer revisão.",
   },
 
   oQueE: {
     // Título nomeia o sintoma pelo ângulo do abandono, não da sujeira: o cofre é
     // literalmente a parte do carro que o dono nunca abre, e é daí que vem o
     // estado dele. Fôrma diferente das outras três rotas.
-    title: "A parte do carro que ninguém abre",
+    // 🐞 Era "A parte do carro que ninguém abre" e o Victor cortou (2026-08-03):
+    // afirmação sem critério nenhum pra sustentar — o MESMO defeito do subtítulo
+    // que ele já tinha mandado tirar ("Muita gente nunca lavou o motor…"). Eu
+    // tirei de um lugar e deixei no outro.
+    // 🔑 ENQUADRAMENTO da seção, dito por ele: é INFORMATIVA. Diz o óbvio com
+    // clareza e descreve o que é feito. Não é tease, não é insinuação, não
+    // precisa de gancho. Mesmo molde do "O que é" aprovado na Higienização.
+    // Título escolhido pelo Victor (2026-08-03). "Atenção" no lugar de
+    // "limpeza": não repete a palavra que já está no hero, no título do "O que
+    // cobre" e no nome da categoria, e é a palavra dele pro que a seção comunica.
+    title: "O motor também precisa de atenção",
+    // 🐞 O corpo anterior abria em "segue uma ordem que não muda" e ele cortou
+    // pela mesma razão do título: por que precisa NECESSARIAMENTE seguir uma
+    // ordem? Premissa inventada. Agora o parágrafo só descreve o que o serviço
+    // trata e o cuidado que existe nele, sem afirmar regra que não dá pra
+    // provar. Antes disso, a versão original era a fôrma recusada de 3 §§
+    // (cena → aforismo "Proteger antes de molhar, secar antes de fechar" →
+    // "É o serviço certo pra quem…").
     body: [
-      "Graxa que endureceu em volta do bloco. Folha seca acumulada no fundo do cofre. Poeira que virou crosta em cima das mangueiras. E o motivo de estar tudo assim: quase ninguém lava o motor, com medo de molhar o que não pode.",
-      // Linha-âncora da categoria: "Proteger antes de molhar, secar antes de
-      // fechar" é o processo inteiro em seis palavras, e responde o medo sem
-      // prometer nada. Equivale ao "Remover na origem" da Higienização.
-      "A limpeza de motor resolve isso com ordem. Primeiro protegemos o que é sensível: central, chicotes, alternador e as entradas de ar. Depois vem o desengraxante, a agitação onde a sujeira agarrou e o enxágue controlado, sem jato de pressão em cima de conector. Proteger antes de molhar, secar antes de fechar.",
-      // O parêntese carrega o benefício mais concreto e verificável da categoria:
-      // num cofre limpo, mancha nova de óleo salta à vista. Vale mais que
-      // qualquer adjetivo sobre aparência.
-      "É o serviço certo pra quem vai vender o veículo, pra quem vai levar na revisão (vazamento aparece na hora num motor limpo) ou pra quem simplesmente não abre o capô há anos.",
+      "Graxa e óleo acumulados escondem de onde vem um vazamento. A limpeza de motor trata o compartimento inteiro: o bloco, as tampas plásticas, as mangueiras, o chicote elétrico e o fundo do cofre, onde barro e folha se acumulam. Protegemos os componentes sensíveis durante todo o serviço, e num motor limpo qualquer vazamento novo aparece de primeira.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
     image: "/assets/servicos/limpeza-de-motor-v2.jpg",
@@ -862,38 +1001,47 @@ const limpezaDeMotor: ServicoDetalhe = {
   },
 
   cobre: {
-    // Mesma construção das rotas irmãs: do PONTO pro TODO, aqui no eixo espacial
-    // do compartimento.
-    title: "Da tampa do motor ao fundo do cofre",
-    intro: "É isto que entra quando você faz a limpeza completa.",
+    // 🐞 O título anterior era "Da tampa do motor ao fundo do cofre" — a mesma
+    // fôrma "do PONTO pro TODO" que o Victor recusou em Bancos e Estofados
+    // ("soa gíria de quem já entende de carro"). Agora o título é o rótulo
+    // funcional e a faixa desce pro subtítulo, exatamente como ficou lá.
+    title: "O que a limpeza completa cobre",
+    // A faixa aqui é o PROCESSO, não o espaço físico: é a espinha da categoria
+    // e a ordem real em que os 6 cards estão dispostos.
+    intro: "Da proteção da elétrica à secagem final.",
     items: [
       {
         // 🚩 PRIMEIRO de propósito: é a objeção da categoria. A ordem dos cards
         // é a ordem real do serviço, e começar pela proteção já responde o medo
         // antes de o cliente chegar no FAQ.
         title: "Proteção dos componentes",
-        desc: "Central, chicotes, alternador e entradas de ar isolados antes de qualquer produto.",
+        desc: "Isolamos central, chicotes, alternador e entradas de ar antes de qualquer produto entrar.",
       },
       {
         title: "Desengraxe",
-        desc: "Remoção da graxa e do óleo que endureceram nas laterais do bloco.",
+        // Mecanismo, não repetição: o produto amolece, então não precisa raspar.
+        desc: "O desengraxante amolece a graxa endurecida no bloco, e ela sai sem precisar de raspagem.",
       },
       {
         title: "Tampas e plásticos",
-        desc: "Limpeza das capas, tampas e reservatórios, sem acabamento oleoso por cima.",
+        // O "sem produto oleoso" ganha o PORQUÊ, que o card antigo não dava.
+        desc: "Capas, tampas e reservatórios ficam limpos sem produto oleoso por cima, que atrai poeira de novo.",
       },
       {
         title: "Mangueiras e chicotes",
-        desc: "Limpeza das linhas e do chicote elétrico, onde a poeira vira crosta.",
+        // Mecanismo, não repetição: escova em vez de jato direto, e o porquê.
+        desc: "A crosta de poeira sai com escova, sem jato direto que possa forçar os conectores.",
       },
       {
         title: "Fundo do cofre",
-        desc: "Retirada de folha, terra e resíduo acumulados nos cantos mais baixos.",
+        // Não repete mais "barro e folha se acumulam" do parágrafo do "O que é"
+        // (linha ~926) — agora explica por que esse ponto fica de fora do
+        // cuidado comum, sem inventar técnica não confirmada (ex.: "sucção").
+        desc: "É o ponto mais baixo do cofre — o único que fica de fora quando o motor é só espanado por cima.",
       },
       {
-        // Fecha o ciclo aberto pela linha-âncora: secar antes de fechar.
         title: "Secagem",
-        desc: "Ar comprimido nos conectores e nos vãos antes de fechar o capô.",
+        desc: "O ar comprimido tira a água dos conectores e dos vãos antes de o capô fechar.",
       },
     ],
     // 🚩 ÓRFÃO: o CoberturaBlock não renderiza `note`. Escrito pra ficar pronto.
@@ -956,14 +1104,20 @@ const limpezaDeMotor: ServicoDetalhe = {
     ],
   },
 
-  // CASES — nenhum trabalho real ainda. 5 cards de ENCHIMENTO pra sustentar a
-  // leitura do reel. `placeholdersVisiveis: 5` sobrepõe o global (1).
-  // ➡️ Quando o 1º real entrar: escrever o case acima destes e baixar o número.
-  // 🚩 NUNCA apagar os placeholders (ocultar-nunca-apagar).
+  // CASES — 🔕 SEÇÃO OCULTA (Victor, 2026-08-03): "a gente não tem case ainda".
+  // O `0` zera os cards de enchimento; como não há nenhum trabalho REAL nesta
+  // categoria, `casesPublicaveis` devolve lista vazia e o ServicoPage não
+  // renderiza a seção — some título, setas e o padding, sem vão na página.
+  // ➡️ PRA REATIVAR: basta escrever o 1º case real no `items` (com fotos). A
+  //    seção volta SOZINHA, sem tocar neste número — com `0`, o que aparece é
+  //    exatamente o que é real. Só voltar pra `5` se ele quiser encher o reel
+  //    de novo enquanto a captação não acontece.
+  // 🚩 NUNCA apagar os placeholders (ocultar-nunca-apagar) — eles seguem aqui,
+  //    dormentes, e voltam a servir de molde quando o trabalho real chegar.
   cases: {
     heading: "Alguns trabalhos",
     subheading: "Motores limpos na MV, cada um no seu estado de origem.",
-    placeholdersVisiveis: 5,
+    placeholdersVisiveis: 0,
     items: [
       { id: "lm-1", title: "Sedan · cofre encardido", summary: "Graxa endurecida retirada das laterais do bloco.", placeholder: true },
       { id: "lm-2", title: "SUV · pré-revisão", summary: "Motor limpo antes de seguir pra manutenção.", placeholder: true },
@@ -1034,31 +1188,47 @@ const limpezaDeMotor: ServicoDetalhe = {
  * afirmação de prazo entrou na copy.
  */
 const vitrificacao: ServicoDetalhe = {
+  // 2ª rodada: passa a citar os plásticos (o 2º serviço do agrupamento) e o
+  // prazo real de 2 anos, que é o que diferencia numa lista de resultados.
   seoDescription:
-    "Vitrificação em Simonésia, MG. Revestimento que protege a pintura corrigida, com efeito hidrofóbico e lavagem mais fácil. Avaliação gratuita.",
+    "Vitrificação em Simonésia, MG: camada cerâmica na pintura e nos plásticos externos, com proteção de até 2 anos. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Proteção",
-    // 🚩 Teste do eco: o Polimento já abre com "A pintura do seu carro". Aqui o
-    // objeto é a PROTEÇÃO, não a pintura, e as duas rotas param de ler como a
-    // mesma manchete com adjetivo trocado.
-    title: "A proteção da pintura",
-    // Separa de cera sem citar concorrente e sem afirmar prazo: fala do que a
-    // lavagem faz (ou não faz) com a camada, que é observável.
-    titleAccent: "que a lavagem não tira",
+    // 🔑 2ª rodada (2026-08-03, flyers reais da MV): a rota passa a FUNDIR dois
+    // serviços do catálogo — Vitrificação Comercial (pintura) + Vitrificação de
+    // Plásticos Externos —, mesmo molde da Higienização Completa e do Polimento.
+    // 🚩 Teste do eco: NÃO usar "A pintura e os plásticos do seu carro", que
+    // seria a manchete do Polimento ("A pintura e o farol do seu carro") com as
+    // palavras trocadas. O objeto aqui é o CARRO protegido, e o prazo carrega o
+    // destaque — é o dado que separa da cera sem citar concorrente.
+    // ✅ "dois anos" é dado REAL do flyer ("protegido por até 2 anos" / "Pintura
+    // protegida por até 24 meses"), não prazo inventado — mesma licença do
+    // "2 a 3 anos" do farol no Polimento (regra 6 vale pra invenção, não pra
+    // fato da MV).
+    title: "Seu carro protegido",
+    titleAccent: "por dois anos",
+    // Responde "protegido de quê / como" na linha seguinte, pra o destaque não
+    // ficar com referente solto (o defeito recorrente — ver
+    // `copy-mv-registro-processo`). `\n` marca a quebra no fim da 1ª oração.
     subtitle:
-      "A pintura corrigida fica exposta do mesmo jeito no dia seguinte. A vitrificação é o que segura esse resultado.",
+      "Uma camada cerâmica sobre o verniz e sobre as peças plásticas de fora.\nA água escorre, a sujeira agarra menos, e a lavagem seguinte sai mais fácil.",
   },
 
   oQueE: {
-    // Sintoma pelo ângulo da frustração de quem JÁ pagou por um tratamento e viu
-    // sumir. É a experiência real que antecede a busca por vitrificação.
-    title: "O brilho que some poucas lavagens depois",
+    // 🐞 Título trocado (2026-08-03): "O brilho que some poucas lavagens depois"
+    // era tease E afirmação sem critério (quantas lavagens? de quem?) — os dois
+    // defeitos que custaram caro na rota de Motor. O novo faz o trabalho nº1 do
+    // eixo (separar de CERA, que é com o que o cliente compara) apoiado no dado
+    // real do flyer, então a comparação é verificável em vez de retórica.
+    title: "Proteção que dura mais que uma cera",
+    // Corpo saiu da fôrma recusada (3 §§ cena+aforismo+público-alvo) pra 1
+    // parágrafo informativo na fôrma aprovada: problema observável → o que o
+    // serviço trata (lista concreta, agora com os DOIS materiais) → benefício.
+    // A lista de peças plásticas é a do flyer 12 (para-choques, retrovisores,
+    // frisos e acabamentos). "Recebe o desgaste no lugar da superfície" é a
+    // camada de sacrifício dita sem jargão.
     body: [
-      "O carro sai do polimento perfeito e um mês depois já não é o mesmo. A cera acabou na terceira lavagem. A chuva secou no capô e deixou marca. Poeira e resíduo voltam a agarrar como antes.",
-      // Linha-âncora: "Proteger o que foi corrigido, em vez de repolir todo ano"
-      // resume a proposta e amarra a categoria ao Polimento sem empurrar venda.
-      "A vitrificação entra aí. É um revestimento que cura sobre o verniz e forma uma camada de sacrifício: a água escorre em vez de assentar, o resíduo tem menos onde agarrar e a lavagem seguinte sai mais fácil. Proteger o que foi corrigido, em vez de repolir todo ano.",
-      "É o serviço certo pra quem acabou de polir e não quer perder o resultado, pra quem deixa o carro na rua ou embaixo de árvore, ou pra quem lava com frequência e cansou de repor cera.",
+      "O sol, a chuva e o resíduo do dia a dia atacam o verniz e as peças plásticas o ano inteiro. A vitrificação cobre os dois com uma camada cerâmica: na pintura, aplicada painel a painel sobre o verniz original; nos plásticos externos, o mesmo revestimento nos para-choques, retrovisores, frisos e acabamentos, que devolve a cor e segura o desbotamento. A camada recebe o desgaste no lugar da superfície e mantém o carro protegido por até dois anos.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
     image: "/assets/servicos/vitrificacao-v2.jpg",
@@ -1070,38 +1240,79 @@ const vitrificacao: ServicoDetalhe = {
   },
 
   cobre: {
-    title: "Da pintura às rodas",
-    intro: "É isto que entra quando você faz a proteção completa.",
+    // 🐞 Título trocado (2026-08-03): era "Da pintura às rodas" — a fôrma "do
+    // PONTO pro TODO" que ele já cortou em Bancos ("soa gíria de quem já entende
+    // de carro") e de novo em Motor. Vira rótulo funcional, e a faixa
+    // ponto-a-ponto desce pro subtítulo. 🚩 "rodas" saiu junto: NENHUM flyer da
+    // MV menciona roda ou pinça de freio — era invenção minha (ver o card antigo
+    // "Rodas e pinças" abaixo, removido pelo mesmo motivo).
+    title: "O que a vitrificação completa cobre",
+    // 🐞 O intro antigo ("É isto que entra quando você faz a proteção completa")
+    // era legenda de lista, não dizia nada. Agora carrega a faixa do PROCESSO,
+    // que é a espinha da categoria — mesma receita de Motor.
+    intro: "Da correção da pintura à proteção dos plásticos.",
+    // 🚩 Os 6 cards saíram do 1º passe genérico e agora seguem os flyers reais
+    // (Vitrificação Comercial + Vitrificação de Plásticos). Cada um acrescenta
+    // MECANISMO, nunca reformula o parágrafo do "O que é"
+    // (`copy-cards-nao-repetem-paragrafo`).
     items: [
       {
         // 🚩 PRIMEIRO de propósito: é o ponto que decide se o serviço vale. A
         // camada sela o que estiver embaixo, então o preparo não é detalhe.
-        title: "Preparo da pintura",
-        desc: "Descontaminação e correção antes de aplicar, porque a camada sela o que estiver embaixo.",
+        // ✅ Respaldo do flyer: "Correção com Polimento Comercial" está na
+        // PREPARAÇÃO — o polimento não é upsell desta rota, é pré-requisito
+        // declarado por eles. Isso também resolve a dúvida antiga sobre o
+        // crossLink inverso (Polimento → Vitrificação) "beirar upsell".
+        title: "Correção antes da camada",
+        desc: "A camada sela a pintura no estado em que ela está, então o polimento entra antes: risco que ficar embaixo continua lá depois.",
       },
       {
-        title: "Aplicação do revestimento",
-        desc: "Produto aplicado painel a painel, com o tempo de cura respeitado antes da entrega.",
+        // ✅ Flyer: "Descontaminação da pintura" (Preparação). O porquê é o que
+        // o card acrescenta — sem ele, é só nome de etapa.
+        title: "Descontaminação da pintura",
+        desc: "Resíduo ferroso e respingo agarrados no verniz impedem a camada de assentar direto sobre a pintura.",
       },
       {
-        title: "Efeito hidrofóbico",
-        desc: "A água junta em gota e escorre, levando parte do resíduo em vez de secar na pintura.",
+        // ✅ Flyer: "Vitrificação da pintura" + "Processo técnico de cura e
+        // fixação do produto" (Aplicação). A cura é o mecanismo não-óbvio.
+        title: "Vitrificação da pintura",
+        desc: "O produto é aplicado painel a painel e passa pelo tempo de cura antes de o carro sair.",
       },
       {
-        title: "Rodas e pinças",
-        desc: "Proteção nas rodas, onde o pó de freio agarra com mais força e queima com o calor.",
+        // ✅ Flyer 12 (Vitrificação de Plásticos Externos), o 2º serviço que esta
+        // rota agrupa: a lista de peças e o ganho ("Cor original restaurada",
+        // "Menos ressecamento e desbotamento") são de lá.
+        title: "Vitrificação dos plásticos",
+        desc: "Para-choques, retrovisores, frisos e acabamentos recebem o revestimento que segura o ressecamento e o desbotamento.",
       },
       {
-        title: "Plásticos externos",
-        desc: "Proteção das peças plásticas de fora, que desbotam antes da lataria.",
+        // Funde o antigo card "Efeito hidrofóbico" com a resistência a resíduo:
+        // é UM mecanismo só (a camada é o que recebe o ataque), e assim sobra
+        // slot pros dois serviços do agrupamento. ✅ Flyer: "Superfície mais lisa
+        // e repelente à água" + "Resistência a fezes de aves e seiva de árvores".
+        title: "Barreira sobre o verniz",
+        desc: "A água junta em gota e escorre; seiva de árvore e fezes de pássaro encontram a camada antes de encontrar o verniz.",
       },
       {
-        title: "Orientação de manutenção",
-        desc: "Como lavar depois pra não comprometer o rendimento da camada aplicada.",
+        // ✅ Flyer: "Proteção contra raios UV". Fecha a lista pelo agente que
+        // ataca os DOIS materiais da rota, amarrando pintura e plástico.
+        title: "Proteção contra o sol",
+        desc: "O UV é o que desbota a pintura e resseca os plásticos; a camada recebe essa exposição por cima das duas superfícies.",
       },
     ],
     // 🚩 ÓRFÃO: o CoberturaBlock não renderiza `note`.
     note: "Não sabe se a sua pintura está pronta pra receber proteção? Na avaliação a gente olha o estado dela antes, sem compromisso.",
+    // 🎁 Do flyer da Vitrificação Comercial, literal: "CORTESIA INCLUSA:
+    // descontaminação e cristalização de TODOS os vidros!". Victor autorizou
+    // publicar em 2026-08-03 ("pode colocar exatamente como está nos flyers"),
+    // com a ressalva de que o dono da estética ainda vai reler e pode recuar —
+    // por isso vive numa chave própria, fácil de remover.
+    // 🚩 Preço e tempo do flyer NÃO entram (regra fechada: fechamento por
+    // WhatsApp). Só o brinde.
+    cortesia: {
+      label: "Cortesia inclusa",
+      text: "Descontaminação e cristalização de todos os vidros entram junto com a vitrificação, sem custo.",
+    },
     // 🔗 O crossLink mais justificado do site: é PRÉ-REQUISITO, não sugestão.
     crossLink: {
       label: "Polimento",
@@ -1160,10 +1371,13 @@ const vitrificacao: ServicoDetalhe = {
     ],
   },
 
+  // 🔕 SEÇÃO OCULTA (Victor, 2026-08-03) — mesma receita da Limpeza de Motor:
+  // sem case real, `0` esvazia a lista publicável e a seção inteira não
+  // renderiza. Reativa sozinha quando o 1º trabalho real for escrito aqui.
   cases: {
     heading: "Alguns trabalhos",
     subheading: "Pinturas protegidas na MV, cada uma no seu estado de origem.",
-    placeholdersVisiveis: 5,
+    placeholdersVisiveis: 0,
     items: [
       { id: "vt-1", title: "Sedan · pós-polimento", summary: "Proteção aplicada logo depois da correção da pintura.", placeholder: true },
       { id: "vt-2", title: "SUV · carro na rua", summary: "Camada aplicada em veículo que dorme fora da garagem.", placeholder: true },
@@ -1187,11 +1401,13 @@ const vitrificacao: ServicoDetalhe = {
         a: "Na maioria dos casos, sim. A camada sela a pintura no estado em que ela está, então risco e marca que ficarem embaixo continuam lá depois. Na avaliação vemos o que a sua precisa antes.",
       },
       {
-        // 🚩 Campo minado: durabilidade depende do produto, e qual produto a MV
-        // usa está PENDENTE DO DONO. A resposta empurra pra avaliação em vez de
-        // inventar prazo.
+        // ✅ DESTRAVADO 2026-08-03 pelos flyers reais: "protegido por até 2 anos"
+        // / "Pintura protegida por até 24 meses". Antes esta resposta esquivava
+        // do prazo ("depende do produto aplicado") porque eu não tinha o dado —
+        // hoje tenho, e é da MV, não inventado. A ressalva de uso/lavagem fica,
+        // porque o próprio flyer diz "até".
         q: "Quanto tempo dura a proteção?",
-        a: "Depende do produto aplicado e de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá pra esperar no seu caso, antes de fechar.",
+        a: "Até dois anos, dependendo de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá pra esperar no seu caso, antes de fechar.",
       },
       {
         q: "Posso lavar o carro normalmente depois?",
@@ -1223,29 +1439,45 @@ const vitrificacao: ServicoDetalhe = {
  * ⚠️ FOTO PLACEHOLDER (`cristalizacao-v2.jpg`, o card da home) e COPY = 1º PASSE.
  */
 const cristalizacaoDeVidros: ServicoDetalhe = {
+  // 2ª rodada: "chuva ácida" entra, porque é o NOME do serviço no catálogo real
+  // (flyer "Remoção de Chuva Ácida + Cristalização de Vidros") e é o termo que o
+  // cliente digita.
   seoDescription:
-    "Cristalização de vidros em Simonésia, MG. Remove marca de chuva incrustada e faz a água escorrer com o vento. Mais visibilidade na chuva.",
+    "Cristalização de vidros em Simonésia, MG: remoção de mancha de chuva ácida e camada que faz a água escorrer com o vento. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Vidros",
-    title: "O para-brisa do seu carro",
-    titleAccent: "sem o borrão da chuva",
-    // A cena mais concreta que esta categoria tem: farol de frente espalhando no
-    // vidro à noite. Não é venda, é a experiência que o motorista reconhece.
+    // 🔑 2ª rodada (2026-08-03, flyer real): a rota agrupa Remoção de Chuva Ácida
+    // + Cristalização. O título antigo ("O para-brisa do seu carro") era estreito
+    // demais — o serviço trata todos os vidros, não só o da frente. 🚩 Teste do
+    // eco: evitei "Os vidros do seu carro", porque Bancos e Polimento já abrem
+    // com "<peça> do seu carro" e a terceira repetição vira fôrma.
+    title: "Vidros sem mancha",
+    titleAccent: "e chuva sem borrão",
+    // 🔑 MANTIDO quase intacto de propósito — é a linha mais forte das 6 rotas: a
+    // cena é um fato óptico observável, não uma suposição sobre o que "as pessoas
+    // fazem" (o defeito de `copy-nao-afirmar-sem-criterio`). Só "encardido" virou
+    // "manchado", pra amarrar com a chuva ácida do título e do corpo.
     subtitle:
-      "Vidro encardido espalha a luz do farol que vem na frente. À noite, debaixo de chuva, é isso que mais cansa a vista.",
+      "Vidro manchado espalha a luz do farol que vem na frente.\nÀ noite, debaixo de chuva, é isso que mais cansa a vista.",
   },
 
   oQueE: {
-    // Sintoma que qualquer motorista já viveu, e que ninguém associa a serviço.
-    title: "A marca que o limpador não tira",
+    // 🐞 Título trocado: "A marca que o limpador não tira" era bom, mas não
+    // nomeava a chuva ácida — que é o serviço que esta rota absorveu. O novo é
+    // declarativo e informativo, no enquadramento que ele fixou pra esta seção
+    // (`copy-secao-o-que-e-e-informativa`): dizer o óbvio com clareza, sem tease.
+    title: "Chuva ácida deixa marca no vidro",
+    // Saiu a fôrma recusada (3 §§) pra 1 parágrafo na fôrma aprovada: problema
+    // observável → o que o serviço trata → benefício. As duas etapas (remover o
+    // incrustado, depois proteger) são o que o flyer descreve e o que separa
+    // isto de "passar um produto no vidro". Fecho no eixo da categoria — a única
+    // das 6 em que o ganho é SEGURANÇA, e o flyer confirma ("contribuindo para
+    // uma condução mais segura").
+    // 🚩 Cortado daqui: "a película de gordura que embaça por dentro" — nenhum
+    // flyer menciona a face INTERNA do vidro, e eu tinha afirmado isso sem base.
+    // Volta se o Victor confirmar que o serviço trata o vidro por dentro.
     body: [
-      "O limpador passa e a marca continua ali. À noite, o farol do carro da frente vira um borrão espalhado no vidro. Depois da chuva ficam pontos brancos que a lavagem não leva. Isso não é sujeira solta: é resíduo que penetrou no vidro.",
-      // Linha-âncora: nomeia as DUAS etapas, que é o que separa a cristalização
-      // de "passar um produto no vidro".
-      "A cristalização trata as duas metades do problema. Primeiro sai o que está incrustado: marca de chuva, resíduo mineral e a película de gordura que embaça por dentro. Depois entra o tratamento hidrofóbico, que faz a água juntar em gota e escorrer com o vento. Tirar o resíduo de dentro do vidro antes de proteger a superfície.",
-      // O terceiro caso é o detalhe mais humano do catálogo: muita gente troca a
-      // palheta achando que o problema é ela, quando é o vidro.
-      "É o serviço certo pra quem dirige à noite, pra quem pega estrada com chuva, ou pra quem já trocou o limpador achando que o problema era a palheta.",
+      "A chuva ácida, a poeira e o tempo deixam manchas agarradas no vidro, que não saem na lavagem nem com o limpador. A cristalização trata os vidros em duas etapas: primeiro sai o que está incrustado na superfície, depois entra uma camada protetora que faz a água juntar em gota e escorrer com o vento. Vidro transparente muda o que você enxerga à noite e na chuva.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
     image: "/assets/servicos/cristalizacao-v2.jpg",
@@ -1257,32 +1489,57 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
   },
 
   cobre: {
-    title: "Do para-brisa aos retrovisores",
-    intro: "É isto que entra quando você faz o tratamento completo.",
+    // 🐞 Título trocado: "Do para-brisa aos retrovisores" era a fôrma "do PONTO
+    // pro TODO" cortada em Bancos e em Motor — e ainda prometia retrovisor, que
+    // nenhum flyer menciona. Vira rótulo funcional + faixa de processo no
+    // subtítulo, mesma receita das rotas já fechadas.
+    title: "O que o tratamento dos vidros cobre",
+    intro: "Da remoção da mancha à camada que repele a água.",
+    // 🚩 TRÊS cards antigos saíram por não terem respaldo em flyer nenhum —
+    // eram invenção minha, o defeito de `copy-nao-afirmar-sem-criterio`:
+    // "Limpeza da face interna" (gordura por dentro), "Retrovisores" e
+    // "Palhetas" (esta ainda por cima era política operacional: conferir o
+    // estado da palheta do cliente). Se o Victor confirmar qualquer um dos três
+    // com o dono, voltam com o mecanismo que já estava escrito.
     items: [
       {
-        title: "Remoção de incrustação",
-        desc: "Saída da marca de chuva e do resíduo mineral que penetrou na superfície do vidro.",
+        // ✅ Flyer: "Remoção de manchas de chuva ácida". O mecanismo é o porquê
+        // de ser serviço e não lavagem: está INCRUSTADO, não pousado em cima.
+        title: "Remoção de chuva ácida",
+        desc: "A mancha da chuva ácida fica incrustada na superfície, e por isso não sai com produto de limpeza comum.",
       },
       {
-        title: "Limpeza da face interna",
-        desc: "Retirada da película de gordura que embaça e espalha a luz por dentro.",
+        // ✅ Flyer: "Limpeza profunda dos vidros". O card acrescenta o que a
+        // película faz (embaça mesmo depois de lavado), não repete o nome.
+        title: "Limpeza profunda",
+        desc: "Poeira e resíduo do tempo formam uma película que embaça o vidro mesmo depois de lavado.",
       },
       {
-        title: "Tratamento hidrofóbico",
+        // ✅ Flyer: "Aplicação de cristalização protetora" + "Tratamento de
+        // proteção da superfície do vidro".
+        title: "Camada de cristalização",
+        desc: "O tratamento sela a superfície depois de limpa, pra a mancha não voltar a se agarrar tão rápido.",
+      },
+      {
+        // ✅ Flyer: "Vidros com efeito hidrorrepelente". Mantido do 1º passe —
+        // já trazia o efeito sentido, não o nome da etapa.
+        title: "Efeito hidrorrepelente",
         desc: "A água junta em gota e sai com o vento, em vez de espalhar na frente da vista.",
       },
       {
-        title: "Laterais e traseiro",
-        desc: "Mesmo tratamento nas outras faces, não só no para-brisa.",
+        // Substitui o antigo "Laterais e traseiro", que era fragmento sem verbo
+        // ("Mesmo tratamento nas outras faces"). ✅ Respaldo: o flyer da
+        // Vitrificação declara "cristalização de TODOS os vidros", e o desta
+        // categoria fala em "vidros" no plural o tempo todo.
+        title: "Todos os vidros",
+        desc: "Para-brisa, laterais e traseiro recebem o mesmo tratamento, não só o vidro da frente.",
       },
       {
-        title: "Retrovisores",
-        desc: "Espelhos tratados, onde a gota parada atrapalha mais na hora de mudar de faixa.",
-      },
-      {
-        title: "Palhetas",
-        desc: "Conferência do estado das palhetas, que riscam o vidro quando estão ressecadas.",
+        // ✅ Flyer: "Maior facilidade na limpeza dos vidros". 🚩 Escolhido no
+        // lugar de um card sobre ofuscamento à noite, que ecoaria o subtítulo do
+        // hero (teste do eco — a cena do farol já é a linha de abertura da rota).
+        title: "Limpeza mais fácil depois",
+        desc: "Com a superfície selada, poeira e resíduo têm menos onde agarrar e saem com menos esforço.",
       },
     ],
     // 🚩 ÓRFÃO: o CoberturaBlock não renderiza `note`.
@@ -1340,10 +1597,15 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
     ],
   },
 
+  // 🔕 SEÇÃO OCULTA (Victor, 2026-08-03) — mesma receita das outras duas.
+  // 🚩 Quando reativar, ANTES de publicar: o card `cv-3` abaixo ainda promete
+  //    "película de gordura retirada da face interna", que é justamente o
+  //    escopo que saiu dos cards por falta de respaldo em flyer. Ou o dono
+  //    confirma que o serviço trata o vidro por dentro, ou esse summary muda.
   cases: {
     heading: "Alguns trabalhos",
     subheading: "Vidros tratados na MV, cada um no seu estado de origem.",
-    placeholdersVisiveis: 5,
+    placeholdersVisiveis: 0,
     items: [
       { id: "cv-1", title: "Sedan · marca de chuva", summary: "Incrustação removida do para-brisa e das laterais.", placeholder: true },
       { id: "cv-2", title: "SUV · uso noturno", summary: "Vidros tratados para quem roda à noite com frequência.", placeholder: true },
@@ -1389,7 +1651,7 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
 
 /** Mapa slug → detalhe. Categorias fora daqui caem na versão RESUMO da rota. */
 export const servicosDetalhe: Readonly<Record<string, ServicoDetalhe>> = {
-  "higienizacao-interna": higienizacaoInterna,
+  "higienizacao-completa": higienizacaoInterna,
   polimento,
   "bancos-e-estofados": bancosEEstofados,
   "limpeza-de-motor": limpezaDeMotor,

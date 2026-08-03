@@ -6,6 +6,10 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { servicos, servicosMeta } from "@/content";
 import { revealHeadingVariants, staggerCard } from "@/lib/animation";
+// Import DIRETO (não pelo barrel `@/components/layout`): o barrel reexporta o
+// Footer, que é Server Component, e puxá-lo pra dentro de um client component
+// o arrastaria pro bundle do navegador.
+import { ehCliqueSimples, useRouteTransition } from "@/components/layout/RouteTransition";
 import styles from "./Servicos.module.css";
 
 /**
@@ -26,6 +30,10 @@ import styles from "./Servicos.module.css";
  * ⚠️ Rotas `/servicos/[slug]` ainda não existem — clicar dá 404 até construí-las.
  */
 export function Servicos() {
+  // Cada card abre a rota da categoria pela CORTINA da logo (Victor, 2026-08-03)
+  // em vez do corte seco da navegação client-side. Ver `RouteTransition`.
+  const { transitionTo } = useRouteTransition();
+
   // UM gatilho ÚNICO pra toda a cascata (Victor, 2026-07-17): tag → título →
   // cards revelam em sequência a partir do MESMO ponto, na ordem certa. Atrasado
   // (margem inferior -45%): só dispara quando o cabeçalho sobe além da metade da
@@ -78,7 +86,18 @@ export function Servicos() {
                 animate={inView ? "visible" : "hidden"}
                 variants={staggerCard}
               >
-                <Link href={`/servicos/${s.slug}`} className={styles.card}>
+                {/* Segue sendo `<Link href>` de verdade — prefetch, URL real e
+                    abrir em aba nova continuam nativos. O `onClick` só troca o
+                    corte seco pela cortina no clique SIMPLES. */}
+                <Link
+                  href={`/servicos/${s.slug}`}
+                  className={styles.card}
+                  onClick={(e) => {
+                    if (!ehCliqueSimples(e)) return;
+                    e.preventDefault();
+                    transitionTo(`/servicos/${s.slug}`);
+                  }}
+                >
                   <Image
                     src={s.image}
                     alt={s.alt}

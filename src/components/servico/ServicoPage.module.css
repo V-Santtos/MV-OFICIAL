@@ -67,6 +67,32 @@
   color: var(--accent-glint);
 }
 
+/* Escape hatch (Victor, 2026-08-03, Bancos e Estofados): quando uma palavra
+   do `.title` branco precisa dividir a MESMA linha visual com o começo do
+   `.titleAccent` azul (ex. "tratados" branco + "de acordo" azul juntos).
+   `inline` deixa o span fluir no texto em vez de abrir linha própria; a
+   quebra em si fica a cargo dos `\n` do conteúdo (`white-space: pre-line`,
+   already ativo no desktop pela regra abaixo). Só entra via
+   `hero.accentInline` no content — as outras 5 rotas não usam esta classe e
+   mantêm o `display:block` de sempre. */
+.titleAccentInline {
+  display: inline;
+}
+
+/* Desktop honra a quebra ESCRITA no texto: um `\n` no `title` de
+   servico-detalhe.ts vira quebra de linha aqui, e a rota decide onde a frase
+   parte em vez de depender da quebra gulosa do navegador. No mobile a regra
+   não vale (`normal` volta a tratar o `\n` como espaço comum), porque a linha
+   fixada estouraria a largura da tela. Título sem `\n` não muda em nada.
+   (Victor, 2026-08-03.) */
+@media (min-width: 768px) {
+  .title,
+  .titleAccent,
+  .subtitle {
+    white-space: pre-line;
+  }
+}
+
 /* Mobile: acento INLINE (Victor, 2026-07-24). Com `block` o título quebrava em 4
    linhas deixando "carro" órfão. Inline, a frase flui e a quebra gulosa cai em 3:
    "O interior do seu" / "carro como no" / "primeiro dia". O azul começa em "como"
@@ -445,6 +471,128 @@
   font-size: clamp(0.96rem, 1.05vw, 1.03rem);
   line-height: 1.6;
   color: var(--text-2);
+}
+
+/* ============================================================
+   FAIXA DE CORTESIA — o brinde declarado no flyer da categoria
+   (Victor, 2026-08-03: "coloca exatamente como está nos flyers").
+   ============================================================
+   POR QUE É FAIXA E NÃO CARD: o grid é de 3 colunas, então um 7º card ficaria
+   órfão sozinho na 3ª linha. E semanticamente são coisas diferentes — os 6
+   cards são o que a categoria COBRE, isto é o que ela DÁ. Formato diferente =
+   leitura diferente, sem precisar de rótulo explicando.
+
+   A LINGUAGEM veio dos flyers da própria MV, não inventada: eles têm um FILETE
+   AZUL horizontal cortando sob o título. Aqui ele vira o filete vertical da
+   esquerda — mesmo gesto, adaptado à faixa. O azul é o único ponto do bloco
+   onde ele aparece em REPOUSO (nos 6 cards o azul só acende no hover), e é o
+   que faz o olho parar aqui sem precisar de tamanho maior nem de cor berrante.
+   Discreto por construção: a faixa é mais BAIXA que os cards, não compete. */
+.cobreCortesia {
+  margin-top: clamp(1.5rem, 2.4vw, 2.1rem);
+  display: flex;
+  justify-content: center;
+}
+
+.cortesiaFaixa {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  /* 40rem e não mais: em 46rem a frase quebrava deixando "sem custo." sozinho
+     na 2ª linha (órfão). Mais estreito, as duas linhas ficam equilibradas. */
+  max-width: 40rem;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  padding: clamp(1.15rem, 1.9vw, 1.5rem) clamp(1.4rem, 2.4vw, 2rem);
+  border-radius: 16px;
+  background: var(--bg-0);
+  /* Mesmo emboss dos 6 cards (a faixa pertence ao bloco), porém MENOS profundo
+     — ela é um adendo, não um sétimo item de peso igual. */
+  box-shadow:
+    -4px -4px 9px 0 rgba(45, 45, 45, 0.22),
+    4px 4px 9px 0 rgba(0, 0, 0, 0.22),
+    /* Respingo azul, a mesma ideia do card relacionado: ancora a peça no
+       ambiente em vez de deixá-la colada por cima. */
+    0 10px 34px -16px rgba(57, 101, 200, 0.3);
+}
+
+/* Halo azul MUITO baixo, saindo da borda esquerda — dá profundidade ao filete
+   sem virar "caixa colorida". Fica atrás do texto (z-index negativo preso pelo
+   `isolation` do pai). */
+.cortesiaFaixa::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    rgba(57, 101, 200, 0.16) 0%,
+    rgba(57, 101, 200, 0.05) 26%,
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+/* O FILETE — o gesto dos flyers da MV. Vertical, colado na borda esquerda, com
+   glow próprio. É a peça que carrega o "premium" do bloco inteiro. */
+.cortesiaFilete {
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 3px;
+  min-height: 2.6rem;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--accent-glint) 0%,
+    var(--accent) 55%,
+    rgba(57, 101, 200, 0.35) 100%
+  );
+  box-shadow: 0 0 12px 0 rgba(110, 147, 230, 0.5);
+}
+
+.cortesiaTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  text-align: left;
+}
+
+/* Reusa a régua tipográfica do `.relEyebrow` (uppercase + tracking largo), só
+   que em AZUL — é o rótulo que nomeia a natureza da peça: é brinde, não item. */
+.cortesiaLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-glint);
+}
+
+.cortesiaFrase {
+  margin: 0;
+  font-size: clamp(0.98rem, 1.1vw, 1.06rem);
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+/* MOBILE: o filete deitaria mal numa coluna estreita com texto de 2-3 linhas.
+   Vira uma barra HORIZONTAL curta acima do texto — o mesmo gesto do flyer, na
+   orientação original dele. */
+@media (max-width: 599px) {
+  .cortesiaFaixa {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .cortesiaFilete {
+    align-self: flex-start;
+    width: 2.6rem;
+    min-height: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-glint) 0%, var(--accent) 100%);
+  }
 }
 
 /* 7º CARD — categoria relacionada (Bancos): centralizado e ISOLADO numa linha

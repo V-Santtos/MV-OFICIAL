@@ -1,6 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Birthstone } from "next/font/google";
-import { Navbar, Footer, IntroReveal, SmoothScroll } from "@/components/layout";
+import {
+  Navbar,
+  Footer,
+  IntroReveal,
+  SmoothScroll,
+  RouteTransitionProvider,
+} from "@/components/layout";
 import { brand } from "@/content";
 import { siteConfig, siteUrl, localBusinessJsonLd } from "@/lib/seo";
 import "./globals.css";
@@ -131,9 +137,17 @@ export default function RootLayout({
         />
         <SmoothScroll />
         <IntroReveal />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        {/* Cortina de troca de ROTA (a logo se desenhando, como na abertura).
+            Envolve Navbar/main/Footer porque quem dispara mora nos dois: os
+            cards do mosaico (dentro de `main`) e a logo/"Início" da Navbar.
+            Navbar, `children` e Footer continuam renderizando no SERVER — o JSX
+            é montado aqui, num Server Component, e chega ao provider como
+            `children` (não vira client por estar dentro de um). */}
+        <RouteTransitionProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </RouteTransitionProvider>
         <script
           type="application/ld+json"
           // JSON-LD LocalBusiness (Simonésia-MG). Conteúdo controlado, sem input de usuário.

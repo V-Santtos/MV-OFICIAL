@@ -8,6 +8,18 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
 
+  // Rota renomeada (Victor, 2026-08-03): "Higienização Interna" virou
+  // "Completa". Redirect permanente pra não perder o que já foi indexado.
+  async redirects() {
+    return [
+      {
+        source: "/servicos/higienizacao-interna",
+        destination: "/servicos/higienizacao-completa",
+        permanent: true,
+      },
+    ];
+  },
+
   images: {
     // Formatos modernos servidos pelo otimizador do next/image.
     formats: ["image/avif", "image/webp"],
