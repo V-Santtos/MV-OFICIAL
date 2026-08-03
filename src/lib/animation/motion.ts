@@ -306,8 +306,20 @@ export const menuOverlay = {
        gesto lateral em vez de brigar com ele. */
     from: { opacity: 0, x: 26 },
     to: { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", stagger: 0.06 },
-    /** Sobreposição com o fim da cortina (segundos, negativo = antecipa). */
-    overlap: -0.28,
+    /**
+     * Sobreposição com o fim da cortina: os itens entram 0,28s ANTES de o painel
+     * assentar (0.45 − 0.28 = 0.17s).
+     *
+     * 🐞 **STRING, nunca número.** Era `-0.28` (número) e custou o "delay de
+     * ~280ms ao tocar no hambúrguer" que passou semanas sem causa achada. No
+     * GSAP, posição em NÚMERO é tempo ABSOLUTO na timeline — `-0.28` punha os
+     * itens em −0,28s, e o GSAP normaliza isso empurrando TODO o resto 0,28s pra
+     * frente. Resultado medido nos filhos da timeline: itens em 0s e **painel em
+     * 0,28s** — a ordem invertida. Os itens animavam primeiro, dentro de um
+     * painel ainda fora da tela, e o toque ficava 280ms sem nada visível.
+     * `"-=0.28"` (string) é que significa "0,28s antes do fim".
+     */
+    overlap: "-=0.28",
   },
   /** `prefers-reduced-motion`: sem cortina, só um fade curto. */
   reduced: { duration: 0.2, ease: "power1.out" },

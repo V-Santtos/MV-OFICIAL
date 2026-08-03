@@ -323,6 +323,55 @@
   color: var(--text-3);
 }
 
+/* ============================================================
+   MOBILE — o mapa deixa de ser PÍLULA e vira FAIXA de ponta a ponta
+   (Victor, 2026-08-03, com marcação em cima do print). Desktop intocado.
+
+   O problema: a `aspect-ratio: 21/8` foi calibrada pra janela larga do desktop.
+   Aplicada aos 345px que sobram no celular depois do padding, ela produzia
+   131px de altura — uma fita onde o botão "Abrir no Google Maps" (37px) sozinho
+   ocupava 28% da altura. Não era o mapa que estava pequeno: era a PROPORÇÃO
+   errada pro retrato.
+   ============================================================ */
+@media (max-width: 767px) {
+  .mapWrap {
+    /* Full-bleed. `margin-inline` negativo no valor EXATO do padding lateral da
+       `.section` (1.5rem) — e não `100vw`, que conta a calha da barra de
+       rolagem (o `scrollbar-gutter: stable` do `globals.css`) e vazaria pra
+       fora no desktop/moldura.
+       🐞 `align-self: stretch` + `width: auto` são OBRIGATÓRIOS juntos: o
+       `.inner` é flex com `align-items: center`, então o item NÃO estica
+       sozinho. Com o `width: 100%` que vinha do bloco base, o elemento manteria
+       os 345px e as margens negativas só o deslocariam pra esquerda, deixando
+       uma sobra de 48px na direita em vez de encostar dos dois lados. */
+    align-self: stretch;
+    width: auto;
+    margin-inline: -1.5rem;
+  }
+
+  .map {
+    /* 2:1 = a proporção que o Victor marcou no print. 393×196 no 14 Pro
+       (era 345×131): +50% de altura, e a largura agora é a tela inteira. */
+    aspect-ratio: 2 / 1;
+    /* Bordas retas: peça que encosta na margem não tem canto arredondado. */
+    border-radius: 0;
+    /* E sem traço VERTICAL — a borda lateral marcaria um limite que não existe
+       mais. Sobram as hairlines de cima e de baixo, que leem como uma faixa
+       atravessando a tela (mesma gramática do resto do site). */
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .mapLive {
+    /* A sombra de card flutuante (`0 40px 90px`) pressupunha peça destacada do
+       fundo; encostada na margem ela vira sujeira nas laterais. Fica só o anel
+       de luz no TOPO e o respiro azul, que amarra a faixa ao halo do CTA. */
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+      0 0 70px -24px rgba(57, 101, 200, 0.3);
+  }
+}
+
 /* Aviso discreto de placeholder (sai quando o mapa real entrar). */
 .mapNote {
   position: absolute;

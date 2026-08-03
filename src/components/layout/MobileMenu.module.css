@@ -80,13 +80,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* ⚠️ O TOPO RESERVA A FAIXA DA NAVBAR — a logo e o X flutuam POR CIMA desta
-     cortina, então o primeiro link tem que começar abaixo deles.
-     A logo termina em ~111px; com `6.5rem` (104px) o "Início" nascia
-     literalmente atrás dela (foi o que o Victor apontou). `9rem` (144px) abre
-     ~43px de respiro entre a base da logo e a primeira linha.
-     Só coube porque o CTA saiu do rodapé e devolveu ~90px. */
-  padding: 9rem 1.75rem 1.5rem;
+  /* ⚠️ O TOPO ACOMPANHA O ENTALHE, não é número fixo. Era `9rem` (144px) de
+     quando a logo da navbar flutuava POR CIMA desta cortina e o primeiro link
+     tinha que nascer abaixo dela. Essa decisão FOI REVERTIDA (o drawer cobre a
+     navbar inteira; o único elemento no topo é o X daqui) — e os 144px viravam
+     espaço morto justamente nos aparelhos sem entalhe, que são os mais curtos:
+     no Android de 360×584 o X terminava em 90px e sobravam 54px de nada.
+     Agora: `--safe-top` + 72px. O X vai até `--safe-top` + 58px, então sobram
+     ~14px de respiro em QUALQUER aparelho, com ou sem Dynamic Island. */
+  padding: calc(var(--safe-top) + 4.5rem) 1.75rem 1.25rem;
 }
 
 /* ---- X de fechar — canto superior direito, alinhado com o hambúrguer ----
@@ -94,7 +96,10 @@
    entalhe/Dynamic Island, igual à navbar. */
 .fechar {
   position: absolute;
-  top: calc(1.4rem + var(--safe-top));
+  /* `0.9rem` = o MESMO respiro da navbar (Navbar.module.css) — o X ocupa o lugar
+     exato onde o hambúrguer estava, então tem que alinhar com ele. Era `1.4rem`,
+     que além de desalinhar empurrava todo o conteúdo 8px pra baixo. */
+  top: calc(0.9rem + var(--safe-top));
   right: 1.5rem;
   z-index: 2;
   width: 44px;
@@ -150,8 +155,11 @@
   display: flex;
   flex-direction: column;
   /* Separa navegação principal de "Serviços" — são dois pesos diferentes e
-     precisam ler como dois blocos, não como uma lista só. */
-  gap: 2.5rem;
+     precisam ler como dois blocos, não como uma lista só.
+     🔑 `svh` no MEIO do clamp (ver `.link`): 2.5rem em tela alta, aperta até
+     1.1rem na curta — é o primeiro lugar de onde tirar espaço, porque encolher
+     um vão não muda o tamanho de nada que se lê ou se toca. */
+  gap: clamp(1.1rem, 3svh, 2.5rem);
 }
 
 .rolagem::-webkit-scrollbar {
@@ -165,7 +173,7 @@
 }
 
 .rotulo {
-  margin: 0 0 1rem;
+  margin: 0 0 clamp(0.4rem, 1.4svh, 1rem); /* mesma escala por altura do `.link` */
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -188,15 +196,24 @@
   display: flex;
   align-items: baseline;
   gap: 0.9rem;
-  /* Alvo de toque confortável: a linha inteira é clicável, não só o texto.
-     Voltou de 0.6 pra 0.85rem quando o CTA saiu do rodapé e devolveu espaço —
-     o aperto anterior existia só pra caber nos ~691px úteis do Safari. */
-  padding: 0.85rem 0;
-  min-height: 48px;
+  /* 🔑 O MENU NÃO PODE ROLAR EM CELULAR NENHUM (Victor, 2026-08-03) — e são 10
+     destinos + rótulo + rodapé, que em tela curta não cabem com medida fixa.
+     Daí `svh` NO MEIO DO CLAMP: o valor ideal é o de sempre nos aparelhos altos
+     e cede sozinho conforme a altura encolhe, em vez de um breakpoint que
+     adivinha aparelho. Os EXTREMOS do clamp é que são o contrato:
+       • teto  = exatamente o que já estava aprovado no iPhone 14 Pro;
+       • piso  = o mínimo que ainda se toca sem erro.
+     A linha inteira é clicável (a largura toda), então a altura é o único eixo
+     em jogo. 38px fica acima do mínimo do WCAG 2.5.8 (24px) e só abaixo do
+     confortável dos 44pt da Apple nos aparelhos onde a alternativa seria rolar.
+     `min()` na fonte pela mesma razão: em tela curta manda a altura, não a
+     largura — 6.2vw sozinho não sabe que a tela é baixa. */
+  padding: clamp(0.3rem, 1.1svh, 0.85rem) 0;
+  min-height: clamp(38px, 6.6svh, 48px);
   color: var(--text-1);
   text-decoration: none;
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 6.2vw, 1.8rem);
+  font-size: clamp(1.25rem, min(6.2vw, 3.6svh), 1.8rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -230,10 +247,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  /* Subiu pros 44px de alvo confortável (era 36) — deu pra pagar depois que o
-     CTA saiu do rodapé. */
-  padding: 0.5rem 0;
-  min-height: 44px;
+  /* 6 itens = o maior bloco do menu e a principal fonte do estouro. Mesma
+     escala por altura do `.link`: 44px (o alvo confortável) onde cabe, cedendo
+     até 36px só na tela curta — onde a alternativa seria rolagem. */
+  padding: clamp(0.2rem, 0.8svh, 0.5rem) 0;
+  min-height: clamp(36px, 6svh, 44px);
   color: var(--text-2);
   text-decoration: none;
   font-size: 0.88rem;
@@ -267,7 +285,7 @@
 /* ---- Rodapé do menu: só a localidade (o CTA saiu — ver MobileMenu.tsx) ---- */
 .rodape {
   flex: none; /* fora da área que rola — fica sempre visível no pé */
-  padding-top: 1.5rem;
+  padding-top: clamp(0.7rem, 2svh, 1.5rem); /* mesma escala por altura do `.link` */
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
