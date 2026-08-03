@@ -1446,13 +1446,26 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
     "Cristalização de vidros em Simonésia, MG: remoção de mancha de chuva ácida e camada que faz a água escorrer com o vento. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Vidros",
-    // 🔑 2ª rodada (2026-08-03, flyer real): a rota agrupa Remoção de Chuva Ácida
-    // + Cristalização. O título antigo ("O para-brisa do seu carro") era estreito
-    // demais — o serviço trata todos os vidros, não só o da frente. 🚩 Teste do
-    // eco: evitei "Os vidros do seu carro", porque Bancos e Polimento já abrem
-    // com "<peça> do seu carro" e a terceira repetição vira fôrma.
-    title: "Vidros sem mancha",
-    titleAccent: "e chuva sem borrão",
+    // 🔑 ESCOLHIDO POR ELE (2026-08-03), entre 6 opções apresentadas. O caminho
+    // até aqui, que vale como régua:
+    //  1. "O para-brisa do seu carro" — estreito demais (o serviço trata TODOS
+    //     os vidros, não só o da frente).
+    //  2. "Vidros sem mancha / e chuva sem borrão" — ele cortou "borrão":
+    //     *"precisa ser mais claro, eu não sei do que você está falando"*. É o
+    //     REFERENTE SOLTO de novo (borrão de quê?), o mesmo defeito de "o que
+    //     não pode" e "antes de começar" na rota de Motor.
+    //  3. Mais 3 opções minhas, todas recusadas de uma vez — e o diagnóstico foi
+    //     de ENQUADRAMENTO, não de palavra: as quatro tentavam descrever *a
+    //     chuva atrapalhando a visão*, que é cena negativa e abstrata. Só
+    //     destravou quando parei de propor variações e ofereci ÂNGULOS.
+    // 🚩 Eco conhecido e aceito por ele: Bancos ("Os bancos do seu carro
+    //    tratados") e Polimento ("A pintura e o farol do seu carro") já usam
+    //    "<peça> do seu carro" — esta é a 3ª. Eu tinha evitado de propósito; ele
+    //    escolheu assim mesmo, sabendo. NÃO reabrir sem ele pedir.
+    // Sem `\n`: as duas linhas cabem inteiras em 1024→1920 (medido), e o
+    // `titleAccent` já abre linha própria por padrão (`display:block`).
+    title: "Os vidros do seu carro",
+    titleAccent: "transparentes de novo",
     // 🔑 MANTIDO quase intacto de propósito — é a linha mais forte das 6 rotas: a
     // cena é um fato óptico observável, não uma suposição sobre o que "as pessoas
     // fazem" (o defeito de `copy-nao-afirmar-sem-criterio`). Só "encardido" virou
@@ -1462,11 +1475,17 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
   },
 
   oQueE: {
-    // 🐞 Título trocado: "A marca que o limpador não tira" era bom, mas não
-    // nomeava a chuva ácida — que é o serviço que esta rota absorveu. O novo é
-    // declarativo e informativo, no enquadramento que ele fixou pra esta seção
-    // (`copy-secao-o-que-e-e-informativa`): dizer o óbvio com clareza, sem tease.
-    title: "Chuva ácida deixa marca no vidro",
+    // 🐞 2 trocas até fechar (2026-08-03). "A marca que o limpador não tira" não
+    // nomeava a chuva ácida; a 2ª, "Chuva ácida deixa marca no vidro", ele cortou
+    // pelo TOM — e o diagnóstico vale pras outras rotas: aquele título punha **a
+    // chuva como sujeito**, virando manchete sobre chuva ácida em vez de falar do
+    // carro de quem lê. Nenhum título aprovado no site é sobre o agente agressor;
+    // todos falam do carro ou do serviço ("O motor também precisa de atenção").
+    // 🔑 O título agora abre o PROBLEMA e a seção seguinte abre RESOLVENDO ele —
+    // par pedido por ele: *"se for falar do problema na seção 2, tem que abrir a
+    // seção posterior e falar que é aquilo que resolve. Contraste."* O elo é
+    // "não sai lavando" → "Tira o que está incrustado" (ver `cobre.intro`).
+    title: "Nem toda sujeira do vidro sai lavando",
     // Saiu a fôrma recusada (3 §§) pra 1 parágrafo na fôrma aprovada: problema
     // observável → o que o serviço trata → benefício. As duas etapas (remover o
     // incrustado, depois proteger) são o que o flyer descreve e o que separa
@@ -1477,7 +1496,7 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
     // flyer menciona a face INTERNA do vidro, e eu tinha afirmado isso sem base.
     // Volta se o Victor confirmar que o serviço trata o vidro por dentro.
     body: [
-      "A chuva ácida, a poeira e o tempo deixam manchas agarradas no vidro, que não saem na lavagem nem com o limpador. A cristalização trata os vidros em duas etapas: primeiro sai o que está incrustado na superfície, depois entra uma camada protetora que faz a água juntar em gota e escorrer com o vento. Vidro transparente muda o que você enxerga à noite e na chuva.",
+      "A chuva ácida, a poeira e o tempo deixam manchas agarradas na superfície do vidro, que o limpador também não tira. A cristalização trata os vidros em duas etapas: primeiro sai o que está incrustado, depois entra uma camada protetora que faz a água juntar em gota e escorrer com o vento. Vidro transparente muda o que você enxerga à noite e na chuva.",
     ],
     // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
     image: "/assets/servicos/cristalizacao-v2.jpg",
@@ -1494,7 +1513,15 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
     // nenhum flyer menciona. Vira rótulo funcional + faixa de processo no
     // subtítulo, mesma receita das rotas já fechadas.
     title: "O que o tratamento dos vidros cobre",
-    intro: "Da remoção da mancha à camada que repele a água.",
+    // 🔑 O CONTRASTE com a seção de cima (Victor, 2026-08-03): o "O que é" abre
+    // no problema ("Nem toda sujeira do vidro sai lavando") e este subtítulo abre
+    // resolvendo exatamente ele — "não sai lavando" → "Tira o que está
+    // incrustado". A faixa de processo antiga ("Da remoção da mancha à camada que
+    // repele a água") descrevia a lista sem responder a seção anterior.
+    // 🚩 O título ficou no molde das outras 5 rotas de propósito: das 3 opções
+    // apresentadas, ele escolheu a que preserva o padrão "O que a X cobre" e faz
+    // o contraste só no subtítulo.
+    intro: "Tira o que está incrustado e protege pra não voltar.",
     // 🚩 TRÊS cards antigos saíram por não terem respaldo em flyer nenhum —
     // eram invenção minha, o defeito de `copy-nao-afirmar-sem-criterio`:
     // "Limpeza da face interna" (gordura por dentro), "Retrovisores" e
