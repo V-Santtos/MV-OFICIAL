@@ -95,6 +95,19 @@
   outline-offset: 2px;
 }
 
+/* Feedback TÁTIL (sem hover no toque) — mesma língua do X do menu mobile.
+   `.seta` já carrega `translateY(-50%)` pra centralizar; o active PRESERVA
+   esse deslocamento e só soma o afundamento. */
+.fechar:active {
+  opacity: 0.6;
+  transform: scale(0.92);
+}
+
+.seta:active {
+  opacity: 0.6;
+  transform: translateY(-50%) scale(0.92);
+}
+
 /* ---- Palco da foto ---- */
 .palco {
   position: relative;
@@ -192,5 +205,11 @@
   .overlay,
   .figura {
     transition: none;
+  }
+  .fechar:active {
+    transform: none;
+  }
+  .seta:active {
+    transform: translateY(-50%);
   }
 }

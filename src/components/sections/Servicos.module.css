@@ -263,6 +263,12 @@
   transform: rotate(0deg);
 }
 
+/* Feedback TÁTIL: no toque não há hover, então quem responde ao dedo é o
+   `:active` — mesma língua do resto do site (afunda de leve). */
+.card:active {
+  transform: scale(0.98);
+}
+
 .card:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 3px;
@@ -278,6 +284,9 @@
     transform: none;
   }
   .card:hover .img {
+    transform: none;
+  }
+  .card:active {
     transform: none;
   }
 }

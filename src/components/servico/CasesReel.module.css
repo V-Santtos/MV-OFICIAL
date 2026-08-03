@@ -283,6 +283,13 @@
   border-radius: var(--radius-lg);
 }
 
+/* Feedback TÁTIL: o hover do `.slide` (linha acima) só existe em `@media
+   (hover: hover)` — no toque não sobra nenhum. Aqui a foto escurece de leve
+   sob o dedo, no gatilho que cobre o card inteiro. */
+.gatilho:active {
+  background: rgba(0, 0, 0, 0.15);
+}
+
 .img {
   object-fit: cover;
   /* Filtro ALIVIADO (era saturate .82 / brightness .94): quem escurece agora é

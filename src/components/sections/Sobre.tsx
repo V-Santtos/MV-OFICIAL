@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   motion,
+  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -96,14 +97,38 @@ function Photo({
   const lane = scrollReveal.photoLanes[photo.lane];
   const y = useTransform(progress, [0, 1], [lane.fromY, lane.toY]);
 
+  // 🚩 O <video> só MONTA perto da viewport (medido, 2026-08-03): com ele no
+  // SSR, o `autoPlay` vence o `preload="metadata"` — o navegador baixa o
+  // arquivo INTEIRO no load, e era a maior transferência da página (720 KiB
+  // terminando a ~5,7s no 4G lento), na frente do JS que a intro espera.
+  // `useInView` do Framer (padrão do projeto), gatilho `once`. Até montar, o
+  // ramo de baixo (Image do poster) segura o visual — é o MESMO frame do vídeo.
+  // ⚠️ Margem de 200px, não mais: a lane é `top: 0` do palco (o transform do
+  // parallax não muda a caixa dela), então margem de ~1 tela alcançava a seção
+  // ainda NO LOAD e o download voltava pro caminho crítico (medido: 800px
+  // reintroduzia os 429 KiB @4,1s). (O observer só roda pós-hidratação, mas
+  // aqui isso não é o problema do mapa do Contato: a seção fica ~3 telas
+  // abaixo, hidrata muito antes.)
+  const laneRef = useRef<HTMLDivElement>(null);
+  const nearView = useInView(laneRef, { once: true, margin: "0px 0px 200px 0px" });
+
+  // Salvaguarda do autoplay: em vídeo montado DEPOIS da carga (o nosso caso),
+  // alguns Safari ignoram o atributo `autoPlay`. O play() imperativo cobre;
+  // o catch engole o NotAllowedError — aí fica o poster, que é o mesmo frame.
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (nearView) videoRef.current?.play().catch(() => {});
+  }, [nearView]);
+
   return (
-    <div className={styles.lane} data-lane={photo.lane}>
+    <div ref={laneRef} className={styles.lane} data-lane={photo.lane}>
       {/* Reduced-motion: parada numa posição visível fixa (sem esteira). */}
       <motion.div className={styles.photo} style={{ y: reduced ? lane.staticY : y }}>
-        {photo.video && !reduced ? (
+        {photo.video && !reduced && nearView ? (
           // Loop mudo e decorativo: sem controles, sem áudio, sem entrar na
           // ordem de foco. Em reduced-motion cai no poster (o ramo de baixo).
           <video
+            ref={videoRef}
             className={styles.photoVideo}
             src={photo.video}
             poster={photo.src}
