@@ -90,16 +90,32 @@
   line-height: 0.9;
 }
 
-/* Mobile: a rampa de 260vh foi calibrada no DESKTOP (widescreen). No retrato o
-   círculo cobre a tela mais cedo (scale ~0.73, progresso ~0.93), então sobra
-   scroll morto — e o começo (bolinha minúscula) rende tela vazia. Encolher a
-   altura comprime TODA a rolagem proporcionalmente: o efeito é progress-mapped,
-   então o formato se preserva (mesma lógica da lapidação 300→260 do desktop) e a
-   cobertura segue acontecendo antes do release. NÃO toca na Sobre (fotos pinadas
-   dependem da altura DELA) — só nesta seção. Valor de calibração; ajustar no
-   olhômetro. (Victor, 2026-07-24.) */
+/* ---- MOBILE ---- */
 @media (max-width: 767px) {
   .section {
+    /* 🚫 SEÇÃO OCULTA NO MOBILE (Victor, 2026-08-02 — decisão do dono da MV:
+       "muito irrelevante" no celular). A frase-ponte sai e a home passa de
+       "Quem somos" DIRETO pra "Serviços".
+
+       Consequência ACEITA por ele: o Círculo era a transição claro→dark, então
+       agora o claro da Sobre corta seco no escuro de Serviços. As duas seções
+       pintam o próprio fundo, então é um corte limpo — não sobra vão nem
+       terceira cor.
+
+       🔑 É OCULTAR, não destruir: o componente, o conteúdo e toda a calibração
+       mobile seguem intactos. Pra trazer de volta é só apagar esta linha — o
+       `height: 180vh` abaixo é a rampa calibrada em 2026-07-24 e continua aqui
+       de propósito, esperando. */
+    display: none;
+
+    /* Rampa mobile calibrada (2026-07-24) — INERTE enquanto o `display:none`
+       estiver acima. A de 260vh foi feita no DESKTOP (widescreen); no retrato o
+       círculo cobre a tela mais cedo (scale ~0.73, progresso ~0.93), então
+       sobrava scroll morto — e o começo (bolinha minúscula) rendia tela vazia.
+       Encolher a altura comprime TODA a rolagem proporcionalmente: o efeito é
+       progress-mapped, então o formato se preserva (mesma lógica da lapidação
+       300→260 do desktop) e a cobertura segue acontecendo antes do release.
+       NÃO toca na Sobre (as fotos pinadas dependem da altura DELA). */
     height: 180vh;
   }
 }

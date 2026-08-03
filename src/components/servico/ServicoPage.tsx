@@ -63,7 +63,11 @@ export function ServicoDetalhePage({
 }) {
   const { hero, oQueE, cobre, cases, faq } = detalhe;
   // Cases que de fato vão pro ar nesta categoria (ver a regra em servico-detalhe.ts).
-  const casesVisiveis = cases ? casesPublicaveis(cases.items) : [];
+  // A categoria pode sobrepor quantos cards de enchimento aparecem; sem override,
+  // vale o número global.
+  const casesVisiveis = cases
+    ? casesPublicaveis(cases.items, cases.placeholdersVisiveis)
+    : [];
 
   return (
     <article className={styles.page}>
@@ -94,8 +98,8 @@ export function ServicoDetalhePage({
           de marca no card.
 
           🚩 PUBLICAÇÃO (Victor, 2026-08-01): a seção só existe se sobrar case
-          pra mostrar. `casesPublicaveis` some com os cards de enchimento quando
-          `MOSTRAR_CASES_PLACEHOLDER` for `false`; se a categoria ficar sem
+          pra mostrar. `casesPublicaveis` devolve os reais + os primeiros
+          `PLACEHOLDERS_VISIVEIS` cards de enchimento; se a categoria ficar sem
           nenhum, o `.length` zera e NADA é renderizado — nem título, nem setas,
           nem o padding da seção. É de propósito que a checagem seja aqui fora e
           não dentro do CasesReel: assim não sobra um vão vazio na página. */}

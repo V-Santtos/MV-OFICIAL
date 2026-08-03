@@ -3,7 +3,7 @@
  * Conteúdo migrado as-is do case congelado. NÃO redesenhar aqui — Fase 2.
  *
  * ⚠️ Bugs de conteúdo herdados (parqueados p/ Fase 2, ver ANEXO-MEMORIA §6):
- *   - WhatsApp é placeholder (`wa.me/5500000000000`).
+ *   - ~~WhatsApp é placeholder~~ ✅ RESOLVIDO 2026-08-03 (número confirmado pelo Victor).
  *   - Nome do fundador conflita entre `alt` da foto ("Diogo Andrade") e o texto ("Matheus Vitor").
  *   - Nav tem âncora quebrada (`#quem-somos` não existe; a seção é `#posicionamento`).
  *   - Redes sociais genéricas; Política/Termos vazios.
@@ -91,9 +91,25 @@ export const assets = {
   heroCar: "/assets/hero-car-v2.png",
 } as const;
 
-/** Contato. `whatsapp` é PLACEHOLDER — trocar por número real na Fase 2. */
+/**
+ * Contato.
+ *
+ * ✅ **WhatsApp CONFIRMADO pelo Victor em 2026-08-03** — era
+ * `wa.me/5500000000000` (placeholder) e travava o CTA do site inteiro: Hero,
+ * Contato, Footer, o trilho do FAQ e o CTA de cada rota de serviço apontam
+ * todos pra cá. Também destrava o `telephone` do JSON-LD.
+ *
+ * 🚩 Formato: `wa.me` exige **só dígitos**, com país e DDD e SEM `+`, espaço ou
+ * traço — `55` (Brasil) + `33` (DDD) + `998463806`. O `phoneE164` é a mesma
+ * coisa no formato que o schema.org espera, e o `phoneDisplay` é o único que
+ * pode ser lido por humano.
+ */
 export const contact = {
-  whatsapp: "https://wa.me/5500000000000",
+  whatsapp: "https://wa.me/5533998463806",
+  /** E.164 — usado no `telephone` do JSON-LD e em `href="tel:"`. */
+  phoneE164: "+5533998463806",
+  /** Formato de leitura. Nunca usar em link. */
+  phoneDisplay: "(33) 99846-3806",
   instagram: "https://instagram.com/",
   facebook: "https://facebook.com/",
 

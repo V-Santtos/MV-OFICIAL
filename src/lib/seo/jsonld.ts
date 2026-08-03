@@ -7,8 +7,8 @@
  * ⚠️ Regra: só entra o que é VERDADEIRO hoje. Dado fabricado prejudica mais
  * que ajuda.
  *   - ✅ Endereço, CEP e `geo` EXATOS desde 2026-07-22 (ficha do Google da MV).
- *   - `telephone`: (33) 99846-3806 apareceu na ficha, mas o Victor ainda não
- *     confirmou → OMITIDO até confirmar.
+ *   - ✅ `telephone`: (33) 99846-3806 — **CONFIRMADO pelo Victor em 2026-08-03**,
+ *     entrou no schema. Vive em `contact.phoneE164` (fonte única com o `wa.me`).
  *   - `sameAs`: perfis sociais ainda genéricos, sem handle → omitido.
  *   - `openingHours`: a ficha mostra "Fecha 18:00", mas não temos a semana
  *     inteira → omitido.
@@ -19,7 +19,7 @@
  */
 
 import { brand, contact, positioning, servicos } from "@/content";
-import type { Servico, FaqItem } from "@/content";
+import type { Servico, FaqItem, CobreItem } from "@/content";
 import { siteConfig, siteUrl } from "./site";
 
 export function localBusinessJsonLd() {
@@ -32,6 +32,9 @@ export function localBusinessJsonLd() {
     url: siteUrl,
     image: `${siteUrl}/logo.png`,
     logo: `${siteUrl}/logo.png`,
+    // Confirmado 2026-08-03. E.164 é o formato que o schema.org espera; a mesma
+    // constante alimenta o link do WhatsApp, então não há como divergirem.
+    telephone: contact.phoneE164,
     address: {
       "@type": "PostalAddress",
       streetAddress: "R. Padre Horácio Rentis",
@@ -75,12 +78,23 @@ export function localBusinessJsonLd() {
  * negócio local (referência via `@id` — não duplica o LocalBusiness inteiro,
  * que já sai no layout raiz).
  */
-export function servicoJsonLd(servico: Servico) {
+export function servicoJsonLd(
+  servico: Servico,
+  /**
+   * Sub-serviços da categoria (os itens do "O que cobre"). Quando existem, viram
+   * um `OfferCatalog`: sem isso o buscador só sabe o NOME da categoria, e passa
+   * a saber que "Polimento" cobre faróis, oxidação e refino. Nenhum dado novo é
+   * inventado — é o conteúdo que já está na página, declarado em schema.
+   */
+  cobre?: readonly CobreItem[],
+  /** Descrição de SERP da rota; sem ela, cai no texto do card do mosaico. */
+  description?: string,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
     name: servico.title,
-    description: servico.desc,
+    description: description ?? servico.desc,
     url: `${siteUrl}/servicos/${servico.slug}`,
     image: `${siteUrl}${servico.image}`,
     serviceType: servico.title,
@@ -89,6 +103,48 @@ export function servicoJsonLd(servico: Servico) {
       "@type": "AdministrativeArea",
       name: `${brand.city} e região, ${brand.state}`,
     },
+    ...(cobre?.length
+      ? {
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: `O que entra em ${servico.title}`,
+            itemListElement: cobre.map((item) => ({
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: item.title,
+                description: item.desc,
+              },
+            })),
+          },
+        }
+      : {}),
+  };
+}
+
+/**
+ * BreadcrumbList da rota de serviço — estava PROMETIDO no cabeçalho de
+ * `app/servicos/[slug]/page.tsx` desde a criação da rota, mas nunca existiu
+ * (achado em 2026-08-03). É o que faz o Google desenhar a trilha
+ * "Início › Serviços › Polimento" no resultado, em vez da URL crua.
+ *
+ * 🚩 O 2º nível aponta pra `/#servicos`, a âncora do mosaico na home: **não
+ * existe uma página `/servicos`**. Se um dia existir, trocar aqui.
+ */
+export function breadcrumbJsonLd(servico: Servico) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Serviços", item: `${siteUrl}/#servicos` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: servico.title,
+        item: `${siteUrl}/servicos/${servico.slug}`,
+      },
+    ],
   };
 }
 

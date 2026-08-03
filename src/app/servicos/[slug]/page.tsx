@@ -15,7 +15,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { brand, servicos, servicosDetalhe } from "@/content";
-import { servicoJsonLd, faqJsonLd } from "@/lib/seo";
+import { servicoJsonLd, faqJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { ServicoDetalhePage, ServicoResumoPage } from "@/components/servico";
 
 export const dynamicParams = false;
@@ -35,14 +35,17 @@ export async function generateMetadata({
 
   // Título entra no template do layout: "%s — MV Estética Automotiva".
   const title = `${servico.title} em ${brand.location}`;
+  // Snippet de busca escrito pra ESTA rota; sem ele, cai no texto do card do
+  // mosaico (que tem outro trabalho). Ver `seoDescription` em servico-detalhe.ts.
+  const description = servicosDetalhe[slug]?.seoDescription ?? servico.desc;
 
   return {
     title,
-    description: servico.desc,
+    description,
     alternates: { canonical: `/servicos/${slug}` },
     openGraph: {
       title,
-      description: servico.desc,
+      description,
       url: `/servicos/${slug}`,
       type: "website",
       images: [{ url: servico.image }],
@@ -68,10 +71,23 @@ export default async function ServicoPage({
       ) : (
         <ServicoResumoPage servico={servico} />
       )}
+      {/* Service — enriquecido com os sub-serviços do "O que cobre" quando a
+          categoria tem miolo completo: assim o buscador sabe o que a categoria
+          COBRE, não só o nome dela. */}
       <script
         type="application/ld+json"
         // Conteúdo controlado (content/*.ts), sem input de usuário.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicoJsonLd(servico)) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            servicoJsonLd(servico, detalhe?.cobre.items, detalhe?.seoDescription),
+          ),
+        }}
+      />
+      {/* BreadcrumbList — vale pras 6 rotas, inclusive as que caem no resumo:
+          a trilha existe independente de a página ter miolo. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(servico)) }}
       />
       {detalhe && (
         <script

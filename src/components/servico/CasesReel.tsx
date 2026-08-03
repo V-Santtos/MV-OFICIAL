@@ -49,8 +49,9 @@ export interface CaseItem {
   /**
    * Campo INTERNO, nunca renderizado — mesma convenção do `real` em
    * `content/depoimentos.ts`. `true` = card de enchimento (carro e resultado
-   * inventados), no ar só pra validar o visual do reel. Filtrado por
-   * `casesPublicaveis()` quando o switch de placeholder for desligado.
+   * inventados), no ar só pra sustentar o visual do reel. Quantos desses
+   * aparecem é decidido por `PLACEHOLDERS_VISIVEIS` em `casesPublicaveis()`;
+   * os que sobram ficam no arquivo, ocultos — nunca são apagados.
    */
   placeholder?: boolean;
 }

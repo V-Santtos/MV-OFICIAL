@@ -12,6 +12,31 @@ import styles from "./Contato.module.css";
  *  recarrega quando a pessoa só passa o mouse por cima indo pro rodapé. */
 const MAP_RESET_DELAY = 1200;
 
+/**
+ * ❌ PRÉ-CARGA POR IntersectionObserver — TENTADO E REVERTIDO (2026-08-03).
+ *    NÃO refazer. Medido, não deduzido.
+ *
+ * A ideia era trocar o `loading="lazy"` do iframe por um gatilho nosso, com
+ * `rootMargin` de 1200px, pra começar o download uma tela e meia antes. Parecia
+ * óbvio e **piorou nos dois cenários**:
+ *
+ *  | cenário             | lazy nativo        | observer nosso     |
+ *  |---------------------|--------------------|--------------------|
+ *  | desktop, rolando rápido | 274 ms de espera | 792 ms             |
+ *  | 3G                  | pedido 329 ms ANTES de chegar | pedido 1619 ms DEPOIS |
+ *
+ * 🔑 **A CAUSA:** `loading="lazy"` é do HTML — o navegador dispara na hora do
+ * parse, **sem depender de JavaScript**, e a heurística dele já é adaptativa
+ * (margem maior em rede lenta). Um IntersectionObserver só roda **depois da
+ * hidratação do React**. Em rede lenta a hidratação chega tarde, então trocamos
+ * um gatilho que roda cedo por um que roda depois. Em rede rápida também perde,
+ * porque ainda custa um render a mais até o iframe montar.
+ *
+ * ➡️ Regra que fica: **pra adiar recurso abaixo da dobra, o atributo nativo
+ *    ganha do observer.** Só vale JS quando é preciso trocar o comportamento,
+ *    não a hora.
+ */
+
 /** Duração do crossfade entre o mapa antigo e o novo (ms). Precisa bater com o
  *  `transition` de `.mapFrame` no CSS. */
 const MAP_FADE = 600;
@@ -170,12 +195,11 @@ export function Contato() {
   const { frames, wrapRef, onFrameReady, onPointerDown, onPointerEnter, onPointerLeave } =
     useMapaReset();
 
-  // Esquenta a conexão com o Google ANTES de o iframe pedir o load — o mapa é
-  // lazy (só carrega perto da viewport), mas o handshake de DNS+TLS não
-  // precisa esperar isso: preconnect durante o render é dedupado pelo React,
-  // então chamar em todo render não tem custo. Só ganho de latência, sem
-  // baixar nenhum byte a mais (Victor, 2026-07-31: mapa "demorando a carregar",
-  // pior no celular).
+  // Esquenta a conexão com o Google ANTES de o iframe pedir o load: o handshake
+  // de DNS+TLS não precisa esperar o gatilho de proximidade. Preconnect durante
+  // o render é dedupado pelo React, então chamar em todo render não tem custo.
+  // Só ganho de latência, sem baixar nenhum byte a mais (Victor, 2026-07-31:
+  // mapa "demorando a carregar", pior no celular).
   if (contact.mapsEmbedUrl) {
     ReactDOM.preconnect("https://www.google.com");
     ReactDOM.preconnect("https://maps.gstatic.com");
