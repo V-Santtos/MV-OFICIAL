@@ -1,0 +1,29 @@
+# Seção: Contato — fecho dark, sem formulário, com MAPA REAL · ANEXO-REGRAS
+> Legenda: 🐞 bug caro · 🚫 fechado · 🔑 princípio · 🚩 restrição · [← índice](ANEXO-REGRAS.md)
+
+Form REMOVIDO. Coluna única centralizada; clima por nível de escuro (vinheta + grão + hairline); único azul = halo do CTA. `contactSection = {title, body[], whatsappCta, trust[]}`.
+- 🚩 **Mapa SEM Google Cloud (decisão dura, não reabrir).** A Maps JS API exige conta de faturamento; o Victor recusou cadastrar cartão. Chave apagada, `.env.local` removido.
+- Caminho: **iframe de compartilhamento** (`?q=<busca>&output=embed`). Sem chave, sem cota. Vazio ⇒ volta ao placeholder CSS.
+- ⚠️ **A query é NOME+ENDEREÇO, nunca lat,lng** (coordenada dá pino genérico e mudo; a busca do estabelecimento vem rotulada com o cartão da ficha aberto — estado default aprovado).
+- Dark: só existe embed claro → `filter: invert(92%) hue-rotate(180deg) …` (remendo consciente).
+- **Reset ao default** (`useMapaReset`): iframe cross-origin → **remonta trocando a `key`**. 🐞 **Detectar interação pelo FOCO, não por `pointerdown`** — evento de mouse dentro de iframe cross-origin não chega ao pai. Gatilhos: `window blur` + `activeElement` é o iframe, `pointerleave` (1,2s), IntersectionObserver.
+- **Crossfade obrigatório:** cada iframe nasce invisível, aparece no `load`; o antigo fica pintado até o novo carregar (fade por tempo fixo dava faixa preta). `MAP_FADE` (TSX) tem que bater com o `transition` do `.mapFrame` (CSS).
+- 🚫 **Duas tentativas DESCARTADAS de esconder o thumbnail de camadas do Google:** gradiente virava "sujeira"; deslocar 90px cortava o cartão. O thumbnail fica; o cartão vale mais.
+- ⚠️ Rótulo de POI ("Alfa Car Lava Jato", que não existe mais) só some se o dono marcar "Fechado permanentemente". Ctrl+scroll é do Google, não configurável.
+
+## 📱 Mapa no MOBILE — pílula vira FAIXA full-bleed (2026-08-03)
+
+🚫 **Decisão do Victor, marcada em cima do print:** no celular o mapa **encosta nas duas margens** e tem **bordas retas**. Desktop **não se toca** (segue pílula `24px` + sombra de card). Tudo num `@media (max-width: 767px)` no fim do `Contato.module.css`.
+- 🔑 **O defeito não era "mapa pequeno", era PROPORÇÃO errada pro retrato.** `aspect-ratio: 21/8` foi calibrada pra janela larga do desktop; aplicada aos 345px que sobravam depois do padding, dava **131px de altura** — e o botão "Abrir no Google Maps" (37px) sozinho ocupava **28%** disso. Medido antes de mexer, não estimado.
+- **Proporção nova = `2/1`**, tirada da marcação laranja do print dele (393×196 no 14 Pro, era 345×131): +50% de altura e a largura da tela inteira.
+- 🐞 **Full-bleed dentro de um flex `align-items:center` exige TRÊS coisas juntas**, não só a margem negativa: `align-self: stretch` + `width: auto` + `margin-inline: -1.5rem`. Só a margem negativa (com o `width:100%` que vinha do bloco base) mantém a largura antiga e apenas **desloca** a peça pra esquerda — encosta num lado e deixa 48px de sobra no outro.
+- 🚩 **`margin-inline: -1.5rem` (o valor EXATO do padding da `.section`), NUNCA `100vw`.** O `100vw` conta a calha da barra de rolagem (`scrollbar-gutter: stable` do `globals.css`) e vazaria pra fora no desktop/moldura — mesma armadilha do `CaseLightbox` (ver [sec-rota-servico.md](sec-rota-servico.md)).
+- **Acabamento que acompanha a decisão:** `border-radius: 0`; **bordas laterais removidas** (traço vertical marca um limite que não existe mais) sobrando as hairlines de topo/base, que leem como faixa atravessando a tela; e a sombra de card flutuante (`0 40px 90px`) sai — encostada na margem ela vira sujeira lateral —, ficando o anel de luz no topo + o respiro azul que amarra a faixa ao halo do CTA.
+- ℹ️ **O cartão da ficha do Google não aparece no mobile** (vira só um botão "Maps ↗" no canto). É o Google que colapsa por largura, dentro do iframe cross-origin — não é regressão nossa e não há como forçar.
+
+## 🗺️ "Mapa demorando a carregar" — investigado e FECHADO (2026-08-03): deixar como está
+
+🔑 **Diagnóstico corrigido depois de o Victor testar em aba anônima:** *"o que não abriu de forma instantânea foi somente esse quadradinho. O mapa inteiro ele abriu correto."* O mapa base pinta rápido mesmo com cache frio — quem chega atrasado é **o cartão do Google** (nome+endereço+nota, canto superior esquerdo), porque a busca por `?q=nome+endereço` (decisão travada acima, pino mudo senão) obriga o Google a RESOLVER o estabelecimento num 2º estágio, depois do mapa base pintar. **Fora do nosso alcance** — é sub-elemento de terceiro dentro de iframe cross-origin; não dá pra estilizar, pré-carregar nem cobrir com esqueleto.
+- 🔑 **Lição de método:** a medição original (`onLoad` do iframe) media "carregou tudo", incluindo o 2º estágio — por isso apontava ~274ms de "retângulo escuro" que na prática não existe (o mapa já está pintado antes). **Medir o que o usuário aponta, não o que é fácil instrumentar.** Probe: `probes/mapa-timing.mjs` (`--rapido --mobile --net 3g --eager`).
+- 🐞 **TENTADO E REVERTIDO: trocar `loading="lazy"` por `IntersectionObserver` (`rootMargin:1200px`).** Piorou nos dois cenários (desktop 274→792ms; 3G o pedido saiu 1619ms DEPOIS da chegada em vez de 329ms antes). **Causa:** `loading="lazy"` é do HTML, dispara no parse sem depender de JS, com heurística já adaptativa por rede; `IntersectionObserver` só roda depois da hidratação do React, que em rede lenta chega tarde. 🔑 **Regra: pra adiar recurso abaixo da dobra, o atributo nativo ganha do observer.** (Documentado também em comentário no `Contato.tsx`.)
+- ✅ **Decisão: deixar como está.** Fachada não resolve (preenche a janela inteira; a janela não é o problema). `eager` ajudaria (a resolução do lugar começaria junto com a página) mas custa 1,8MB extra em **toda** visita — não compensa. Registrado como a única alavanca real, se um dia incomodar.
