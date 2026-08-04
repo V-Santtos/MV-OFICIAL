@@ -171,8 +171,10 @@ export type ServicoDetalhe = {
         alt: string;
         /** `"video"` faz o item virar `<video>` no Lightbox (ver CasesReel.tsx). */
         tipo?: "video";
-        /** Frame de capa do vídeo — obrigatório na prática quando `tipo` é `"video"`. */
+        /** Capa do CARD (passa pelo next/image) — obrigatório na prática quando `tipo` é `"video"`. */
         poster?: string;
+        /** Frame leve pro `poster=` do `<video>`, que NÃO passa pelo otimizador (ver CasesReel.tsx). */
+        posterVideo?: string;
       }[];
       /** Interno, nunca renderizado — card de enchimento. Ver `casesPublicaveis`. */
       placeholder?: boolean;
@@ -407,6 +409,7 @@ const higienizacaoInterna: ServicoDetalhe = {
             tipo: "video",
             src: "/assets/cases/rampage-lavagem/montagem.mp4",
             poster: "/assets/cases/rampage-lavagem/capa.jpg",
+            posterVideo: "/assets/cases/rampage-lavagem/montagem-poster.webp",
             alt: "Vídeo da RAM Rampage antes, durante e depois da lavagem externa na MV: rodas e lataria encardidas, espuma aplicada em toda a carroceria e o resultado com a pintura em brilho.",
           },
         ],
@@ -765,11 +768,12 @@ const polimento: ServicoDetalhe = {
  * pede pH adequado e hidratação depois. Toda a copy se apoia nisso, porque é a
  * resposta concreta pra "por que isso não está incluso na higienização?".
  *
- * ⚠️ FOTOS SÃO PLACEHOLDER (mesma decisão do Polimento). O acervo só tem
- * `bancos-e-estofados.jpg`, que já é o card da home. Os dois slots do "O que é"
- * apontam pro mesmo arquivo de propósito: repetida na tela, ninguém publica sem
- * trocar. Ao gerar as reais, ler `regras/foto-assinatura.md` ANTES e casar com o
- * CSS: 1472×1440 no card grande (46/45) e 800×600 no pequeno (4/3).
+ * ⚠️ FOTOS DO "O QUE É" AINDA SÃO STOCK (Victor, 2026-08-03) — trocadas do
+ * placeholder duplicado (`bancos-e-estofados.jpg` nos dois slots) por 2 fotos
+ * de banco de imagens, cada uma já cortada pro slot: `bancos-couro-escova.jpg`
+ * (1472×1440, 46/45) no card grande, `bancos-console-espuma.jpg` (800×600,
+ * 4/3) no pequeno. Não é captação própria da MV — mesma régua de
+ * `foto-assinatura.md` ainda vale quando as fotos reais chegarem.
  *
  * ⚠️ COPY = PRIMEIRO PASSE, sem número, prazo, garantia ou marca de produto
  * inventada (a lista PENDENTE DO DONO segue aberta).
@@ -813,12 +817,11 @@ const bancosEEstofados: ServicoDetalhe = {
     body: [
       "O tratamento alcança a sujeira que ficou presa dentro da trama do tecido e o encardido que o uso deixa no couro. Cada um sai de um jeito: no tecido, por extração; no couro, com limpeza de pH adequado e hidratação para repor a maciez. Entram junto as laterais de entrada, os cintos e as costuras, e a impermeabilização.",
     ],
-    // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
-    image: "/assets/servicos/bancos-e-estofados.jpg",
-    imageAlt: "Banco de veículo após tratamento de estofado",
+    image: "/assets/servicos/bancos-couro-escova.jpg",
+    imageAlt: "Escova de cerdas aplicando espuma de limpeza no banco de couro do veículo",
     imagePair: {
-      src: "/assets/servicos/bancos-e-estofados.jpg",
-      alt: "Detalhe do acabamento do banco depois do tratamento",
+      src: "/assets/servicos/bancos-console-espuma.jpg",
+      alt: "Detalhe da escova espumando o console central durante a limpeza",
     },
   },
 

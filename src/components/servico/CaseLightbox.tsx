@@ -189,7 +189,7 @@ function Galeria({
                 key={foto.src}
                 className={styles.img}
                 aria-label={foto.alt}
-                poster={foto.poster}
+                poster={foto.posterVideo ?? foto.poster}
                 autoPlay
                 loop
                 muted

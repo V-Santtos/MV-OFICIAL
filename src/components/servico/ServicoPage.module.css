@@ -160,6 +160,32 @@
   .splitTall .splitCopy {
     grid-column: 2;
   }
+  /* Nudge do par pra CIMA e pra ESQUERDA (Victor, 2026-08-03). Medido antes:
+     o card já estava encostado nos dois limites da caixa de conteúdo
+     (x = 41.67px = o próprio padding-inline da seção; topo colado no
+     padding-block, porque o par é o item mais alto e o `align-items: center`
+     não sobra folga pra distribuir). Subir/andar mais exige SAIR da caixa.
+
+     🐞 NÃO usar `transform` aqui (tentei primeiro, não funciona): o `.pair` é
+     um `motion.div` com a variante `revealFromSide`, e quando a animação de
+     entrada assenta o Framer escreve `transform: none` INLINE no elemento —
+     estilo inline ganha da classe, e o deslocamento some sem deixar rastro.
+     Medido: `pairLeft` voltava pros mesmos 41.7px.
+
+     🐞 Margem negativa também NÃO serve (2ª tentativa): as colunas são
+     `minmax()`/`fr` e somam mais que o espaço disponível, então elas se
+     redistribuem — a margem negativa entra na conta de largura da coluna e o
+     card ANDOU SÓ 17.7px dos 32 pedidos, alargando junto.
+
+     ✅ O que funciona: `top`/`left`. O `.pair` já é `position: relative` (é a
+     âncora do `.pairSecondary`), então deslocamento por offset não gera layout
+     nenhum — não mexe na largura da coluna, não encolhe a seção, não empurra o
+     texto — e o Framer só escreve `transform`/`opacity`, nunca `top`/`left`.
+     🚩 Só no desktop: no mobile a seção empilha centralizada e desalinharia. */
+  .splitTall .pair {
+    top: -2rem;
+    left: -2rem;
+  }
 }
 
 /* 46×45 (largura 40→46rem = +15%; altura 50→45rem = −10%). */

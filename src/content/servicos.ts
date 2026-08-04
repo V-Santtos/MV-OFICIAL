@@ -35,8 +35,9 @@ export const servicos: readonly Servico[] = [
     title: "Higienização Completa",
     slug: "higienizacao-completa",
     desc: "Limpeza profunda de painel, carpetes, teto e superfícies internas, devolvendo frescor e conservação ao interior do veículo.",
-    image: "/assets/servicos/higienizacao-interna-v2.jpg",
-    alt: "Higienização interna do veículo — limpeza de superfícies internas",
+    // v3 (Victor, 2026-08-03): troca de foto do card do mosaico.
+    image: "/assets/servicos/higienizacao-interna-v3.jpg",
+    alt: "Sugador removendo poeira do encosto do banco e do volante durante a higienização interna",
   },
   {
     title: "Tratamento de Bancos e Estofados",

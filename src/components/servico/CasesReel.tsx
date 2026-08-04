@@ -41,8 +41,20 @@ export interface CaseFoto {
    * abre a galeria. Por isso o `<video>` do overlay usa `preload="none"`.
    */
   tipo?: "video";
-  /** Frame de capa do vídeo. Só lido quando `tipo === "video"`. */
+  /**
+   * CAPA DO CARD. Passa pelo `next/image` (vira AVIF, ~20KB) — pode ser um
+   * arquivo grande e nítido, o otimizador dá conta.
+   */
   poster?: string;
+  /**
+   * Frame do atributo `poster=` do `<video>`. 🚩 EXISTE SEPARADO de propósito:
+   * o `poster` do HTML é uma URL CRUA — não passa pelo `next/image`, então o
+   * navegador baixa o arquivo inteiro, do jeito que ele está no disco. Aqui o
+   * frame só pisca antes do autoplay, então vale um webp pequeno. É a mesma
+   * convenção da Sobre (`polimento.mp4` → `polimento-poster.webp`).
+   * Sem isto, cai no `poster` e volta a baixar o arquivo grande cru.
+   */
+  posterVideo?: string;
 }
 
 /** A imagem que o CARD mostra: o poster, se for vídeo; senão a própria foto. */
