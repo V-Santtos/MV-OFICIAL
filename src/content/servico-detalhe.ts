@@ -166,7 +166,14 @@ export type ServicoDetalhe = {
       title: string;
       summary: string;
       /** Galeria; a PRIMEIRA é a capa do card. Sem fotos = placeholder de marca. */
-      fotos?: readonly { src: string; alt: string }[];
+      fotos?: readonly {
+        src: string;
+        alt: string;
+        /** `"video"` faz o item virar `<video>` no Lightbox (ver CasesReel.tsx). */
+        tipo?: "video";
+        /** Frame de capa do vídeo — obrigatório na prática quando `tipo` é `"video"`. */
+        poster?: string;
+      }[];
       /** Interno, nunca renderizado — card de enchimento. Ver `casesPublicaveis`. */
       placeholder?: boolean;
     }[];
@@ -377,6 +384,30 @@ const higienizacaoInterna: ServicoDetalhe = {
           {
             src: "/assets/cases/hilux-poeira/exterior.jpg",
             alt: "Toyota Hilux branca antes e depois: em cima, lataria e rodas encardidas de barro; embaixo, o veículo limpo.",
+          },
+        ],
+      },
+      // CASE 2 — REAL, EM VÍDEO (Victor, 2026-08-03). RAM Rampage — emblema
+      // "RAM"/"RAMPAGE" conferido em zoom nos frames pra não afirmar sem
+      // critério. É a "Lavagem externa" do `cobre` acima (mesma linguagem:
+      // espuma, rodas, caixa de roda), não interior — por isso entra aqui na
+      // Higienização Completa, e não no Polimento.
+      // Montagem editada fora do site (FFmpeg), 11,97s. Antes/durante (7 takes)
+      // ALTERNAM ritmo — 2 rápidos (0,53s) + 1 no ritmo anterior (1,2s), repete —
+      // pra não ficar metronômico. Depois (3 takes) intocado, 2,3s cada, corte
+      // seco, mudo, 1080×1920. Vídeo só carrega ao abrir a galeria — o card
+      // mostra a `capa.jpg` (frame do "depois") como qualquer outro, com o
+      // selo "Vídeo" no lugar da contagem de fotos.
+      {
+        id: "rampage-lavagem",
+        title: "RAM Rampage · lavagem externa",
+        summary: "Lataria e rodas encardidas tratadas na pré-lavagem com espuma, do sujo ao brilho.",
+        fotos: [
+          {
+            tipo: "video",
+            src: "/assets/cases/rampage-lavagem/montagem.mp4",
+            poster: "/assets/cases/rampage-lavagem/capa.jpg",
+            alt: "Vídeo da RAM Rampage antes, durante e depois da lavagem externa na MV: rodas e lataria encardidas, espuma aplicada em toda a carroceria e o resultado com a pintura em brilho.",
           },
         ],
       },
@@ -615,17 +646,57 @@ const polimento: ServicoDetalhe = {
     ],
   },
 
-  // CASES — nenhum trabalho real de polimento ainda. Os 5 cards abaixo são
-  // ENCHIMENTO (`placeholder: true`) e existem pra sustentar a leitura do reel
-  // enquanto a captação não acontece. `placeholdersVisiveis: 5` sobrepõe o
-  // número global (1), que é calibrado pra categoria COM case real.
-  // ➡️ Quando o 1º polimento real entrar: escrever o case acima destes e baixar
-  //    este número. 🚩 NUNCA apagar os placeholders (ver ocultar-nunca-apagar).
+  // CASES — 1º trabalho real de polimento entrou (Victor, 2026-08-03): VW Gol
+  // preto. As 2 fotos são montagens ANTES\DEPOIS já empilhadas, 1080×1920
+  // (9:16), batendo exato com o `.media` do card — sem corte nenhum na galeria.
+  // A CAPA é o reflexo com a placa da MV no capô: é a imagem mais forte do par,
+  // mostra o resultado E assina o trabalho no mesmo quadro.
+  // 🚩 Número de placeholders BAIXADO pro global (1), mesma regra da
+  // Higienização: categoria com case real não precisa mais do override de 5.
+  // Copy do `summary` é RASCUNHO, ainda não passou pelo olhar do Victor.
   cases: {
     heading: "Alguns trabalhos",
     subheading: "Pinturas corrigidas na MV, cada uma no seu estado de origem.",
-    placeholdersVisiveis: 5,
     items: [
+      {
+        id: "gol-hologramas",
+        title: "Volkswagen Gol · polimento",
+        summary: "Hologramas e riscos finos removidos da lataria, pintura devolvida ao espelho.",
+        fotos: [
+          {
+            src: "/assets/cases/gol-hologramas/capo-reflexo.jpg",
+            alt: "Capô do Volkswagen Gol antes e depois do polimento: em cima, reflexo baixo e opaco perto do para-brisa; embaixo, a mesma área em espelho, refletindo até a placa da MV Estética Automotiva colada no teto.",
+          },
+          {
+            src: "/assets/cases/gol-hologramas/capo-lateral.jpg",
+            alt: "Capô e paralama do Gol antes e depois: em cima, reflexo espalhado e marcas de holograma na pintura; embaixo, os tubos de luz refletidos em linhas retas e nítidas.",
+          },
+        ],
+      },
+      // CASE 2 — REAL (Victor, 2026-08-03). Toyota Hilux prata, veículo
+      // DIFERENTE da Hilux branca do case de Higienização (Vitor confirmou;
+      // emblema "HILUX" lido no zoom pra não afirmar sem critério). 3 fotos
+      // antes\depois empilhadas, 900×1600 (9:16). Capa é o paralama com o
+      // risco fundo — o antes/depois mais forte do conjunto.
+      {
+        id: "hilux-riscos",
+        title: "Toyota Hilux · polimento",
+        summary: "Riscos profundos e hologramas removidos da lataria prata, pintura nivelada e devolvida ao espelho.",
+        fotos: [
+          {
+            src: "/assets/cases/hilux-riscos/paralama-dianteiro.jpg",
+            alt: "Paralama dianteiro da Toyota Hilux antes e depois do polimento: em cima, riscos profundos marcados na pintura prata; embaixo, a mesma área lisa, com o emblema HILUX refletindo nítido.",
+          },
+          {
+            src: "/assets/cases/hilux-riscos/traseira-lanterna.jpg",
+            alt: "Lateral traseira da Hilux antes e depois: em cima, hologramas espalhando a luz da lanterna em teia; embaixo, o mesmo painel com reflexo limpo e contínuo.",
+          },
+          {
+            src: "/assets/cases/hilux-riscos/retrovisor.jpg",
+            alt: "Retrovisor e montante da Hilux antes e depois, com fita de proteção verde: em cima, reflexo embaçado perto do vidro; embaixo, reflexo em espelho, nítido.",
+          },
+        ],
+      },
       { id: "po-1", title: "Sedan · correção de pintura", summary: "Teias de lavagem removidas em toda a lataria.", placeholder: true },
       { id: "po-2", title: "SUV · pintura apagada", summary: "Cor recuperada em superfícies castigadas pelo sol.", placeholder: true },
       { id: "po-3", title: "Hatch · marcas do dia a dia", summary: "Riscos de puxador e maçaneta nivelados no verniz.", placeholder: true },

@@ -30,6 +30,24 @@ import styles from "./CasesReel.module.css";
 export interface CaseFoto {
   src: string;
   alt: string;
+  /**
+   * VÍDEO (Victor, 2026-08-03) — `tipo: "video"` faz o item virar um `<video>`
+   * no Lightbox em vez de `<Image>`. Serve pras montagens de take curto
+   * (antes/durante rápidos, depois mais longo) editadas em 1080×1920.
+   *
+   * 🚩 `poster` é OBRIGATÓRIO quando é vídeo: o card do reel nunca renderiza o
+   * vídeo em si (10 cards autoplayando é morte de bateria e de LCP) — ele mostra
+   * o poster como qualquer outra capa, e o vídeo só carrega quando a pessoa
+   * abre a galeria. Por isso o `<video>` do overlay usa `preload="none"`.
+   */
+  tipo?: "video";
+  /** Frame de capa do vídeo. Só lido quando `tipo === "video"`. */
+  poster?: string;
+}
+
+/** A imagem que o CARD mostra: o poster, se for vídeo; senão a própria foto. */
+function capaDe(foto: CaseFoto): string {
+  return foto.tipo === "video" ? (foto.poster ?? foto.src) : foto.src;
 }
 
 export interface CaseItem {
@@ -198,7 +216,7 @@ export function CasesReel({ heading, subheading, items }: CasesReelProps) {
                   <div className={styles.media}>
                     {capa ? (
                       <Image
-                        src={capa.src}
+                        src={capaDe(capa)}
                         alt={capa.alt}
                         fill
                         /* Tem que ESPELHAR o .slide do CSS (min(86vw, 23rem)) —
@@ -218,14 +236,26 @@ export function CasesReel({ heading, subheading, items }: CasesReelProps) {
                         sem isso o título some numa capa clara. */}
                     <div className={styles.veu} aria-hidden="true" />
 
-                    {total > 1 && (
+                    {/* SELO: vídeo tem precedência sobre a contagem de fotos —
+                        sem ele o card de vídeo ficaria idêntico a um card de
+                        foto e ninguém saberia que ali toca alguma coisa. */}
+                    {capa?.tipo === "video" ? (
                       <span className={styles.selo}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                          <rect x="3" y="3" width="13" height="13" rx="2" />
-                          <path d="M8 21h11a2 2 0 0 0 2-2V8" />
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z" />
                         </svg>
-                        {total} fotos
+                        Vídeo
                       </span>
+                    ) : (
+                      total > 1 && (
+                        <span className={styles.selo}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <rect x="3" y="3" width="13" height="13" rx="2" />
+                            <path d="M8 21h11a2 2 0 0 0 2-2V8" />
+                          </svg>
+                          {total} fotos
+                        </span>
+                      )
                     )}
 
                     <div className={styles.legenda}>
@@ -238,7 +268,11 @@ export function CasesReel({ heading, subheading, items }: CasesReelProps) {
                         type="button"
                         className={styles.gatilho}
                         onClick={() => abrirGaleria(item, 0)}
-                        aria-label={`Ver as ${total} fotos do trabalho: ${item.title}`}
+                        aria-label={
+                          capa.tipo === "video"
+                            ? `Ver o vídeo do trabalho: ${item.title}`
+                            : `Ver as ${total} fotos do trabalho: ${item.title}`
+                        }
                       />
                     )}
                   </div>

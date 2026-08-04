@@ -180,15 +180,37 @@ function Galeria({
               else if (info.offset.x > 60) irPara(i - 1);
             }}
           >
-            <Image
-              src={foto.src}
-              alt={foto.alt}
-              fill
-              sizes="(max-width: 900px) 100vw, 80vh"
-              className={styles.img}
-              priority
-              draggable={false}
-            />
+            {foto.tipo === "video" ? (
+              // `preload="none"`: o poster já mostrou no card, o peso do vídeo
+              // só entra quando a galeria de fato abre. Sem áudio na fonte
+              // (montagens são mudas de propósito), autoplay não precisa de
+              // gesto do usuário nem trava por política de som do navegador.
+              <video
+                key={foto.src}
+                className={styles.img}
+                aria-label={foto.alt}
+                poster={foto.poster}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+                preload="none"
+                style={{ width: "100%", height: "100%" }}
+              >
+                <source src={foto.src} type="video/mp4" />
+              </video>
+            ) : (
+              <Image
+                src={foto.src}
+                alt={foto.alt}
+                fill
+                sizes="(max-width: 900px) 100vw, 80vh"
+                className={styles.img}
+                priority
+                draggable={false}
+              />
+            )}
           </motion.figure>
         </AnimatePresence>
       </div>
