@@ -161,7 +161,13 @@ export function Navbar() {
               alt={brand.name}
               width={120}
               height={38}
-              priority
+              /* SEM `priority`/`preload`/`loading` (2026-08-04): qualquer um dos
+                 três emite um 2º `<link rel=preload as=image>` que disputa a fila
+                 crítica com o carro do Hero — o elemento de LCP, e que ainda por
+                 cima está escondido atrás da cortina de abertura. No default o
+                 logo continua baixando de imediato (está na viewport), só não
+                 fura a fila. Medido no `next start`: `loading="eager"` NÃO
+                 resolve, o preload sai do mesmo jeito. */
               className={styles.logoImg}
             />
           </a>

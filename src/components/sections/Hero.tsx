@@ -64,8 +64,14 @@ export function Hero() {
                  no desktop. Errar aqui faz o Next servir um arquivo maior que
                  o necessário no LCP. */
               sizes="(max-width: 48rem) 94vw, 72vw"
-              quality={90}
-              priority
+              /* `preload` + `fetchPriority="high"` (não mais `priority`, deprecado
+                 no Next 16): sem `fetchPriority` o `<link rel=preload>` do LCP saía
+                 sem prioridade explícita — é o que o PageSpeed acusava em
+                 "Descoberta de solicitações de LCP" (2026-08-04). `quality={90}`
+                 removido: `images.qualities` (default `[75]`) já rebaixava
+                 silenciosamente pra 75 — o ar já servia nessa qualidade. */
+              preload
+              fetchPriority="high"
             />
           </div>
         </div>
