@@ -948,7 +948,7 @@ const bancosEEstofados: ServicoDetalhe = {
   cases: {
     heading: "Alguns trabalhos",
     subheading: "Bancos tratados na MV, cada um no seu estado de origem.",
-    placeholdersVisiveis: 5,
+    placeholdersVisiveis: 0,
     items: [
       { id: "be-1", title: "Sedan · bancos de tecido", summary: "Encardido tratado nas faixas de mais contato.", placeholder: true },
       { id: "be-2", title: "SUV · couro ressecado", summary: "Limpeza e hidratação no jogo completo de couro.", placeholder: true },

@@ -110,8 +110,9 @@ export const contact = {
   phoneE164: "+5533998463806",
   /** Formato de leitura. Nunca usar em link. */
   phoneDisplay: "(33) 99846-3806",
-  instagram: "https://instagram.com/",
-  facebook: "https://facebook.com/",
+  instagram: "https://www.instagram.com/mv_estetica_automotiva_/",
+  tiktok: "https://tr.ee/qy6qgecyfu",
+  facebook: "https://www.facebook.com/profile.php?id=100077507498165&ref=PROFILE_EDIT_xav_ig_profile_page_web#",
 
   /**
    * Mapa da seção Contato — IFRAME DE COMPARTILHAMENTO do Google Maps.
@@ -157,12 +158,12 @@ export type SocialLink = {
   href: string;
   label: string;
   /** Identificador do ícone — o componente resolve o SVG. */
-  icon: "whatsapp" | "instagram" | "facebook";
+  icon: "instagram" | "tiktok" | "facebook";
 };
 
 export const socialLinks: readonly SocialLink[] = [
-  { href: contact.whatsapp, label: "WhatsApp", icon: "whatsapp" },
   { href: contact.instagram, label: "Instagram", icon: "instagram" },
+  { href: contact.tiktok, label: "TikTok", icon: "tiktok" },
   { href: contact.facebook, label: "Facebook", icon: "facebook" },
 ] as const;
 
@@ -278,5 +279,5 @@ export const contactSection = {
    * o olho) e o corte evita cravar uma cota com periodicidade. Não é limite de
    * largura — `.copy` tem 46rem e a linha inteira dava ~430px, cabia.
    */
-  trust: ["Simonésia e região", "Atendimento imediato", "Vagas limitadas"],
+  trust: ["Simonésia e região", "Vagas limitadas"],
 } as const;

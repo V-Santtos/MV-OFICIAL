@@ -18,7 +18,7 @@
  *     LocalBusiness. Marcar isso arrisca penalidade manual, não ganha estrela.
  */
 
-import { brand, contact, positioning, servicos } from "@/content";
+import { brand, contact, positioning, servicos, socialLinks } from "@/content";
 import type { Servico, FaqItem, CobreItem } from "@/content";
 import { siteConfig, siteUrl } from "./site";
 
@@ -53,6 +53,7 @@ export function localBusinessJsonLd() {
     // Aponta a ficha real: ajuda o buscador a casar o site com o perfil do
     // Google Business, que é onde moram avaliações, fotos e horário.
     hasMap: contact.mapsPlaceUrl,
+    sameAs: socialLinks.map(({ href }) => href),
     areaServed: {
       "@type": "AdministrativeArea",
       name: `${brand.city} e região, ${brand.state}`,

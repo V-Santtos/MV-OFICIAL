@@ -29,6 +29,14 @@ export function FacebookIcon({ size = 16, className }: IconProps) {
   );
 }
 
+export function TikTokIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-1.82V15.5a6.5 6.5 0 1 1-5.62-6.44v3.28a3.33 3.33 0 1 0 2.33 3.17V0h3.22a4.84 4.84 0 0 0 3.84 3.84v2.85Z" />
+    </svg>
+  );
+}
+
 export function StarIcon({ size = 16, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
@@ -41,5 +49,6 @@ export function StarIcon({ size = 16, className }: IconProps) {
 export const socialIcons = {
   whatsapp: WhatsAppIcon,
   instagram: InstagramIcon,
+  tiktok: TikTokIcon,
   facebook: FacebookIcon,
 } as const;

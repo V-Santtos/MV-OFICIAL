@@ -18,7 +18,7 @@ export const stats: readonly Stat[] = [
     desc: "Carros e motos com tratamento de alta precisão.",
   },
   {
-    target: 8,
+    target: 3,
     suffix: "+",
     badge: "Anos de experiência",
     desc: "Especialização contínua em estética automotiva.",
