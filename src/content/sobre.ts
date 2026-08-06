@@ -3,9 +3,8 @@
  * do Victor, 2026-07-16: testar como possível única parte clara).
  * Estrutura/efeito inspirados na ref MetroRide (marquee + reveal de texto no scroll).
  *
- * ⚠️ Conteúdo PLACEHOLDER (etapa 1 = validar layout + efeito). Copy final vem
- * depois com a skill `copywriting`. As fotos reaproveitam as imagens de banco da
- * galeria (Unsplash) — trocar por fotos REAIS do cliente na Fase 2.
+ * As 4 fotos já são do cliente (nenhuma é mais banco de imagem) — ver a nota do
+ * bloco `photos` para a origem de cada uma.
  */
 
 export type SobrePhoto = {
@@ -36,7 +35,10 @@ export const sobre = {
   /** Fotos flutuando em faixas sticky sobre o marquee.
    *  Lanes 1 (fachada, recriada por IA a partir de foto real do local), 2
    *  (polimento) e 3 (salão) já estão definidas — 2026-07-22. A fachada serve
-   *  de referência de estilo. Só a lane 4 segue placeholder Unsplash.
+   *  de referência de estilo. Lane 4: retrato do dono, gerado por IA a partir das
+   *  3 fotos reais dele em `Foto/` (Atlas Image + Nano Banana 2) — 2026-08-06.
+   *  Fica em 1024px de origem: o Higgsfield não expõe seed, então regerar em 2k
+   *  daria uma imagem NOVA, não esta ampliada. 1024 cobre o card (max 300px) em 3x.
    *  ⚠️ A lane 2 é um trecho de vídeo de terceiro (reel da "The Detailing
    *  Mafia") — recortado para excluir fachada, placa e logo da marca deles,
    *  mas ainda é material licenciado a outrem. Validar direito de uso antes de
@@ -59,8 +61,8 @@ export const sobre = {
       lane: 3,
     },
     {
-      src: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80",
-      alt: "Faróis restaurados — detalhe de acabamento",
+      src: "/assets/sobre/dono.webp",
+      alt: "Dono da MV Estética Automotiva de braços cruzados no salão da oficina",
       lane: 4,
     },
   ] as readonly SobrePhoto[],

@@ -57,8 +57,8 @@ export const servicos: readonly Servico[] = [
     title: "Polimento Detalhado",
     slug: "polimento",
     desc: "Correção de riscos, oxidação e imperfeições da pintura e dos faróis, restaurando brilho e profundidade ao acabamento.",
-    image: "/assets/servicos/polimento.jpg",
-    alt: "Polimento técnico da pintura do veículo",
+    image: "/assets/servicos/polimento-v2.jpg",
+    alt: "Politriz orbital passando pela lataria escura durante o polimento, luz raking revelando o brilho",
   },
   {
     title: "Vitrificação & Proteção",

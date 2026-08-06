@@ -168,6 +168,15 @@
   aspect-ratio: 1 / 1.05;
 }
 
+/* Zoom da foto DENTRO da moldura (o card não muda de tamanho). A imagem cresce
+   e o `overflow: hidden` do `.photo` corta a sobra — é o que permite reposicionar
+   o enquadramento depois sem tocar no arquivo. */
+.lane[data-lane="4"] .photoImg {
+  /* `scale` dá a sobra (12% = 6% de folga em cima e embaixo); o `translateY`
+     negativo gasta parte dessa folga subindo a imagem, o que corta mais teto. */
+  transform: scale(1.12) translateY(-3%);
+}
+
 .photo {
   position: relative;
   width: 100%;

@@ -159,6 +159,25 @@
   transition: transform 0.6s var(--easing-out);
 }
 
+/* ---- Enquadramento por categoria ----------------------------------------
+   `object-position` e NÃO `transform`: o hover já usa `transform: scale(1.06)`
+   no `.img`, e qualquer deslocamento posto ali seria sobrescrito no hover — a
+   foto pularia de volta ao passar o mouse. Com `object-fit: cover`, um Y MAIOR
+   mostra mais da base da foto, ou seja, SOBE a imagem dentro do card. */
+/* object-position sozinho não fazia nada aqui: a foto (1600x1067, 1.5) é mais
+   larga que o card (4/3, 1.33), então o `cover` já enquadra pela ALTURA e corta
+   só nas laterais — não sobra faixa vertical pra subir a imagem. O scale(1.01)
+   é só o mínimo técnico pra abrir essa folga (sem zoom perceptível); o
+   translateY gasta essa folga subindo a foto. Regra própria de hover (mais
+   específica que a global `.card:hover .img`) soma o zoom de interação ao
+   deslocamento de base, em vez de substituir. */
+.card[data-slug="higienizacao-completa"] .img {
+  transform: scale(1.03) translateY(-1%);
+}
+.card[data-slug="higienizacao-completa"]:hover .img {
+  transform: scale(1.03) translateY(-1%) scale(1.06);
+}
+
 /* Película de grade por cima de TODA a foto (uniforme + vinheta) — o "verniz"
    que faz o conjunto parecer editado junto. Wash NEUTRO (não azul: azul é só
    pro essencial). Fica acima da foto e abaixo do scrim/tint/rótulo. */
@@ -202,6 +221,15 @@
   );
   opacity: 0;
   transition: opacity 0.5s var(--easing-out);
+}
+
+/* Faixa azul LIGADA em repouso nestes três (Victor, 2026-08-06). O resto da
+   interação de hover — zoom da foto, elevação do card, giro da seta — continua
+   idêntico; só o tint deixa de ser o que entra, porque já está lá. */
+.card[data-slug="higienizacao-completa"] .tint,
+.card[data-slug="vitrificacao"] .tint,
+.card[data-slug="limpeza-de-motor"] .tint {
+  opacity: 1;
 }
 
 /* Grupo topo-direito: título + seta logo ABAIXO dele, alinhados à direita,

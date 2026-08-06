@@ -92,6 +92,9 @@ export function Servicos() {
                 <Link
                   href={`/servicos/${s.slug}`}
                   className={styles.card}
+                  // Deixa o CSS enquadrar a foto de cada categoria por slug
+                  // (`object-position`) sem depender de nth-child.
+                  data-slug={s.slug}
                   onClick={(e) => {
                     if (!ehCliqueSimples(e)) return;
                     e.preventDefault();

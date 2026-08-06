@@ -517,13 +517,14 @@ const polimento: ServicoDetalhe = {
     body: [
       "Teias finas na lataria, o risco de anel no puxador e o farol amarelado têm a mesma origem: anos de sol sobre o verniz e sobre o policarbonato. Cada um sai de um jeito — na pintura, por abrasão controlada que nivela o risco em vez de disfarçar com cera; no farol, removendo a camada oxidada até a luz voltar a passar limpa. Nos dois casos, o serviço fecha com uma proteção por cima, pra segurar o resultado por mais tempo.",
     ],
-    // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito
-    // (ver o cabeçalho deste objeto). `polimento.jpg` é a foto do card da home.
-    image: "/assets/servicos/polimento.jpg",
-    imageAlt: "Polimento da pintura de um veículo com politriz",
+    // Fotos geradas (Victor, 2026-08-06), no lugar do arquivo único que servia
+    // os dois slots E repetia o card da home. Assinatura de `foto-assinatura.md`.
+    // Semântica do par: grande = RESULTADO, pequeno = PROCESSO.
+    image: "/assets/servicos/polimento-reflexo.jpg",
+    imageAlt: "Lataria escura após o polimento, com o reflexo da luz correndo limpo e contínuo sobre a pintura",
     imagePair: {
-      src: "/assets/servicos/polimento.jpg",
-      alt: "Detalhe do trabalho de polimento sobre a lataria",
+      src: "/assets/servicos/polimento-boina.jpg",
+      alt: "Boina de espuma apoiada na pintura, com o filme de polimento espalhado na borda",
     },
   },
 
@@ -1065,12 +1066,16 @@ const limpezaDeMotor: ServicoDetalhe = {
     body: [
       "Graxa e óleo acumulados escondem de onde vem um vazamento. A limpeza de motor trata o compartimento inteiro: o bloco, as tampas plásticas, as mangueiras, o chicote elétrico e o fundo do cofre, onde barro e folha se acumulam. Protegemos os componentes sensíveis durante todo o serviço, e num motor limpo qualquer vazamento novo aparece de primeira.",
     ],
-    // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
-    image: "/assets/servicos/limpeza-de-motor-v2.jpg",
-    imageAlt: "Compartimento do motor após limpeza e desengraxe",
+    // Fotos geradas (Victor, 2026-08-06), no lugar do arquivo único que servia
+    // os dois slots E repetia o card da home. Assinatura de `foto-assinatura.md`:
+    // Kodak 2383 print + key 5400K (o 5219 anterior é balanceado pra tungstênio
+    // e puxava azul). Semântica do par: grande = RESULTADO, pequeno = PROCESSO.
+    // Dimensões casadas com o CSS — 1472×1440 (46/45) e 800×600 (4/3), zero corte.
+    image: "/assets/servicos/motor-cofre.jpg",
+    imageAlt: "Compartimento do motor após a limpeza, com as tampas plásticas secas e sem filme de graxa",
     imagePair: {
-      src: "/assets/servicos/limpeza-de-motor-v2.jpg",
-      alt: "Detalhe do cofre do motor limpo, sem resíduo acumulado",
+      src: "/assets/servicos/motor-pano.jpg",
+      alt: "Pano de microfibra passando sobre a tampa do motor, deixando uma faixa limpa",
     },
   },
 
@@ -1572,12 +1577,15 @@ const cristalizacaoDeVidros: ServicoDetalhe = {
     body: [
       "A chuva ácida, a poeira e o tempo deixam manchas agarradas na superfície do vidro, que o limpador também não tira. A cristalização trata os vidros em duas etapas: primeiro sai o que está incrustado, depois entra uma camada protetora que faz a água juntar em gota e escorrer com o vento. Vidro transparente muda o que você enxerga à noite e na chuva.",
     ],
-    // ⚠️ PLACEHOLDER: os dois slots apontam pro MESMO arquivo de propósito.
-    image: "/assets/servicos/cristalizacao-v2.jpg",
-    imageAlt: "Para-brisa tratado, com a água formando gotas sobre o vidro",
+    // Fotos geradas (Victor, 2026-08-06), no lugar do arquivo único que servia
+    // os dois slots E repetia o card da home. Assinatura de `foto-assinatura.md`.
+    // Vidro da PORTA, não o para-brisa (pedido dele) — o beading lido de perto
+    // na lateral comunica melhor que o para-brisa inteiro.
+    image: "/assets/servicos/vidros-beading.jpg",
+    imageAlt: "Vidro da porta dianteira após a cristalização, com a água formando gotas redondas e soltas sobre a superfície",
     imagePair: {
-      src: "/assets/servicos/cristalizacao-v2.jpg",
-      alt: "Detalhe do efeito hidrofóbico no vidro depois da cristalização",
+      src: "/assets/servicos/vidros-aplicacao.jpg",
+      alt: "Aplicador de espuma passando sobre o vidro durante a aplicação da camada protetora",
     },
   },
 
