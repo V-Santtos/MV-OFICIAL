@@ -61,7 +61,7 @@ export const sobre = {
       lane: 3,
     },
     {
-      src: "/assets/sobre/dono.webp",
+      src: "/assets/sobre/dono-logo.webp",
       alt: "Dono da MV Estética Automotiva de braços cruzados no salão da oficina",
       lane: 4,
     },
