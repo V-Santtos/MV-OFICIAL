@@ -247,10 +247,9 @@
   }
 }
 
-/* Menos movimento: marquee estático (o freeze das demais animações é feito no
-   componente via useReducedMotion — palavras/fotos no estado final, legível). */
-@media (prefers-reduced-motion: reduce) {
-  .marqueeTrack {
-    transform: none !important;
-  }
-}
+/* 🚩 Sem bloco `prefers-reduced-motion` de propósito (Victor, 2026-08-09): o
+   pin + parallax dessa seção RODA SEMPRE, ligado ou não o "Reduzir Movimento"
+   do aparelho — é o efeito-âncora do site, decisão consciente (ver o comentário
+   no topo de Sobre.tsx). Chegou a existir aqui uma versão que despinava a seção
+   nesse modo; foi removida por decisão explícita, não por esquecimento — não
+   reintroduzir sem essa mesma conversa de novo. */

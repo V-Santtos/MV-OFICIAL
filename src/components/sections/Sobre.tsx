@@ -5,7 +5,6 @@ import Image from "next/image";
 import {
   motion,
   useInView,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -22,6 +21,20 @@ import styles from "./Sobre.module.css";
  * SEÇÃO dirige tudo — parágrafo acende palavra a palavra, fotos sobem em faixas
  * escalonadas e o marquee corre atrás. Framer Motion (mesmo stack da ref).
  *
+ * 🚩 IGNORA `prefers-reduced-motion` DE PROPÓSITO (Victor, 2026-08-09). Esse
+ * pin + parallax É o efeito-âncora do site — o que faz ele parecer prêmio.
+ * Fomos atrás do porquê no site de referência (bogdankolomiyets.com): a seção
+ * dele com o mesmo efeito (`.selected-projects`, cards passando, pinado)
+ * TAMBÉM não checa a preferência — continua rodando igual, toggle ligado ou
+ * desligado. Testamos ao vivo nos dois modos: ela segue `position: sticky` e
+ * os cards seguem trocando de qualquer jeito.
+ * Decisão consciente: quem tem "Reduzir Movimento" ligado é, na prática, muito
+ * mais gente com o Android em economia de bateria (que liga isso sozinho) do
+ * que gente com sensibilidade real a movimento — e a MV não pode abrir mão do
+ * efeito que mais comunica "acabamento premium" pra atender esse grupo minoritário.
+ * Havia uma versão anterior que desmontava o palco nesse modo (ver histórico);
+ * foi removida — não reintroduzir sem essa mesma conversa de novo.
+ *
  * ⚠️ Copy/fotos são placeholder; a cor clara é intencional (única ilha clara).
  */
 
@@ -31,20 +44,18 @@ function Word({
   start,
   end,
   progress,
-  reduced,
 }: {
   children: string;
   start: number;
   end: number;
   progress: MotionValue<number>;
-  reduced: boolean;
 }) {
   const opacity = useSpring(
     useTransform(progress, [start, end], [scrollReveal.fadedOpacity, 1]),
     scrollReveal.spring,
   );
   return (
-    <motion.span className={styles.word} style={reduced ? { opacity: 1 } : { opacity }}>
+    <motion.span className={styles.word} style={{ opacity }}>
       {children}
     </motion.span>
   );
@@ -54,11 +65,9 @@ function Word({
 function RevealParagraph({
   text,
   progress,
-  reduced,
 }: {
   text: string;
   progress: MotionValue<number>;
-  reduced: boolean;
 }) {
   const words = text.split(" ");
   const [wStart, wEnd] = scrollReveal.window;
@@ -72,7 +81,6 @@ function RevealParagraph({
           start={wStart + (i / words.length) * span}
           end={wStart + ((i + 1) / words.length) * span}
           progress={progress}
-          reduced={reduced}
         >
           {/* espaço à direita: preserva separação e permite quebra de linha */}
           {`${word} `}
@@ -82,17 +90,34 @@ function RevealParagraph({
   );
 }
 
+/**
+ * `sizes` por lane — ESPELHA as larguras de `.lane[data-lane=N]` no CSS.
+ *
+ * 🚩 Cada lane tem uma moldura DIFERENTE (290px a 700px). Um `sizes` único pra
+ * todas (era `24vw`) fazia o navegador pedir a foto pela moldura errada: medido
+ * em 2026-08-09, a lane 3 (`salao.webp`) vinha com 256px numa moldura de 614px
+ * = 0,42× da resolução — e o defeito NÃO aparece como lentidão, aparece como
+ * BORRÃO (em retina, 0,21×). Mexeu na largura no CSS, mexe aqui junto.
+ */
+const laneSizes: Record<SobrePhoto["lane"], string> = {
+  // desktop: `min(40vw, 290px)` — a partir de 768px o teto de 290px já vale.
+  1: "(max-width: 767px) 50vw, 290px",
+  2: "(max-width: 767px) 46vw, 290px",
+  // `min(62vw, 700px)`: 62vw manda até o teto bater, em 1129px de viewport.
+  3: "(max-width: 767px) 70vw, (max-width: 1129px) 62vw, 700px",
+  // 300px de moldura × o `scale(1.12)` que o CSS aplica na própria imagem.
+  4: "(max-width: 767px) 50vw, 336px",
+};
+
 /** Foto em parallax PURO (sem opacidade): sobe de `fromY` (abaixo do palco,
  *  escondida) → `toY` (descanso). Entradas escalonadas = surgem distribuídas
  *  pelo movimento, não por fade. */
 function Photo({
   photo,
   progress,
-  reduced,
 }: {
   photo: SobrePhoto;
   progress: MotionValue<number>;
-  reduced: boolean;
 }) {
   const lane = scrollReveal.photoLanes[photo.lane];
   const y = useTransform(progress, [0, 1], [lane.fromY, lane.toY]);
@@ -122,11 +147,10 @@ function Photo({
 
   return (
     <div ref={laneRef} className={styles.lane} data-lane={photo.lane}>
-      {/* Reduced-motion: parada numa posição visível fixa (sem esteira). */}
-      <motion.div className={styles.photo} style={{ y: reduced ? lane.staticY : y }}>
-        {photo.video && !reduced && nearView ? (
+      <motion.div className={styles.photo} style={{ y }}>
+        {photo.video && nearView ? (
           // Loop mudo e decorativo: sem controles, sem áudio, sem entrar na
-          // ordem de foco. Em reduced-motion cai no poster (o ramo de baixo).
+          // ordem de foco.
           <video
             ref={videoRef}
             className={styles.photoVideo}
@@ -145,7 +169,7 @@ function Photo({
             src={photo.src}
             alt={photo.alt}
             fill
-            sizes="(max-width: 48rem) 60vw, 24vw"
+            sizes={laneSizes[photo.lane]}
             className={styles.photoImg}
           />
         )}
@@ -155,18 +179,14 @@ function Photo({
 }
 
 /** Marquee horizontal contínuo — duas metades idênticas p/ emenda invisível. */
-function Marquee({ text, reduced }: { text: string; reduced: boolean }) {
+function Marquee({ text }: { text: string }) {
   const run = text.repeat(6);
   return (
     <div className={styles.marquee} aria-hidden="true">
       <motion.div
         className={styles.marqueeTrack}
-        animate={reduced ? undefined : { x: ["0%", "-50%"] }}
-        transition={
-          reduced
-            ? undefined
-            : { duration: marquee.duration, ease: "linear", repeat: Infinity }
-        }
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: marquee.duration, ease: "linear", repeat: Infinity }}
       >
         <span className={styles.marqueeText}>{run}</span>
         <span className={styles.marqueeText}>{run}</span>
@@ -177,7 +197,6 @@ function Marquee({ text, reduced }: { text: string; reduced: boolean }) {
 
 export function Sobre() {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion() ?? false;
   const { scrollYProgress: sectionProgress } = useScroll({
     target: sectionRef,
     offset: scrollReveal.sectionOffset,
@@ -196,16 +215,11 @@ export function Sobre() {
     >
       {/* Palco pinado (sticky) — cobre a viewport durante a rolagem da seção. */}
       <div className={styles.stage}>
-        <Marquee text={sobre.marquee} reduced={reduced} />
+        <Marquee text={sobre.marquee} />
 
         <div className={styles.photos}>
           {sobre.photos.map((photo) => (
-            <Photo
-              key={photo.src}
-              photo={photo}
-              progress={sectionProgress}
-              reduced={reduced}
-            />
+            <Photo key={photo.src} photo={photo} progress={sectionProgress} />
           ))}
         </div>
 
@@ -219,7 +233,7 @@ export function Sobre() {
               <span className={styles.labelText}>{sobre.label}</span>
             </p>
 
-            <RevealParagraph text={sobre.body} progress={textProgress} reduced={reduced} />
+            <RevealParagraph text={sobre.body} progress={textProgress} />
           </div>
         </div>
       </div>

@@ -391,16 +391,20 @@ export const scrollReveal = {
    *  (`toY` negativo) — NÃO estaciona na tela (o bug do "trava e para": antes o
    *  `toY` era positivo/visível). Entradas escalonadas = surgem distribuídas; e
    *  como saem, no fim do pin só a última (foto 4) ainda aparece, igual à ref.
-   *  `staticY` = posição visível fixa p/ prefers-reduced-motion (sem esteira).
-   *  Vertical 100% via `y`; CSS só cuida do horizontal. (Victor, 2026-07-16) */
+   *  Vertical 100% via `y`; CSS só cuida do horizontal. (Victor, 2026-07-16)
+   *
+   *  🚩 Roda sempre, mesmo com `prefers-reduced-motion: reduce` — decisão
+   *  consciente de Victor (2026-08-09), ver o comentário no topo de Sobre.tsx.
+   *  Não existe mais um modo estático paralelo: não crie um campo tipo
+   *  `staticY` de novo sem essa mesma conversa. */
   photoLanes: {
     // Foto 1 já nasce peeking (fromY 78 = visível no progresso 0) e sai ~75%.
-    1: { fromY: "78vh", toY: "-60vh", staticY: "8vh" },
-    2: { fromY: "106vh", toY: "-52vh", staticY: "14vh" },
+    1: { fromY: "78vh", toY: "-60vh" },
+    2: { fromY: "106vh", toY: "-52vh" },
     // Fotos 3 e 4 descidas (faixa inteira p/ baixo, mesma velocidade — Victor).
-    3: { fromY: "168vh", toY: "-22vh", staticY: "58vh" },
+    3: { fromY: "168vh", toY: "-22vh" },
     // Foto 4 entra por último e ainda está visível no fim do pin (como a ref).
-    4: { fromY: "200vh", toY: "30vh", staticY: "76vh" },
+    4: { fromY: "200vh", toY: "30vh" },
   },
 };
 
