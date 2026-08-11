@@ -32,14 +32,13 @@
 /**
  * Quantos cards de ENCHIMENTO ficam visíveis DEPOIS dos cases reais.
  *
- * Hoje **1** (Victor, 2026-08-02): a Higienização tem 1 case real, e um único
- * card vazio ao lado basta pra sustentar a leitura de "reel" — sem inventar
- * quatro trabalhos que não existem.
+ * Hoje **0** (Victor, 2026-08-11): somente cases reais ficam visíveis. Cards de
+ * enchimento permanecem no arquivo como molde, mas nunca aparecem no site.
  *
  * `0` = só o que é real. 🚩 NÃO apagar os placeholders do array: este número já
  * dá conta de escondê-los, e eles voltam a servir de molde no próximo serviço.
  */
-export const PLACEHOLDERS_VISIVEIS = 1;
+export const PLACEHOLDERS_VISIVEIS = 0;
 
 /**
  * Cases que vão pro ar numa categoria: TODOS os reais, na ordem em que estão,

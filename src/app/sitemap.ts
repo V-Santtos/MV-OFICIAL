@@ -7,20 +7,12 @@ import { siteUrl } from "@/lib/seo";
  * Fase 2: se surgirem páginas reais (Política/Termos, blog), adicionar aqui.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   return [
     {
       url: siteUrl,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 1,
     },
     ...servicos.map((s) => ({
       url: `${siteUrl}/servicos/${s.slug}`,
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
     })),
   ];
 }

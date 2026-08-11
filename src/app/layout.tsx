@@ -9,7 +9,17 @@ import {
 } from "@/components/layout";
 import { brand } from "@/content";
 import { siteConfig, siteUrl, localBusinessJsonLd } from "@/lib/seo";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { CookieConsentBanner } from "@/components/analytics/CookieConsentBanner";
 import "./globals.css";
+
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const googleAnalyticsId =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim()
+    : undefined;
+const showCookieConsent =
+  process.env.NODE_ENV === "development" || Boolean(googleAnalyticsId);
 
 /** Fonte do projeto — Inter (referência MAX COLOR). Variável, cobre todos os pesos. */
 const inter = Inter({
@@ -74,6 +84,9 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
 };
 
 /**
@@ -153,6 +166,10 @@ export default function RootLayout({
           // JSON-LD LocalBusiness (Simonésia-MG). Conteúdo controlado, sem input de usuário.
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd()) }}
         />
+        {showCookieConsent ? <CookieConsentBanner /> : null}
+        {googleAnalyticsId ? (
+          <GoogleAnalytics measurementId={googleAnalyticsId} />
+        ) : null}
       </body>
     </html>
   );
