@@ -132,8 +132,8 @@ os efeitos recalibrados, nunca versão mobile chapada. Engenharia → [regras/mo
 
 ## 2. Backlog (depois do mobile)
 
-1. **Copy final — revisão do site inteiro** (fora das 6 rotas). Inconsistência conhecida:
-   "Desde 2010" × "8+ anos" (ver [regras/sec-sobre.md](regras/sec-sobre.md)).
+1. **Copy final — revisão do site inteiro** (fora das 6 rotas). A data de início da MV foi
+   alinhada para "Desde 2022" em 2026-08-11 (ver [regras/sec-sobre.md](regras/sec-sobre.md)).
 2. **Fechar a mídia da Sobre** — gerar a lane 4 (1:1) e resolver a dívida de direitos da lane 2
    (ver [regras/pendencias-legal-fase2.md](regras/pendencias-legal-fase2.md)).
 3. **Setas do reel de cases** — sumir com a `.nav` quando não há overflow (proposto, não aplicado).

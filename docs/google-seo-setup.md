@@ -46,3 +46,19 @@ navegador, como Global Privacy Control e Do Not Track, também impedem a coleta.
 - Conferir a propriedade em Search Console > Inspeção de URL.
 - Testar o ID no relatório Tempo real do GA4 depois de conceder consentimento.
 - Validar os dados estruturados no Rich Results Test do Google.
+
+## Estado validado em 11 de agosto de 2026
+
+- A propriedade de domínio do Search Console foi verificada por DNS no Registro.br.
+  Manter o registro TXT de verificação ativo.
+- O sitemap enviado é `https://www.mvesteticaautomotiva.com.br/sitemap.xml` e
+  já foi processado pelo Search Console.
+- O ID do GA4 está configurado como variável de ambiente de produção na Vercel;
+  não registrar esse valor no repositório. A coleta só começa após o visitante
+  aceitar o aviso de privacidade.
+- Linha de base no Lighthouse mobile, antes deste deploy: Performance 96,
+  Acessibilidade 93, Boas práticas 100 e SEO 100. Métricas observadas: FCP
+  1,1 s, LCP 2,7 s, TBT 30 ms e CLS 0.
+- Ao adicionar cases, preservar essa linha de base: comprimir fotos em WebP ou
+  AVIF, carregar mídias fora da dobra de forma adiada e não iniciar vídeos
+  pesados automaticamente. Rodar Lighthouse antes de publicar lotes maiores.

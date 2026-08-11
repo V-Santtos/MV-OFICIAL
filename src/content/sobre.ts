@@ -26,7 +26,7 @@ export const sobre = {
   /** Parágrafo revelado palavra por palavra conforme o scroll.
    *  Copy final do Victor (2026-07-17); ajustados só os erros de PT. */
   body:
-    "Desde 2010 atendendo Simonésia e região. Aqui na MV, cuidar de um veículo é mais do que aparência. Trabalhamos com produtos de alta performance e com uma equipe dedicada a cada detalhe, para entregar cuidado e um acabamento à altura que seu veículo merece.",
+    "Desde 2022 atendendo Simonésia e região. Aqui na MV, cuidar de um veículo é mais do que aparência. Trabalhamos com produtos de alta performance e com uma equipe dedicada a cada detalhe, para entregar cuidado e um acabamento à altura que seu veículo merece.",
 
   /** Texto do marquee (carrossel horizontal contínuo, fonte script Birthstone).
    *  Separador " — " no fim p/ emenda no loop. (Victor, 2026-07-17.) */
