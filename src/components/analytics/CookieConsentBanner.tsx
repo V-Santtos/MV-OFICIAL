@@ -45,8 +45,8 @@ export function CookieConsentBanner() {
       <div className={styles.copy}>
         <p className={styles.title}>Sua privacidade</p>
         <p className={styles.description}>
-          Usamos cookies opcionais de análise para entender como o site é
-          utilizado. Eles só serão ativados se você aceitar.
+          Usamos cookies opcionais para melhorar sua experiência no site. Eles
+          só serão ativados se você aceitar.
         </p>
       </div>
 
