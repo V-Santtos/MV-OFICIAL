@@ -10,6 +10,7 @@ import {
 import { brand } from "@/content";
 import { siteConfig, siteUrl, localBusinessJsonLd } from "@/lib/seo";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { CookieConsentBanner } from "@/components/analytics/CookieConsentBanner";
 import "./globals.css";
 
@@ -18,8 +19,16 @@ const googleAnalyticsId =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim()
     : undefined;
+/**
+ * ⚠️ NÃO gateado por `NODE_ENV`, ao contrário do GA acima: o Pixel precisa
+ * carregar em dev pra ser validado no Meta Pixel Helper. O freio dele é o
+ * consentimento + o formato do ID, dentro do próprio `MetaPixel`.
+ */
+const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
 const showCookieConsent =
-  process.env.NODE_ENV === "development" || Boolean(googleAnalyticsId);
+  process.env.NODE_ENV === "development" ||
+  Boolean(googleAnalyticsId) ||
+  Boolean(metaPixelId);
 
 /** Fonte do projeto — Inter (referência MAX COLOR). Variável, cobre todos os pesos. */
 const inter = Inter({
@@ -170,6 +179,7 @@ export default function RootLayout({
         {googleAnalyticsId ? (
           <GoogleAnalytics measurementId={googleAnalyticsId} />
         ) : null}
+        {metaPixelId ? <MetaPixel pixelId={metaPixelId} /> : null}
       </body>
     </html>
   );
