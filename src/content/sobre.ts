@@ -35,10 +35,13 @@ export const sobre = {
   /** Fotos flutuando em faixas sticky sobre o marquee.
    *  Lanes 1 (fachada, recriada por IA a partir de foto real do local), 2
    *  (polimento) e 3 (salão) já estão definidas — 2026-07-22. A fachada serve
-   *  de referência de estilo. Lane 4: retrato do dono, gerado por IA a partir das
-   *  3 fotos reais dele em `Foto/` (Atlas Image + Nano Banana 2) — 2026-08-06.
-   *  Fica em 1024px de origem: o Higgsfield não expõe seed, então regerar em 2k
-   *  daria uma imagem NOVA, não esta ampliada. 1024 cobre o card (max 300px) em 3x.
+   *  de referência de estilo. Lane 4: retrato do dono — FOTO REAL (Victor,
+   *  2026-09-10). Substituiu o retrato que era gerado por IA (Atlas Image +
+   *  Nano Banana 2, 2026-08-06); o arquivo antigo segue em `dono-logo.webp`,
+   *  não referenciado. Guardada em 1500² QUASE SEM PERDA (184 KB) de propósito:
+   *  este arquivo é a FONTE do `next/image`, não o que o navegador baixa. Comprimir
+   *  aqui empilha perda antes do re-encode do Next — e em tela 3x o `sizes` de 336px
+   *  pede 1080, que a versão anterior (1024) estava AMPLIANDO.
    *  ⚠️ A lane 2 é um trecho de vídeo de terceiro (reel da "The Detailing
    *  Mafia") — recortado para excluir fachada, placa e logo da marca deles,
    *  mas ainda é material licenciado a outrem. Validar direito de uso antes de
@@ -61,7 +64,7 @@ export const sobre = {
       lane: 3,
     },
     {
-      src: "/assets/sobre/dono-logo.webp",
+      src: "/assets/sobre/dono.webp",
       alt: "Dono da MV Estética Automotiva de braços cruzados no salão da oficina",
       lane: 4,
     },
