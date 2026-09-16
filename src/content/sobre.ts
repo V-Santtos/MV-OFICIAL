@@ -42,10 +42,8 @@ export const sobre = {
    *  este arquivo é a FONTE do `next/image`, não o que o navegador baixa. Comprimir
    *  aqui empilha perda antes do re-encode do Next — e em tela 3x o `sizes` de 336px
    *  pede 1080, que a versão anterior (1024) estava AMPLIANDO.
-   *  ⚠️ A lane 2 é um trecho de vídeo de terceiro (reel da "The Detailing
-   *  Mafia") — recortado para excluir fachada, placa e logo da marca deles,
-   *  mas ainda é material licenciado a outrem. Validar direito de uso antes de
-   *  publicar, ou substituir por captação própria. */
+   *  A lane 2 usa captação própria do dono da MV, montada em sete planos curtos
+   *  com produto, preparação, polimento e resultado final (2026-09-16). */
   photos: [
     {
       src: "/assets/sobre/fachada.webp",
@@ -53,14 +51,14 @@ export const sobre = {
       lane: 1,
     },
     {
-      src: "/assets/sobre/polimento-poster.webp",
-      video: "/assets/sobre/polimento.mp4",
-      alt: "Politriz passando sobre a lataria escura durante o polimento",
+      src: "/assets/sobre/polimento-mv-poster.webp",
+      video: "/assets/sobre/polimento-mv.mp4",
+      alt: "Dono da MV realizando o polimento de um veículo no salão",
       lane: 2,
     },
     {
-      src: "/assets/sobre/salao.webp",
-      alt: "Salão da MV Estética Automotiva com a marca na parede e veículos em atendimento",
+      src: "/assets/sobre/salao-2026.webp",
+      alt: "Interior renovado da MV Estética Automotiva com recepção, iluminação técnica e veículo no salão",
       lane: 3,
     },
     {

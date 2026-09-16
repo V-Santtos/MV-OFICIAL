@@ -359,6 +359,47 @@ const higienizacaoInterna: ServicoDetalhe = {
     heading: "Alguns trabalhos",
     subheading: "Interiores tratados na MV — cada um no seu estado de origem.",
     items: [
+      /* TODO(modelo-chevrolet): o dono da estética ainda precisa confirmar o
+         modelo deste veículo. Quando chegar, atualizar somente o `title` abaixo
+         para "Chevrolet [MODELO] · higienização interna".
+         CASE REAL (Victor, 2026-09-16). As fotos documentam bancos, assoalho,
+         comandos, difusor e vãos de porta; as montagens antes/depois são
+         exibidas inteiras no lightbox. */
+      {
+        id: "chevrolet-higienizacao",
+        title: "Chevrolet · higienização interna",
+        summary: "Sujeira acumulada no assoalho, nos comandos, nas saídas de ar e nos vãos removida em uma higienização completa.",
+        fotos: [
+          {
+            src: "/assets/cases/chevrolet-higienizacao/volante-antes-depois.jpg",
+            alt: "Volante e painel do Chevrolet antes e depois da higienização interna.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/assoalho-antes-depois.jpg",
+            alt: "Assoalho do Chevrolet antes e depois da higienização: em cima, carpete com sujeira e resíduos; embaixo, carpete limpo e uniforme.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/bancos.jpg",
+            alt: "Bancos dianteiros removidos do Chevrolet durante a higienização dos estofados.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/cambio-antes-depois.jpg",
+            alt: "Alavanca de câmbio e console central do Chevrolet antes e depois da limpeza detalhada.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/difusor-antes-depois.jpg",
+            alt: "Difusor de ar do Chevrolet antes e depois: poeira removida das aletas e das frestas.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/borracha-porta-antes-depois.jpg",
+            alt: "Borracha e acabamento da porta do Chevrolet antes e depois da higienização.",
+          },
+          {
+            src: "/assets/cases/chevrolet-higienizacao/dobradica-porta-antes-depois.jpg",
+            alt: "Vão e dobradiça da porta do Chevrolet antes e depois da limpeza técnica.",
+          },
+        ],
+      },
       /* CASE 1 — REAL (Victor, 2026-08-01). Toyota Hilux de estrada de terra.
          As 4 fotos são montagens ANTES/DEPOIS já empilhadas, 900×1600 (9:16).
          A CAPA é a da cabine de propósito: o assoalho tomado de barro seco é a
