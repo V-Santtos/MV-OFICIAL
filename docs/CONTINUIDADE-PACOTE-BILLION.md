@@ -6,7 +6,7 @@ Atualizado em **09/10/2026**. Este documento é o ponto de entrada para continua
 
 - A raiz Git e do app é **`MV-OFICIAL/site-mv`**, na branch `main`. A pasta `MV-OFICIAL` acima dela não é a raiz Git.
 - **O site atual é a base canônica.** O pacote e o protótipo da Billion são referências de conteúdo, ordem, aparência e comportamento. Integrar no código existente; não substituir a aplicação pelo ZIP.
-- **Home H1, H2 e H3 concluídas e conferidas.** As demais mudanças nas páginas de serviço, formulário, planilha e Pixel ainda não foram implementadas. Ver C02–C18 no checklist antes de marcar qualquer coisa como feita.
+- **Home H1, H2 e H3 concluídas e conferidas.** Nas páginas de serviço, o modelo compartilhado e a Vitrificação estão montados (ver "Páginas de serviço — andamento"); Polimento, Higienização, formulário, planilha e Pixel ainda não. Ver o checklist antes de marcar qualquer coisa como feita.
 - O trabalho está salvo em commits **locais**. Em 09/10/2026, a branch estava 10 commits à frente de `origin/main` antes deste registro; não houve push nem publicação nesta sessão. A tag local `mv-baseline-2026-10-09` guarda a versão anterior ao pacote.
 - O Victor pediu que o plano e o contexto deste **site** fiquem neste projeto MV. Não criar uma segunda lista de tarefas paralela: atualizar o checklist existente ao concluir cada item.
 
@@ -30,6 +30,17 @@ O protótipo extraído está em `MV-OFICIAL/.preview-billion-2026-10-09` e nesta
 | H3 / C05 | Seis cards na ordem Vitrificação, Polimento, Higienização, Bancos, Motor, Vidros. Foto em cima; ícone e nome embaixo; descrição e botão visual “Ver mais”. Card inteiro é o link. Foram **mantidos** o mosaico da MV, fotos, enquadramento, sombras, hover, seta e transição de rota. Última preferência do Victor: ícones azuis, sem pílula/fundo azul. | `src/content/servicos.ts`, `src/components/sections/Servicos.tsx`, `Servicos.module.css` |
 
 O ajuste do rodapé foi encontrado na auditoria final da home e corrigido no commit `396b9be`. Os ícones sem pílula foram salvos no commit `b750606`, podendo ser comparados com a versão anterior. O checklist registra os commits dos outros ajustes.
+
+## Páginas de serviço — andamento
+
+O Victor definiu em 09/10/2026 trabalhar **categoria por categoria, na ordem dos cards**: Vitrificação → Polimento → Higienização.
+
+- **Modelo compartilhado (C08) pronto.** `src/components/servico/VendaSecoes.tsx` e `Venda.module.css` trazem hero com foto, dores, processo, resultado, preço e "por que a MV". Uma rota entra no modelo novo ao ganhar a chave `venda` em `src/content/servico-detalhe.ts`; sem ela, segue no template anterior. Cobertura, cases e FAQ são os componentes que já existiam, reposicionados. As faixas claras trocam tokens CSS (classe `.light`), então o FAQ lê em fundo claro sem ter sido reescrito.
+- **Vitrificação (C09) montada**, aguardando a conferência visual do Victor. Fotos de resultado em `public/assets/vitrificacao/`.
+- **CTAs de venda são provisórios:** abrem o WhatsApp enquanto o formulário (C14) não existe. A troca é uma linha (`ctaProps` em `VendaSecoes.tsx`).
+- O FAQ claro encosta no rodapé, que também é `#f4f4f2`; a faixa escura do formulário vai separá-los quando entrar.
+- Prints: o Playwright dos probes está sem navegador baixado. Funciona lançar com `chromium.launch({ channel: "msedge" })`, que usa o Edge instalado.
+- A copy da Vitrificação foi aplicada como veio no pacote; os pontos ainda sem revisão estão anotados em C07.
 
 ## Como estamos trabalhando
 

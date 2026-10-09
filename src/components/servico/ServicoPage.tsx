@@ -24,6 +24,7 @@ import { OQueEBlock } from "./OQueEBlock";
 import { CoberturaBlock } from "./CoberturaBlock";
 import { CasesReel } from "./CasesReel";
 import { FaqBlock } from "./FaqBlock";
+import { HeroVenda, Dores, ProcessoVenda, Resultado, Preco, PorQue, FaixaClara } from "./VendaSecoes";
 import styles from "./ServicoPage.module.css";
 
 /** CTA de fecho — mesma língua do Contato da home (foco único no WhatsApp). */
@@ -61,13 +62,41 @@ export function ServicoDetalhePage({
   servico: Servico;
   detalhe: ServicoDetalhe;
 }) {
-  const { hero, oQueE, cobre, cases, faq } = detalhe;
+  const { hero, oQueE, cobre, cases, faq, venda } = detalhe;
   // Cases que de fato vão pro ar nesta categoria (ver a regra em servico-detalhe.ts).
   // A categoria pode sobrepor quantos cards de enchimento aparecem; sem override,
   // vale o número global.
   const casesVisiveis = cases
     ? casesPublicaveis(cases.items, cases.placeholdersVisiveis)
     : [];
+
+  const reel = cases && casesVisiveis.length > 0 && (
+    <CasesReel heading={cases.heading} subheading={cases.subheading} items={casesVisiveis} />
+  );
+
+  // MODELO DE VENDA (pacote Billion, 2026-10-09): rota com `venda` troca o
+  // pórtico + "O que é" pelo hero com foto e ganha dores, processo, resultado,
+  // preço e "por que a MV", em faixas alternadas escuro/claro. Cobertura, cases
+  // e FAQ são os MESMOS componentes do template anterior, só reposicionados.
+  // Ordem: hero > dores > o que cobre > processo > resultado/trabalhos > preço >
+  // por que a MV > perguntas.
+  if (venda) {
+    return (
+      <article className={styles.page}>
+        <HeroVenda data={venda.hero} />
+        <Dores data={venda.dores} />
+        <CoberturaBlock cobre={cobre} />
+        <ProcessoVenda data={venda.processo} />
+        {venda.resultado && <Resultado data={venda.resultado} />}
+        {reel}
+        <Preco data={venda.preco} />
+        <PorQue data={venda.porque} />
+        <FaixaClara>
+          <FaqBlock faq={faq} />
+        </FaixaClara>
+      </article>
+    );
+  }
 
   return (
     <article className={styles.page}>
@@ -104,13 +133,7 @@ export function ServicoDetalhePage({
           nenhum, o `.length` zera e NADA é renderizado — nem título, nem setas,
           nem o padding da seção. É de propósito que a checagem seja aqui fora e
           não dentro do CasesReel: assim não sobra um vão vazio na página. */}
-      {cases && casesVisiveis.length > 0 && (
-        <CasesReel
-          heading={cases.heading}
-          subheading={cases.subheading}
-          items={casesVisiveis}
-        />
-      )}
+      {reel}
 
       {/* FECHO INTEGRADO (Victor, 2026-07-23): FAQ + CTA num BLOCO SÓ, agora em
           client component (FaqBlock) pela CASCATA de entrada — details/summary

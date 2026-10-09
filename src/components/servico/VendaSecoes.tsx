@@ -1,0 +1,270 @@
+"use client";
+
+/**
+ * Seções de VENDA da rota /servicos/[slug] (pacote Billion, 2026-10-09): hero
+ * com foto, dores, processo, resultado, preço e "por que a MV". O protótipo
+ * recebido foi a referência de composição; o código é o da casa — variantes
+ * centralizadas em `motion.ts` e gatilho por `useInView` CONTROLADO (nunca
+ * `whileInView`, que dispara "preso invisível" com o Lenis).
+ *
+ * Cada seção tem DOIS gatilhos, como o CoberturaBlock: o cabeçalho revela
+ * quando ele entra na vista e a lista quando ELA entra — numa seção alta no
+ * celular, os itens de baixo não animam fora da tela.
+ */
+
+import { useRef, type ReactNode } from "react";
+import Image from "next/image";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { contact } from "@/content";
+import type { ServicoVenda } from "@/content";
+import { Button } from "@/components/ui";
+import { revealHeadingVariants, softRiseOnMount, staggerCard } from "@/lib/animation/motion";
+import v from "./Venda.module.css";
+
+/**
+ * Destino dos CTAs de venda. 🚩 PROVISÓRIO: o pacote aponta pra `#avaliacao`
+ * (formulário de quatro etapas, C14), que ainda não existe. Até lá o botão
+ * abre o WhatsApp, como o resto do site. Quando o formulário entrar, trocar
+ * por `{ href: "#avaliacao" }`.
+ */
+const ctaProps = {
+  href: contact.whatsapp,
+  target: "_blank",
+  rel: "noopener noreferrer",
+} as const;
+
+function useReveal<T extends HTMLElement>(amount: number) {
+  const ref = useRef<T>(null);
+  const inView = useInView(ref, { once: true, amount });
+  return [ref, inView ? "visible" : "hidden"] as const;
+}
+
+function Cabeca({
+  id,
+  eyebrow,
+  title,
+  accent,
+}: {
+  id: string;
+  eyebrow: string;
+  title: string;
+  accent?: string;
+}) {
+  const [ref, state] = useReveal<HTMLDivElement>(0.5);
+  return (
+    <motion.div
+      ref={ref}
+      className={v.head}
+      initial="hidden"
+      animate={state}
+      variants={revealHeadingVariants}
+    >
+      <p className={v.eyebrow}>{eyebrow}</p>
+      <h2 id={id} className={v.h2}>
+        {title}
+        {accent && (
+          <>
+            {" "}
+            <span className={v.accent}>{accent}</span>
+          </>
+        )}
+      </h2>
+    </motion.div>
+  );
+}
+
+/** Lista com gatilho próprio; os filhos entram em cascata via `staggerCard`. */
+function Lista({
+  as,
+  className,
+  children,
+}: {
+  as: "ul" | "ol";
+  className: string;
+  children: ReactNode;
+}) {
+  const [ref, state] = useReveal<HTMLUListElement & HTMLOListElement>(0.12);
+  const Tag = as === "ul" ? motion.ul : motion.ol;
+  return (
+    <Tag ref={ref} className={className} initial="hidden" animate={state}>
+      {children}
+    </Tag>
+  );
+}
+
+export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
+  const reduce = useReducedMotion();
+  const variants = reduce
+    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }
+    : softRiseOnMount;
+
+  return (
+    <header className={v.hero}>
+      <div className={v.heroIn}>
+        <figure className={v.heroMedia}>
+          <Image
+            src={data.image}
+            alt={data.imageAlt}
+            fill
+            sizes="(max-width: 56rem) 100vw, 45vw"
+            preload
+            fetchPriority="high"
+          />
+        </figure>
+        <motion.div className={v.heroTxt} initial="hidden" animate="visible">
+          <motion.p className={v.local} variants={variants} custom={0}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            {data.local}
+          </motion.p>
+          <motion.h1 className={v.heroTitle} variants={variants} custom={1}>
+            {data.title} <span className={v.accent}>{data.titleAccent}</span>
+          </motion.h1>
+          <motion.p className={v.heroBody} variants={variants} custom={2}>
+            {data.body}
+          </motion.p>
+          <motion.div className={v.heroCta} variants={variants} custom={3}>
+            <Button {...ctaProps} arrow>
+              {data.cta}
+            </Button>
+          </motion.div>
+        </motion.div>
+      </div>
+    </header>
+  );
+}
+
+export function Dores({ data }: { data: ServicoVenda["dores"] }) {
+  return (
+    <section className={`${v.sec} ${v.light}`} aria-labelledby="dores-heading">
+      <div className={v.wrap}>
+        <Cabeca id="dores-heading" eyebrow={data.eyebrow} title={data.title} />
+        <Lista as="ul" className={v.doresGrid}>
+          {data.items.map((d, i) => (
+            <motion.li key={d.q} className={v.dor} variants={staggerCard} custom={i}>
+              <p className={v.dorQ}>“{d.q}”</p>
+              <p className={v.dorA}>{d.a}</p>
+            </motion.li>
+          ))}
+        </Lista>
+      </div>
+    </section>
+  );
+}
+
+export function ProcessoVenda({ data }: { data: ServicoVenda["processo"] }) {
+  return (
+    <section className={`${v.sec} ${v.light}`} aria-labelledby="processo-venda-heading">
+      <div className={v.wrap}>
+        <Cabeca
+          id="processo-venda-heading"
+          eyebrow={data.eyebrow}
+          title={data.title}
+          accent={data.titleAccent}
+        />
+        <Lista as="ol" className={v.etapas}>
+          {data.etapas.map((e, i) => (
+            <motion.li key={e.title} className={v.etapa} variants={staggerCard} custom={i}>
+              <span className={v.num} aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 className={v.etapaTitle}>{e.title}</h3>
+                <p className={v.etapaDesc}>{e.desc}</p>
+              </div>
+            </motion.li>
+          ))}
+        </Lista>
+      </div>
+    </section>
+  );
+}
+
+export function Resultado({ data }: { data: NonNullable<ServicoVenda["resultado"]> }) {
+  return (
+    <section className={`${v.sec} ${v.dark}`} aria-labelledby="resultado-heading">
+      <div className={v.wrap}>
+        <Cabeca
+          id="resultado-heading"
+          eyebrow={data.eyebrow}
+          title={data.title}
+          accent={data.titleAccent}
+        />
+        <Lista as="ul" className={v.fotos}>
+          {data.fotos.map((f, i) => (
+            <motion.li key={f.src} className={v.foto} variants={staggerCard} custom={i}>
+              <figure>
+                <div className={v.fotoImg}>
+                  <Image src={f.src} alt={f.alt} fill sizes="(max-width: 48rem) 100vw, 33vw" />
+                </div>
+                <figcaption className={v.fotoCap}>{f.legenda}</figcaption>
+              </figure>
+            </motion.li>
+          ))}
+        </Lista>
+      </div>
+    </section>
+  );
+}
+
+export function Preco({ data }: { data: ServicoVenda["preco"] }) {
+  const [ref, state] = useReveal<HTMLDivElement>(0.3);
+  return (
+    <section className={`${v.sec} ${v.light}`} aria-labelledby="preco-heading">
+      <div className={v.wrap}>
+        <Cabeca
+          id="preco-heading"
+          eyebrow={data.eyebrow}
+          title={data.title}
+          accent={data.titleAccent}
+        />
+        <motion.div ref={ref} initial="hidden" animate={state} variants={staggerCard}>
+          <div className={v.precoCard}>
+            <p className={v.badge}>{data.badge}</p>
+            <h3 className={v.precoTitle}>{data.cardTitle}</h3>
+            <p className={v.precoDesc}>{data.cardDesc}</p>
+            <p className={v.precoFrom}>{data.priceLabel}</p>
+            <p className={v.precoValor}>{data.price}</p>
+            <p className={v.precoNote}>{data.note}</p>
+            <Button {...ctaProps} arrow>
+              {data.cta}
+            </Button>
+          </div>
+          <p className={v.aviso}>
+            <strong>{data.aviso.label}</strong> {data.aviso.text}
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+export function PorQue({ data }: { data: ServicoVenda["porque"] }) {
+  return (
+    <section className={`${v.sec} ${v.dark}`} aria-labelledby="porque-heading">
+      <div className={v.wrap}>
+        <Cabeca
+          id="porque-heading"
+          eyebrow={data.eyebrow}
+          title={data.title}
+          accent={data.titleAccent}
+        />
+        <Lista as="ul" className={v.porqueGrid}>
+          {data.items.map((it, i) => (
+            <motion.li key={it.title} className={v.porqueItem} variants={staggerCard} custom={i}>
+              <h3 className={v.porqueTitle}>{it.title}</h3>
+              <p className={v.porqueDesc}>{it.desc}</p>
+            </motion.li>
+          ))}
+        </Lista>
+      </div>
+    </section>
+  );
+}
+
+/** Envolve um bloco já existente (FAQ) pra ele ler em fundo claro. */
+export function FaixaClara({ children }: { children: ReactNode }) {
+  return <div className={v.light}>{children}</div>;
+}

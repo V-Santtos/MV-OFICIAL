@@ -93,6 +93,63 @@ export type FaqItem = {
   a: string;
 };
 
+/**
+ * Seções de VENDA da rota (pacote Billion, 2026-10-09): hero com foto, dores,
+ * processo, resultado, preço e "por que a MV". Rota que traz `venda` troca o
+ * pórtico + "O que é" por este conjunto (ver ServicoPage); rota sem a chave
+ * segue no template anterior, intocada.
+ */
+export type ServicoVenda = {
+  hero: {
+    /** Pino de localização acima do H1. */
+    local: string;
+    title: string;
+    titleAccent: string;
+    body: string;
+    cta: string;
+    image: string;
+    imageAlt: string;
+  };
+  dores: {
+    eyebrow: string;
+    title: string;
+    items: readonly FaqItem[];
+  };
+  processo: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    etapas: readonly Passo[];
+  };
+  /** Opcional: só entra quando a rota tem foto real de resultado. */
+  resultado?: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    fotos: readonly { src: string; alt: string; legenda: string }[];
+  };
+  preco: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    badge: string;
+    cardTitle: string;
+    cardDesc: string;
+    priceLabel: string;
+    price: string;
+    note: string;
+    cta: string;
+    /** Limite honesto do serviço, logo abaixo do card. */
+    aviso: { label: string; text: string };
+  };
+  porque: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    items: readonly CobreItem[];
+  };
+};
+
 export type ServicoDetalhe = {
   /**
    * Descrição de SERP e do `Service` no JSON-LD (2026-08-03).
@@ -187,6 +244,8 @@ export type ServicoDetalhe = {
     title: string;
     body: string;
   };
+  /** Seções de venda do pacote Billion. Ausente = template anterior. */
+  venda?: ServicoVenda;
 };
 
 /**
@@ -1432,12 +1491,13 @@ const vitrificacao: ServicoDetalhe = {
       label: "Cortesia inclusa",
       text: "Descontaminação e cristalização de todos os vidros entram junto com a vitrificação, sem custo.",
     },
-    // 🔗 O crossLink mais justificado do site: é PRÉ-REQUISITO, não sugestão.
-    crossLink: {
-      label: "Polimento",
-      desc: "A camada sela a pintura como ela está. Risco precisa sair antes, e isso é polimento. Conheça a categoria.",
-      slug: "polimento",
-    },
+    // 🔕 OCULTO (pacote Billion, 2026-10-09): o cartão de categoria relacionada
+    // saiu desta rota. O polimento agora aparece como etapa 03 do processo.
+    // crossLink: {
+    //   label: "Polimento",
+    //   desc: "A camada sela a pintura como ela está. Risco precisa sair antes, e isso é polimento. Conheça a categoria.",
+    //   slug: "polimento",
+    // },
   },
 
   // 🚩 ÓRFÃOS (`beneficios`, `processo`, `cta`): não renderizados. Limpeza no backlog.
@@ -1506,31 +1566,31 @@ const vitrificacao: ServicoDetalhe = {
     ],
   },
 
+  // FAQ do pacote Billion (2026-10-09): cinco perguntas novas no lugar das
+  // quatro anteriores (versão antiga na tag `mv-baseline-2026-10-09`). O limite
+  // "não protege de risco" continua dito aqui e repetido no aviso do preço.
   faq: {
     title: "Perguntas frequentes",
     items: [
       {
-        // 🚩 PRIMEIRA de propósito: é o MITO da categoria. Deixar essa crença de
-        // pé é o caminho mais curto pra reclamação depois da entrega.
-        q: "Vitrificação deixa a pintura à prova de risco?",
-        a: "Não. A camada resiste bem a resíduo, chuva e sol, mas risco de contato continua marcando o verniz. Proteção e blindagem são coisas diferentes.",
+        q: "Quanto tempo dura a vitrificação?",
+        a: "A proteção dura até 2 anos, dependendo de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá para esperar no seu caso, antes de fechar.",
       },
       {
-        q: "Preciso polir antes?",
-        a: "Na maioria dos casos, sim. A camada sela a pintura no estado em que ela está, então risco e marca que ficarem embaixo continuam lá depois. Na avaliação vemos o que a sua precisa antes.",
+        q: "Meu carro não é zero. Vale a pena vitrificar?",
+        a: "Todo carro vale um polimento técnico com vitrificação. Na avaliação, mostramos os riscos profundos que talvez não saiam 100% no polimento, mas que vão ficar muito menos visíveis.",
       },
       {
-        // ✅ DESTRAVADO 2026-08-03 pelos flyers reais: "protegido por até 2 anos"
-        // / "Pintura protegida por até 24 meses". Antes esta resposta esquivava
-        // do prazo ("depende do produto aplicado") porque eu não tinha o dado —
-        // hoje tenho, e é da MV, não inventado. A ressalva de uso/lavagem fica,
-        // porque o próprio flyer diz "até".
-        q: "Quanto tempo dura a proteção?",
-        a: "Até dois anos, dependendo de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá pra esperar no seu caso, antes de fechar.",
+        q: "O preço muda muito se o carro for grande?",
+        a: "Na avaliação, olhamos o estado da pintura e o tamanho do carro e explicamos quanto tempo o trabalho vai levar. É isso que pode subir um pouco o preço: mais material e mais tempo. Mas o valor não muda tanto, a menos que haja outros serviços a fazer.",
       },
       {
-        q: "Posso lavar o carro normalmente depois?",
-        a: "Pode, com atenção ao produto e ao pano. Lavagem agressiva e pano sujo encurtam o rendimento da camada, e a orientação de manutenção entra junto com a entrega.",
+        q: "A vitrificação protege de risco?",
+        a: "Não. Ela facilita a limpeza, preserva o brilho e melhora a aparência da pintura, mas não protege de pedra, batida nem risco.",
+      },
+      {
+        q: "Toda pintura se recupera?",
+        a: "Depende da avaliação. A espessura do verniz e o tipo de marca dizem até onde a correção pode ir.",
       },
     ],
   },
@@ -1538,6 +1598,135 @@ const vitrificacao: ServicoDetalhe = {
   cta: {
     title: "Sua pintura merece essa proteção.",
     body: "Chame no WhatsApp, conte o estado atual da pintura e receba uma avaliação gratuita — sem compromisso.",
+  },
+
+  // Seções de venda — copy do pacote Billion (2026-10-09), aplicada como veio.
+  // 🚩 Afirmações fortes ainda aguardando a revisão do C07: "100%" (etapas 02,
+  // 04 e 05), "Todo carro vale" (FAQ) e "sem desgastar o seu verniz" (porque).
+  venda: {
+    hero: {
+      local: "Simonésia – MG",
+      title: "Brilho profundo e espelhado,",
+      titleAccent: "valorizando o seu veículo.",
+      body: "Este trabalho não é só para carro zero, apesar de muitos gostarem de proteger a pintura no início da vida útil. Ele devolve o brilho profundo, deixa a pintura espelhada, remove micro-riscos e marcas e protege contra ações químicas e sujeira durante anos.",
+      cta: "Quero meu carro vitrificado",
+      image: "/assets/servicos/vitrificacao-v2.jpg",
+      imageAlt: "Reflexo definido na lataria de um carro vitrificado",
+    },
+    dores: {
+      eyebrow: "Antes de vitrificar",
+      title: "Você se reconhece em alguma dessas?",
+      items: [
+        {
+          q: "Será que vale a pena fazer esse trabalho?",
+          a: "Por isso o resultado tem que aparecer no carro. Um polimento bem feito resulta em brilho e profundidade na cor, e uma vitrificação de qualidade, bem aplicada, resulta em proteção durante anos.",
+        },
+        {
+          q: "Comprei um carro zero e quero investir no tratamento.",
+          a: "É no começo da vida da pintura que a proteção rende mais. A pintura é lavada e descontaminada, recebe o polimento que precisar, e a vitrificação entra sobre o verniz ainda novo, conservando o brilho de fábrica desde o primeiro dia.",
+        },
+        {
+          q: "Pintei ou poli em outro lugar e a pintura ficou marcada no sol.",
+          a: "Redemoinho, mancha e marca de máquina. Muitas vezes o que falta é o acabamento: a correção técnica da pintura.",
+        },
+        {
+          q: "Quero deixar o meu carro muito mais bonito e protegido.",
+          a: "É o que as duas etapas fazem juntas: o polimento técnico tira as marcas e devolve a profundidade da cor, e a vitrificação conserva esse brilho e faz a sujeira grudar menos.",
+        },
+      ],
+    },
+    processo: {
+      eyebrow: "O que é feito no carro",
+      title: "O processo,",
+      titleAccent: "etapa por etapa.",
+      etapas: [
+        {
+          title: "Avaliação e mapeamento",
+          desc: "Identificamos onde estão as principais marcas e micro-riscos, onde vamos dar o foco.",
+        },
+        {
+          title: "Lavagem e descontaminação da pintura",
+          desc: "Tiramos não só a sujeira que sairia numa lavagem: passamos a clay bar para descontaminar 100% a pintura e remover tudo o que estiver impregnado. Ela fica 100% lisa.",
+        },
+        {
+          title: "Aplicação do polimento técnico",
+          desc: "Diferente de um polimento comercial, o polimento técnico é feito de forma mais concentrada e devagar, com um corte mais profundo no verniz. Ele remove as principais áreas com micro-riscos e marcas, deixa o carro espelhado e aumenta a profundidade da cor e o brilho.",
+        },
+        {
+          title: "Aplicação da vitrificação",
+          desc: "Aplicamos o produto devagar e com uma boa quantidade, para o seu carro ficar 100% protegido.",
+        },
+        {
+          title: "Processo de cura",
+          desc: "Depois da aplicação, a vitrificação precisa de um tempo para secar 100%. O carro fica num local reservado, para nada grudar nem estragar o trabalho feito. Por isso pedimos esse tempo a mais.",
+        },
+      ],
+    },
+    // Quadros reais do take da SW4 pronta (Drive da MV). Sem antes/depois por
+    // enquanto: quando o Matheus mandar os pares, entram como itens novos (C17).
+    resultado: {
+      eyebrow: "Resultado",
+      title: "O brilho,",
+      titleAccent: "no carro.",
+      fotos: [
+        {
+          src: "/assets/vitrificacao/resultado-1.jpg",
+          alt: "Traseira de uma Toyota SW4 vitrificada, com o reflexo da iluminação do salão na pintura",
+          legenda: "Toyota SW4 · vitrificação",
+        },
+        {
+          src: "/assets/vitrificacao/resultado-2.jpg",
+          alt: "Lateral de uma Toyota SW4 vitrificada, com o teto de luz refletido na lataria",
+          legenda: "Toyota SW4 · vitrificação",
+        },
+        {
+          src: "/assets/vitrificacao/resultado-3.jpg",
+          alt: "Porta de uma Toyota SW4 vitrificada, com reflexo nítido na pintura",
+          legenda: "Toyota SW4 · vitrificação",
+        },
+      ],
+    },
+    // 🚩 Preço NO SITE é decisão do pacote (antes a regra era fechar só pelo
+    // WhatsApp). O valor veio do Matheus, conforme o documento da Billion.
+    preco: {
+      eyebrow: "Quanto custa",
+      title: "Quanto custa a",
+      titleAccent: "vitrificação com polimento.",
+      badge: "Aproveite",
+      cardTitle: "Vitrificação com polimento",
+      cardDesc: "Lavagem, descontaminação, polimento técnico em etapas e vitrificação por último.",
+      priceLabel: "A partir de:",
+      price: "R$ 1.800",
+      note: "O valor final depende do tamanho do carro e do estado da pintura, e sai na avaliação presencial, que não tem nenhum custo.",
+      cta: "Quero meu carro vitrificado",
+      aviso: {
+        label: "O que a vitrificação não faz:",
+        text: "ela não protege de pedra, batida nem risco.",
+      },
+    },
+    porque: {
+      eyebrow: "Por que a MV",
+      title: "Correção e proteção",
+      titleAccent: "no mesmo lugar.",
+      items: [
+        {
+          title: "Profissionais especializados em polimento",
+          desc: "Trabalhamos com isso desde 2022, em Simonésia, e sabemos fazer esse processo sem desgastar o seu verniz e sem deixar marcas de politriz.",
+        },
+        {
+          title: "Produtos e equipamentos de alta qualidade",
+          desc: "Usamos produtos de alta performance e equipamentos de qualidade, porque sabemos como deixar a sua experiência da melhor forma possível.",
+        },
+        {
+          title: "Avaliação antes de começar",
+          desc: "Olhamos o estado da sua pintura, explicamos o que dá para fazer e o que não dá, e só então passamos o orçamento. A avaliação não tem custo.",
+        },
+        {
+          title: "Proteção de até 2 anos",
+          desc: "A camada protege a pintura por até dois anos, e a orientação de como conservar o resultado entra junto com a entrega do carro.",
+        },
+      ],
+    },
   },
 };
 
