@@ -44,6 +44,41 @@ Prioridade considera impacto para o visitante e dependência para publicar. Difi
 | 8 | Registro e mensuração do lead | R1 | Crítica | Alta | Após definir semântica do Lead | POST na planilha, UTMs, `fbclid`, `_fbp`, `_fbc`, `lead_id` e `eventID`; testar consentimento, falhas e deduplicação. |
 | 9 | Configuração e validação final | R1 + conjunto | Crítica para publicar | Média | Após implementação | Variável `NEXT_PUBLIC_LEAD_ENDPOINT` em Preview/Production, testes de planilha e Meta, responsividade, acessibilidade, SEO e build. |
 
+## Checklist de execução
+
+Este é o controle operacional. A tabela acima mostra **prioridade e impacto**; a ordem abaixo começa pelo trabalho menor e deixa as integrações e decisões mais incertas para depois. Uma etapa concluída deve permanecer na lista como `- [x] ~~texto original da tarefa~~ — concluída em DD/MM/AAAA, commit <hash>; verificação: <resultado>`. Não apagar nem reescrever a tarefa para esconder seu escopo original. Marcar apenas quando a alteração e a verificação indicada estiverem feitas. Se houver uma decisão pendente, anotá-la no item sem marcá-lo.
+
+### A. Preparação e alterações pontuais
+
+- [x] ~~C00 · Guardar a versão inicial do site e o plano no Git local.~~ — concluída em 09/10/2026; commit `197a87d`, tag `mv-baseline-2026-10-09`; área de trabalho limpa após o registro.
+- [x] ~~C01 · Conferir documento, código, assets e prints do pacote.~~ — concluída em 09/10/2026; os arquivos separados de código e assets coincidem com o protótipo, e os 106 prints cobrem as quatro páginas em desktop e celular. A avaliação crítica está registrada nas decisões abaixo.
+- [ ] **C02 · Reordenar os trabalhos da Higienização (L4).** Dificuldade baixa; impacto limitado a uma rota. Vídeo da RAM Rampage primeiro, depois Chevrolet e Hilux. Verificar reel e lightbox.
+- [ ] **C03 · Remover os cartões de categoria relacionada nas três rotas (V2/P2/L2).** Dificuldade baixa; conferir que os blocos de cobertura e cortesia continuam completos.
+- [ ] **C04 · Atualizar o hero da home (H1).** Dificuldade baixa de código; inserir pino, título e apoio, mantendo carro, fundo e CTA. Verificar que "no mesmo lugar." não se divide e que a copy foi aprovada.
+- [ ] **C05 · Atualizar os cards da home (H3).** Dificuldade média; ordem, ícones, foto, descrição, botão visual e seis links. Verificar em 390 px e 1440 px.
+- [ ] **C06 · Mudar a ordem da home e do menu (H2).** Dificuldade média; mover Círculo + Serviços antes de Sobre. Verificar âncoras, animações sticky e transição claro/escuro em desktop e celular.
+
+### B. Páginas de serviço
+
+- [ ] **C07 · Revisar as novas copies e o escopo comercial das três rotas.** Dificuldade média; decisão de conteúdo. Validar números, absolutos, tratamento de faróis, proteção, custos e o que entra em cada preço antes de publicar. Registrar as aprovações no próprio item ou em seção vinculada.
+- [ ] **C08 · Integrar o modelo visual compartilhado das páginas de serviço.** Dificuldade alta; preservar layout global, SEO, consentimento, Pixel, transições e rotas fora do escopo. Adaptar os imports de animação à dependência existente. Verificar o componente em mobile e desktop antes de replicar.
+- [ ] **C09 · Montar Vitrificação (V1–V8).** Dificuldade média após C08; hero, dores, cobertura sem cross-link, processo, três resultados da SW4, preço, por que a MV e FAQ novo. Verificar imagens, textos e JSON-LD.
+- [ ] **C10 · Montar Polimento (P1–P6).** Dificuldade média após C08; hero da SW4, dores, cobertura, processo, trabalhos, preço, por que a MV e FAQ preservado.
+- [ ] **C11 · Montar Higienização completa (L1–L6).** Dificuldade média após C08; hero do console, dores, cobertura, processo, trabalhos na ordem de C02, preço, por que a MV e FAQ preservado.
+
+### C. Formulário, decisões e integrações
+
+- [ ] **C12 · Decidir a política de privacidade e o texto de uso de dados.** Dificuldade de código baixa, dependência de conteúdo/decisão. Necessário antes da publicação do formulário.
+- [ ] **C13 · Decidir o significado do evento Meta `Lead`.** Dificuldade de decisão média. O site atual o usa nos cliques de WhatsApp; o pacote o reserva ao formulário. Definir a regra antes de alterar o Pixel.
+- [ ] **C14 · Implementar o formulário de quatro etapas (V9).** Dificuldade alta; compartilhar entre as três rotas, validar nome/telefone/modelo/prazo, preservar respostas ao voltar, aplicar honeypot e gerar a mensagem correta para o WhatsApp. Resolver a regra de 10 ou 11 dígitos.
+- [ ] **C15 · Integrar atribuição, planilha e Pixel (R1).** Dificuldade alta; capturar UTMs desde a página de entrada, enviar todos os campos mesmo vazios, respeitar o consentimento, usar o mesmo `lead_id` no Pixel e na planilha e seguir para WhatsApp após falha/tempo limite. Verificar registro real, pois `no-cors` não confirma sucesso.
+- [ ] **C16 · Configurar Preview/Production e validar a entrega.** Dificuldade média, dependência externa; configurar `NEXT_PUBLIC_LEAD_ENDPOINT`, testar planilha e Gerenciador de Eventos com o mesmo ID, executar build/lint e conferir quatro páginas nas duas larguras de referência. Não importar `noindex` do protótipo.
+
+### D. Itens futuros, fora desta entrega
+
+- [ ] **C17 · Adicionar pares de antes/depois à seção Resultado quando o Matheus enviar as fotos.** Bloqueado por material futuro; não impede C09.
+- [ ] **C18 · Avaliar nota do Google na seção Por que a MV, se o Matheus quiser exibi-la.** Opcional; não impede publicação.
+
 ### Mudanças pontuais que podem ser feitas separadamente
 
 - H1: pino e textos da home, depois de revisar a copy.
@@ -102,6 +137,9 @@ Prioridade considera impacto para o visitante e dependência para publicar. Difi
 4. **Copy com afirmações fortes:** revisar antes de publicar, sobretudo "10 vezes mais espelhada", "100% protegido", "todo carro vale", "sem desgastar o verniz", prazos e escopo técnico. O documento atribui preços ao Matheus; verificar se o Victor mantém essa aprovação para publicação.
 5. **Fotos de antes/depois:** aguardadas para expansão posterior da seção Resultado; não bloqueiam a primeira entrega.
 6. **Nota do Google:** opcional e não necessária agora.
+7. **Preço da Higienização:** esclarecer se o valor inicial de R$ 800 se refere ao interior, ao exterior ou ao conjunto. A página oferece as três opções.
+8. **Formulário do protótipo:** a máscara sugere celular com 11 dígitos, mas aceita 10; a captura de UTMs só acontece quando o formulário monta, podendo perder a campanha de quem entra pela home; os campos opcionais sem valor não são enviados, embora o documento peça enviá-los vazios. Corrigir na integração.
+9. **Rastreamento e confirmação de registro:** `no-cors` não permite saber pela resposta se a planilha gravou o lead. A verificação precisa consultar a planilha. O protótipo não inclui os componentes globais de analytics/consentimento do site atual e marca páginas como `noindex`.
 
 ## Critérios de conclusão da futura implementação
 
