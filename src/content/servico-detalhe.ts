@@ -691,13 +691,13 @@ const polimento: ServicoDetalhe = {
     // mesmo vale pro `note` da Higienização). Escrito pra ficar pronto se o
     // campo voltar; hoje não aparece na tela.
     note: "Não sabe o que a sua pintura precisa? Na avaliação a gente vê isso junto, sem compromisso.",
-    // Cruzamento natural da categoria: polimento é pré-requisito de vitrificação.
-    // A Higienização aponta pra Bancos; esta aponta pra Vitrificação.
-    crossLink: {
-      label: "Vitrificação e proteção",
-      desc: "O polimento corrige a pintura; a vitrificação protege o que foi corrigido. Conheça a categoria.",
-      slug: "vitrificacao",
-    },
+    // 🔕 OCULTO (pacote Billion, 2026-10-09): o cartão de categoria relacionada
+    // saiu desta rota. A vitrificação segue citada na última pergunta do FAQ.
+    // crossLink: {
+    //   label: "Vitrificação e proteção",
+    //   desc: "O polimento corrige a pintura; a vitrificação protege o que foi corrigido. Conheça a categoria.",
+    //   slug: "vitrificacao",
+    // },
   },
 
   // 🚩 ÓRFÃO, igual na Higienização: `beneficios` e `processo` NÃO são
@@ -860,6 +860,121 @@ const polimento: ServicoDetalhe = {
   cta: {
     title: "Sua pintura merece esse cuidado.",
     body: "Chame no WhatsApp, conte o estado atual da pintura e receba uma avaliação gratuita — sem compromisso.",
+  },
+
+  // Seções de venda — copy do pacote Billion (2026-10-09), aplicada como veio.
+  // Cobertura, trabalhos (cases) e FAQ desta rota são os que já existiam, só
+  // reposicionados; sem `resultado`, porque os trabalhos fazem esse papel.
+  // 🚩 Afirmações fortes ainda aguardando a revisão do C07: "10 vezes mais
+  // espelhada" (hero), "100% transparentes" (hero) e "sem desgastar o seu
+  // verniz" (porque) — esta última ao lado de um FAQ que diz que polir
+  // "trabalha o verniz".
+  venda: {
+    hero: {
+      local: "Simonésia – MG",
+      title: "A pintura do seu carro",
+      titleAccent: "10 vezes mais espelhada e sem marcas.",
+      body: "Esse trabalho remove micro-riscos e marcas e devolve o brilho e o espelhamento à pintura do seu veículo. Além disso, podemos fazer o polimento dos faróis para deixá-los 100% transparentes, aumentando o poder de iluminação do seu carro.",
+      cta: "Quero meu carro espelhado",
+      image: "/assets/servicos/polimento-sw4-hero.jpg",
+      imageAlt:
+        "Toyota SW4 grafite polida na MV, com as luzes hexagonais do teto refletidas nítidas no para-brisa, no capô e na lateral",
+    },
+    dores: {
+      eyebrow: "Antes de polir",
+      title: "Você se reconhece em alguma dessas?",
+      items: [
+        {
+          q: "Paguei um polimento e, no sol, apareceu tudo.",
+          a: "Holograma e marca de máquina aparecem quando o polimento só esconde o risco. Aqui cada painel recebe o corte que o estado do verniz pede, e o carro passa por uma conferência final antes de ser liberado.",
+        },
+        {
+          q: "Tenho medo de polir e gastar o verniz.",
+          a: "O polimento trabalha o verniz, então não é serviço para repetir toda semana. Por isso avaliamos a condição da pintura antes e usamos só a correção que o caso pede.",
+        },
+        {
+          q: "O farol do meu carro está amarelado.",
+          a: "O amarelado é oxidação do policarbonato pelo sol. O polimento desgasta essa camada e devolve a transparência ao facho, com uma proteção por cima para segurar o resultado.",
+        },
+        {
+          q: "Quero ver a minha pintura brilhando de novo.",
+          a: "O reflexo que a pintura perdeu não sumiu. O polimento tira a camada externa embaçada pelo sol e expõe a cor viva que está por baixo.",
+        },
+      ],
+    },
+    processo: {
+      eyebrow: "O que é feito no carro",
+      title: "O processo,",
+      titleAccent: "etapa por etapa.",
+      etapas: [
+        {
+          title: "Avaliação e mapeamento",
+          desc: "Olhamos o estado do verniz e dos faróis, identificamos onde estão as teias, os riscos e a oxidação e definimos o corte de que cada painel precisa.",
+        },
+        {
+          title: "Lavagem e descontaminação",
+          desc: "Resíduo ferroso, seiva e respingo de asfalto não saem na lavagem comum e arranham o verniz se o polimento passar por cima. Removemos tudo antes de começar.",
+        },
+        {
+          title: "Correção da pintura",
+          desc: "Cada painel recebe o corte que o estado do verniz pede, sem aplicar a mesma agressividade no carro inteiro. A abrasão controlada nivela o risco em vez de disfarçar com cera.",
+        },
+        {
+          title: "Refino e lustro",
+          desc: "O corte inicial pode deixar microrrisco no verniz. O refino usa boina e composto mais finos até o reflexo voltar nítido.",
+        },
+        {
+          title: "Faróis",
+          desc: "Quando os faróis entram no serviço, o polimento desgasta a camada oxidada do policarbonato e devolve a transparência ao facho. O polimento dos faróis é feito no par.",
+        },
+        {
+          title: "Proteção do resultado",
+          desc: "Uma camada de proteção por cima segura o resultado: sem ela, a pintura corrigida volta a marcar já nas primeiras lavagens.",
+        },
+      ],
+    },
+    // 🚩 Preço NO SITE é decisão do pacote. Valor confirmado em 09/10/2026,
+    // conforme o material da Billion; aparece só nesta seção, não no hero.
+    preco: {
+      eyebrow: "Quanto custa",
+      title: "Quanto custa o",
+      titleAccent: "polimento.",
+      badge: "Aproveite",
+      cardTitle: "Polimento Detalhado",
+      cardDesc: "Lavagem, descontaminação, correção da pintura em etapas, refino e proteção do resultado.",
+      priceLabel: "A partir de:",
+      price: "R$ 1.100",
+      note: "O valor final depende do tamanho do carro e do estado da pintura, e sai na avaliação presencial, que não tem nenhum custo.",
+      cta: "Quero meu carro espelhado",
+      aviso: {
+        label: "O que o polimento não faz:",
+        text: "risco que atravessou o verniz e pegou a tinta não sai no polimento. Quando é o caso, avisamos antes de começar.",
+      },
+    },
+    porque: {
+      eyebrow: "Por que a MV",
+      title: "Correção sem gastar",
+      titleAccent: "mais do que o necessário.",
+      items: [
+        {
+          title: "Profissionais especializados em polimento",
+          desc: "Trabalhamos com isso desde 2022, em Simonésia, e sabemos fazer esse processo sem desgastar o seu verniz e sem deixar marcas de politriz.",
+        },
+        {
+          title: "Só a correção que o caso pede",
+          desc: "Avaliamos a condição da pintura antes de começar e usamos o corte de cada painel, sem aplicar a mesma agressividade no carro inteiro.",
+        },
+        {
+          title: "Pintura e faróis, juntos ou separados",
+          desc: "São processos independentes: você pode pedir só os faróis, só a pintura ou os dois, e o polimento dos faróis é feito no par.",
+        },
+        {
+          title: "Avaliação antes de começar",
+          desc: "Olhamos o estado da sua pintura, explicamos o que dá para fazer e o que não dá, e só então passamos o orçamento. A avaliação não tem custo.",
+        },
+      ],
+    },
+    servicoForm: "Polimento detalhado",
   },
 };
 
