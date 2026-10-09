@@ -3,22 +3,25 @@
 /**
  * Seções de VENDA da rota /servicos/[slug] (pacote Billion, 2026-10-09): hero
  * com foto, dores, processo, resultado, preço e "por que a MV". O protótipo
- * recebido foi a referência de composição; o código é o da casa — variantes
- * centralizadas em `motion.ts` e gatilho por `useInView` CONTROLADO (nunca
- * `whileInView`, que dispara "preso invisível" com o Lenis).
+ * recebido foi a referência de composição; o código é o da casa — abertura do
+ * hero em GSAP encadeada à intro, e seções com variantes centralizadas em
+ * `motion.ts` e gatilho por `useInView` CONTROLADO (nunca `whileInView`, que
+ * dispara "preso invisível" com o Lenis).
  *
  * Cada seção tem DOIS gatilhos, como o CoberturaBlock: o cabeçalho revela
  * quando ele entra na vista e a lista quando ELA entra — numa seção alta no
  * celular, os itens de baixo não animam fora da tela.
  */
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import gsap from "gsap";
+import { motion, useInView } from "framer-motion";
 import { contact } from "@/content";
 import type { ServicoVenda } from "@/content";
 import { Button } from "@/components/ui";
-import { revealHeadingVariants, softRiseOnMount, staggerCard } from "@/lib/animation/motion";
+import { heroCascade, introDelay, onIntroReveal } from "@/lib/animation";
+import { revealHeadingVariants, staggerCard } from "@/lib/animation/motion";
 import v from "./Venda.module.css";
 
 /**
@@ -93,10 +96,36 @@ function Lista({
 }
 
 export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
-  const reduce = useReducedMotion();
-  const variants = reduce
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }
-    : softRiseOnMount;
+  const txtRef = useRef<HTMLDivElement>(null);
+
+  // ABERTURA em GSAP, a mesma do Hero da home: a cascata é encadeada à intro
+  // (`onIntroReveal`) e só toca quando a cortina sobe — no mount ela rodaria
+  // atrás do painel e ninguém veria. Itens com `data-reveal`, na ordem do DOM
+  // (pino → título → texto → CTA). A foto não entra na cascata: como o carro
+  // da home, o cenário já está na cena quando a página abre.
+  useEffect(() => {
+    const txt = txtRef.current;
+    if (!txt) return;
+
+    const items = gsap.utils.toArray<HTMLElement>("[data-reveal]", txt);
+    if (!items.length) return;
+
+    // Reduced-motion: conteúdo já visível (default do CSS), sem cascata.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let off = () => {};
+    const ctx = gsap.context(() => {
+      gsap.set(items, heroCascade.from);
+      off = onIntroReveal(() => {
+        gsap.to(items, { ...heroCascade.to, delay: introDelay(heroCascade.to.delay) });
+      });
+    }, txt);
+
+    return () => {
+      off();
+      ctx.revert();
+    };
+  }, []);
 
   return (
     <header className={v.hero}>
@@ -111,26 +140,26 @@ export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
             fetchPriority="high"
           />
         </figure>
-        <motion.div className={v.heroTxt} initial="hidden" animate="visible">
-          <motion.p className={v.local} variants={variants} custom={0}>
+        <div ref={txtRef} className={v.heroTxt}>
+          <p className={v.local} data-reveal>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z" />
               <circle cx="12" cy="10" r="2.5" />
             </svg>
             {data.local}
-          </motion.p>
-          <motion.h1 className={v.heroTitle} variants={variants} custom={1}>
+          </p>
+          <h1 className={v.heroTitle} data-reveal>
             {data.title} <span className={v.accent}>{data.titleAccent}</span>
-          </motion.h1>
-          <motion.p className={v.heroBody} variants={variants} custom={2}>
+          </h1>
+          <p className={v.heroBody} data-reveal>
             {data.body}
-          </motion.p>
-          <motion.div className={v.heroCta} variants={variants} custom={3}>
+          </p>
+          <div className={v.heroCta} data-reveal>
             <Button {...ctaProps} arrow>
               {data.cta}
             </Button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </header>
   );
