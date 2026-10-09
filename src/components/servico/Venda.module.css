@@ -383,6 +383,15 @@
   color: var(--text-3);
 }
 
+/* Legenda ÚNICA do conjunto: centralizada (cai sob a foto do meio no desktop)
+   e em branco, porque passa a identificar a seção inteira, não uma foto. */
+.fotosCap {
+  margin: 1.1rem 0 0;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--text-1);
+}
+
 /* ---- PREÇO ------------------------------------------------- */
 /* Card ESCURO dentro da faixa clara: é o único bloco da seção, e o contraste
    invertido faz dele o ponto de parada da página. */
@@ -787,4 +796,29 @@
   font-size: 0.96rem;
   line-height: 1.6;
   color: var(--text-2);
+}
+
+/* ---- QUEBRA DE LINHA ---------------------------------------
+   Nada de palavra sozinha na última linha (Victor, 2026-10-09: "custo." e
+   "risco." isolados no card do preço). Texto CENTRADO e curto equilibra as
+   linhas (`balance`); parágrafo corrido só evita a viúva (`pretty`), sem
+   encurtar as outras linhas. */
+.precoDesc,
+.precoNote,
+.aviso,
+.dorQ,
+.etapaTitle,
+.porqueTitle,
+.fotosCap {
+  text-wrap: balance;
+}
+
+.dorA,
+.etapaDesc,
+.porqueDesc,
+.formIntro,
+.priv,
+.enviadoBody,
+.light details p {
+  text-wrap: pretty;
 }

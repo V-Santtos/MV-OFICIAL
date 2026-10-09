@@ -907,6 +907,17 @@
   transform: rotate(90deg);
 }
 
+/* Sem palavra sozinha na última linha (Victor, 2026-10-09) — cards da
+   cobertura são centrados, então equilibram; a resposta do FAQ só evita a viúva. */
+.covCard h3,
+.covCard p {
+  text-wrap: balance;
+}
+
+.faqItem p {
+  text-wrap: pretty;
+}
+
 /* Invólucro da resposta — é ELE que o GSAP anima em altura. O padding fica no
    <p> de dentro, então a altura vai a zero de verdade, sem sobra. */
 .faqAnswer {

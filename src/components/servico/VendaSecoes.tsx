@@ -224,6 +224,14 @@ export function ProcessoVenda({ data }: { data: ServicoVenda["processo"] }) {
 }
 
 export function Resultado({ data }: { data: NonNullable<ServicoVenda["resultado"]> }) {
+  // Fotos do MESMO carro repetiam a legenda embaixo de cada uma (Victor,
+  // 2026-10-09). Quando todas dizem a mesma coisa, sai UMA legenda só,
+  // centralizada sob o conjunto. Legendas diferentes (os pares de antes/depois
+  // que ainda vão chegar) continuam cada uma na sua foto.
+  const legendaUnica = data.fotos.every((f) => f.legenda === data.fotos[0].legenda)
+    ? data.fotos[0].legenda
+    : null;
+
   return (
     <section className={`${v.sec} ${v.dark}`} aria-labelledby="resultado-heading">
       <div className={v.wrap}>
@@ -240,11 +248,12 @@ export function Resultado({ data }: { data: NonNullable<ServicoVenda["resultado"
                 <div className={v.fotoImg}>
                   <Image src={f.src} alt={f.alt} fill sizes="(max-width: 48rem) 100vw, 33vw" />
                 </div>
-                <figcaption className={v.fotoCap}>{f.legenda}</figcaption>
+                {!legendaUnica && <figcaption className={v.fotoCap}>{f.legenda}</figcaption>}
               </figure>
             </motion.li>
           ))}
         </Lista>
+        {legendaUnica && <p className={v.fotosCap}>{legendaUnica}</p>}
       </div>
     </section>
   );
