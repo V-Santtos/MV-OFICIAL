@@ -14,7 +14,7 @@ export function Hero() {
   // Cascata de entrada (GSAP), encadeada à intro: dispara quando o painel da
   // intro sobe (sinal `onIntroReveal`), não no load — assim o conteúdo é visto
   // ENTRANDO conforme a cena é revelada. Itens marcados com `data-reveal`,
-  // animados na ordem do DOM (título → subtítulo → CTA).
+  // animados na ordem do DOM (cidade → título → subtítulo → CTA).
   useEffect(() => {
     const inner = innerRef.current;
     if (!inner) return;
@@ -80,8 +80,15 @@ export function Hero() {
       </div>
 
       <div ref={innerRef} className={styles.inner}>
+        <p className={styles.location} data-reveal>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+            <circle cx="12" cy="10" r="2.5" />
+          </svg>
+          {hero.location}
+        </p>
         <h1 className={styles.headline} data-reveal>
-          {hero.title}
+          {hero.title} <span className={styles.headlineAccent}>{hero.titleAccent}</span>
         </h1>
 
         <p className={styles.subtitle} data-reveal>

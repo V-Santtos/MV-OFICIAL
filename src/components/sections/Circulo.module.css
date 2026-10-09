@@ -25,7 +25,7 @@
   height: 100svh;
   overflow: visible; /* deixa o círculo crescer durante a entrada sem tampa reta */
   isolation: isolate; /* mantém círculo e texto contidos no palco */
-  background: #f4f4f2; /* claro: continua a ilha clara (Quem somos) */
+  background: #f4f4f2; /* palco claro antes da expansão para Serviços */
 }
 
 /* Círculo escuro que cresce. Base 150vmax → no scale cheio cobre a diagonal

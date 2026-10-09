@@ -89,9 +89,9 @@
    Estreita e nítida, POR CIMA da luz branca e POR BAIXO do carro. */
 .carShadow {
   position: absolute;
-  left: 18.91vw;
-  bottom: 1.04vw;
-  width: 60.36vw;
+  left: 20.5vw;
+  bottom: -1.46vw;
+  width: 57.2vw;
   height: 2.76vw;
   border-radius: 50%;
   background: #0c0c0c;
@@ -100,14 +100,14 @@
   transform: translateZ(0);
 }
 
-/* Carro (Figma: carr1 — x238 y464 1374×1215). O PNG tem espaço vazio embaixo
-   de propósito: a caixa desce 599px (31.2vw) além da dobra p/ as rodas
-   assentarem exatamente sobre a sombra, na borda da tela. */
+/* PNG do carro independente da sombra/luz. Reduzido e abaixado no desktop
+   para manter distância entre o teto e o CTA com o novo título H1. A sombra
+   acompanha o deslocamento, sem alterar o enquadramento mobile. */
 .car {
   position: absolute;
-  left: 12.4vw;
-  bottom: -31.2vw;
-  width: 71.56vw;
+  left: 14.2vw;
+  bottom: -32vw;
+  width: 68vw;
   aspect-ratio: 2748 / 2429;
 }
 
@@ -123,25 +123,49 @@
   width: 100%;
   max-width: 60rem;
   margin: 0 auto;
-  /* Título em ~24% da altura da dobra (ref. Figma: headline y=258 no frame 1080).
-     Proporcional via svh — o bloco desce junto com telas mais altas. */
-  padding: clamp(5.5rem, 23.5svh, 16rem) 1.5rem 0;
+  /* Novo H1 ocupa três linhas; o bloco começa mais alto para preservar o
+     intervalo entre CTA e carro sem alterar a altura de uma dobra. */
+  padding: clamp(5.5rem, 17svh, 12rem) 1.5rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
+.location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 clamp(1rem, 2.4svh, 1.75rem);
+  color: var(--text-1);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.location svg {
+  width: 1rem;
+  height: 1rem;
+  color: #a9c9ff;
+}
+
 .headline {
-  max-width: 27ch; /* coluna larga o bastante p/ a frase fechar em 2 linhas, como a ref (era 16ch) */
+  max-width: 25ch;
   font-family: var(--font-display);
   font-weight: 400; /* Inter Regular — peso exato do Figma (node 475:144); leve = premium */
-  font-size: clamp(2rem, 3.4vw, 4.1rem); /* 65px @1920 — tamanho exato da ref (era teto 52px) */
+  font-size: clamp(2rem, 3.4vw, 4.1rem);
   line-height: 1.02; /* quase colado, editorial — ref usa 0.84; 1.02 é o fiel seguro p/ web */
   letter-spacing: 0.01em; /* ref não tem tracking; resquício mínimo p/ render de tela */
   text-transform: uppercase; /* caixa alta como a ref */
   color: var(--text-1);
-  white-space: pre-line; /* respeita a quebra de linha definida na copy (brand.ts) */
+  text-wrap: balance;
+}
+
+.headlineAccent {
+  display: inline-block;
+  white-space: nowrap;
+  color: #8fb8ff;
 }
 
 .subtitle {
@@ -246,16 +270,13 @@
      o vão abaixo do CTA virar descanso de composição, não buraco.
      O carro não entra na conta — posição dele é travada. */
   .inner {
-    padding-top: 24.5svh;
+    padding-top: 18svh;
   }
 
-  /* ⚠️ TETO DE 8.4vw: a copy quebra em 2 linhas por `white-space: pre-line`,
-     e "MERECE O MELHOR" é a linha longa. Em 390px de tela sobram 342px úteis;
-     acima de ~8.6vw a linha estoura e o título vira 3 linhas, empurrando o
-     bloco inteiro pra cima do carro. O valor antigo (9.2vw) fazia exatamente
-     isso — só não aparecia porque a regra nunca aplicava. */
+  /* Tamanho do novo H1 calibrado para manter "no mesmo lugar." inteiro até
+     320px, com respiro para subtítulo e CTA acima do carro. */
   .headline {
-    font-size: clamp(2rem, 8.4vw, 2.35rem);
+    font-size: clamp(1.75rem, 7.3vw, 2.35rem);
   }
 
   /* 🔑 O BLOCO TEM QUE AGRUPAR, não distribuir igual.
@@ -270,6 +291,6 @@
   }
 
   .ctas {
-    margin-top: clamp(2.5rem, 7.8svh, 4.5rem);
+    margin-top: clamp(1.75rem, 5svh, 3rem);
   }
 }

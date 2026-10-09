@@ -171,11 +171,7 @@ export type NavLink = { href: string; label: string };
 
 /** Nav da navbar. Âncoras com `/` na frente: nas rotas `/servicos/[slug]` elas
  *  voltam pra home e rolam até a seção (na home o comportamento não muda). */
-// Ordem por PRIORIDADE COMERCIAL, não pela ordem da página (na rolagem, "Quem
-// somos" vem antes de Serviços). Escolha do Victor, 2026-07-22.
-// "Processo" entrou aqui porque responde a objeção que nasce logo depois de "o
-// que vocês fazem?" — *"vão fazer direito no meu carro?"* — e é a seção mais
-// trabalhada do site.
+// Ordem da navegação acompanha H2: Início → Serviços → Quem somos → Processo.
 // 🚫 **Depoimentos NÃO entra na navbar** enquanto os 9 forem FICTÍCIOS: item de
 // navbar é promessa de substância, e mandaria o visitante direto pra parte menos
 // confiável da página. No rodapé o link existe ("Clientes") e o dano é menor,
@@ -186,8 +182,8 @@ export type NavLink = { href: string; label: string };
 export const navLinks: readonly NavLink[] = [
   { href: "/#hero", label: "Início" },
   { href: "/#servicos", label: "Serviços" },
-  { href: "/#processo", label: "Processo" },
   { href: "/#quem-somos", label: "Quem somos" },
+  { href: "/#processo", label: "Processo" },
 ] as const;
 
 /** Nav do rodapé (âncoras válidas, prefixadas p/ funcionar nas subpáginas). */
@@ -198,12 +194,13 @@ export const footerNavLinks: readonly NavLink[] = [
   { href: "/#contato", label: "Contato" },
 ] as const;
 
-/** Copy do Hero (validada na Fase 2, 2026-07-14). */
+/** Copy do Hero, atualizada conforme H1 do pacote Billion (09/10/2026). */
 export const hero = {
-  /* Quebra de linha intencional (Victor, 2026-07-15): duas linhas fixas no Hero. */
-  title: "Seu veículo\nmerece o melhor",
+  location: "Simonésia – MG",
+  title: "Pintura espelhada e higienização profunda",
+  titleAccent: "no mesmo lugar.",
   subtitle:
-    "Serviços completos de estética automotiva, com produtos de qualidade e acabamento de precisão.",
+    "Não somos lava-jato: entregamos pintura espelhada e higienização do interior onde a lavagem comum não chega.",
   /* "Solicitar orçamento" → "Avaliação gratuita" (Victor, 2026-07-17): orçamento
      soava pressão/dinheiro no 1º clique; avaliação gratuita é convite — e casa
      com o fluxo real (chama no WhatsApp → avalia → orçamento vem depois). */

@@ -19,8 +19,8 @@ export type SobrePhoto = {
 };
 
 export const sobre = {
-  /** Índice/rótulo à esquerda (padrão "00 — 02 · QUEM SOMOS"). */
-  index: "00 — 02",
+  /** Índice da seção na ordem atual da home. */
+  index: "00 — 04",
   label: "Quem somos",
 
   /** Parágrafo revelado palavra por palavra conforme o scroll.

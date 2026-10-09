@@ -29,6 +29,20 @@ export type Servico = {
 
 export const servicos: readonly Servico[] = [
   {
+    title: "Vitrificação & Proteção",
+    slug: "vitrificacao",
+    desc: "Revestimento cerâmico e selantes que protegem a pintura por anos, com brilho intenso e efeito hidrofóbico.",
+    image: "/assets/servicos/vitrificacao-v2.jpg",
+    alt: "Vitrificação e proteção da pintura — reflexo na lataria",
+  },
+  {
+    title: "Polimento Detalhado",
+    slug: "polimento",
+    desc: "Correção de riscos, oxidação e imperfeições da pintura e dos faróis, restaurando brilho e profundidade ao acabamento.",
+    image: "/assets/servicos/polimento-v2.jpg",
+    alt: "Politriz orbital passando pela lataria escura durante o polimento, luz raking revelando o brilho",
+  },
+  {
     // Renomeado de "Higienização Interna" (Victor, 2026-08-03): a categoria
     // passou a comunicar interior + exterior. Slug mudou junto — redirect
     // permanente da rota antiga em next.config.ts.
@@ -52,20 +66,6 @@ export const servicos: readonly Servico[] = [
     desc: "Desengraxe e higienização do compartimento do motor com segurança elétrica e produtos de alta performance.",
     image: "/assets/servicos/limpeza-de-motor-v2.jpg",
     alt: "Limpeza do compartimento do motor",
-  },
-  {
-    title: "Polimento Detalhado",
-    slug: "polimento",
-    desc: "Correção de riscos, oxidação e imperfeições da pintura e dos faróis, restaurando brilho e profundidade ao acabamento.",
-    image: "/assets/servicos/polimento-v2.jpg",
-    alt: "Politriz orbital passando pela lataria escura durante o polimento, luz raking revelando o brilho",
-  },
-  {
-    title: "Vitrificação & Proteção",
-    slug: "vitrificacao",
-    desc: "Revestimento cerâmico e selantes que protegem a pintura por anos, com brilho intenso e efeito hidrofóbico.",
-    image: "/assets/servicos/vitrificacao-v2.jpg",
-    alt: "Vitrificação e proteção da pintura — reflexo na lataria",
   },
   {
     title: "Cristalização de Vidros",

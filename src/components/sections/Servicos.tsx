@@ -12,6 +12,25 @@ import { revealHeadingVariants, staggerCard } from "@/lib/animation";
 import { ehCliqueSimples, useRouteTransition } from "@/components/layout/RouteTransition";
 import styles from "./Servicos.module.css";
 
+function ServiceIcon({ slug }: { slug: string }) {
+  const common = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
+
+  switch (slug) {
+    case "vitrificacao":
+      return <svg {...common}><path d="M12 3 19 6v5c0 4.8-2.8 8.1-7 10-4.2-1.9-7-5.2-7-10V6l7-3Z" /></svg>;
+    case "polimento":
+      return <svg {...common}><path d="m12 2 2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z" /><path d="m19 19 1 2m-2-1 2-1" /></svg>;
+    case "higienizacao-completa":
+      return <svg {...common}><path d="M12 3C9 7.5 6 10.8 6 14.3a6 6 0 0 0 12 0C18 10.8 15 7.5 12 3Z" /></svg>;
+    case "bancos-e-estofados":
+      return <svg {...common}><path d="M7 3h7a3 3 0 0 1 3 3v7H7V3Zm0 10H5a2 2 0 0 0-2 2v3h17v-3a2 2 0 0 0-2-2h-1M5 18v3m14-3v3" /></svg>;
+    case "limpeza-de-motor":
+      return <svg {...common}><path d="M5 8h13v10H5V8Zm3-3v3m4-3v3m4-3v3M2 11h3m-3 4h3m13-4h4m-4 4h4M8 12h7" /></svg>;
+    default:
+      return <svg {...common}><path d="M5 4h14v16H5V4Zm0 5h14M8 15h8" /></svg>;
+  }
+}
+
 /**
  * Catálogo de serviços — mosaico foto-led (ref Glänzen), emendado no fim do
  * Círculo (dark). Cada card é uma PORTA pra rota `/servicos/[slug]` (a construir).
@@ -101,28 +120,32 @@ export function Servicos() {
                     transitionTo(`/servicos/${s.slug}`);
                   }}
                 >
-                  <Image
-                    src={s.image}
-                    alt={s.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={styles.img}
-                    // 🚫 SEM `priority` (2026-07-22). Era `priority={i<3}`, o que
-                    // emitia 3 `<link rel=preload>` para fotos que ficam ~6 telas
-                    // abaixo (depois de Posicionamento + Sobre 260vh + Círculo
-                    // 260vh) e disputavam banda com o `hero-car.png`, que é o LCP
-                    // real. Lazy (padrão) é o certo aqui.
-                  />
-                  <span className={styles.scrim} aria-hidden="true" />
-                  <span className={styles.tint} aria-hidden="true" />
-                  <div className={styles.meta}>
-                    <h3 className={styles.label}>{s.title}</h3>
-                    <span className={styles.arrow} aria-hidden="true">
-                      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14" />
-                        <path d="m13 6 6 6-6 6" />
-                      </svg>
-                    </span>
+                  <div className={styles.media}>
+                    <Image
+                      src={s.image}
+                      alt={s.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={styles.img}
+                    />
+                    <span className={styles.scrim} aria-hidden="true" />
+                    <span className={styles.tint} aria-hidden="true" />
+                    <div className={styles.meta}>
+                      <div className={styles.name}>
+                        <span className={styles.icon}><ServiceIcon slug={s.slug} /></span>
+                        <h3 className={styles.label}>{s.title}</h3>
+                      </div>
+                      <span className={styles.arrow} aria-hidden="true">
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14" />
+                          <path d="m13 6 6 6-6 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div className={styles.details}>
+                    <p className={styles.description}>{s.desc}</p>
+                    <span className={styles.more}>Ver mais <span aria-hidden="true">→</span></span>
                   </div>
                 </Link>
               </motion.div>

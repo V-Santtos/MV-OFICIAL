@@ -129,10 +129,10 @@
 /* Card = link. overflow hidden pra o zoom da foto acontecer por dentro. */
 .card {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  aspect-ratio: 4 / 3; /* mobile/tablet */
   background: var(--bg-2);
   isolation: isolate;
   /* Repouso definido (base p/ a proposta D): hairline branca (separa o card do
@@ -146,7 +146,15 @@
   transition: transform 0.5s var(--easing-out), box-shadow 0.5s var(--easing-out);
 }
 
-/* Cards PAISAGEM (horizontais) em todas as larguras, como a referência. */
+/* A foto conserva o enquadramento e os efeitos do card original. */
+.media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  isolation: isolate;
+}
 
 .img {
   object-fit: cover;
@@ -181,7 +189,7 @@
 /* Película de grade por cima de TODA a foto (uniforme + vinheta) — o "verniz"
    que faz o conjunto parecer editado junto. Wash NEUTRO (não azul: azul é só
    pro essencial). Fica acima da foto e abaixo do scrim/tint/rótulo. */
-.card::before {
+.media::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -248,6 +256,30 @@
   pointer-events: none;
 }
 
+.name {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.icon {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.65rem;
+  background: var(--accent-primary);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 .label {
   margin: 0;
   color: #ffffff;
@@ -257,6 +289,43 @@
   letter-spacing: 0.01em;
   line-height: 1.2;
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
+}
+
+.details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  min-height: 10.5rem;
+  padding: 1.15rem 1.25rem 1.25rem;
+}
+
+.description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding: 0.65rem 1.05rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #161616;
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1;
+  transition: background 0.3s var(--easing-out), transform 0.3s var(--easing-out);
+}
+
+.card:hover .more {
+  background: #e8efff;
+  transform: translateX(2px);
 }
 
 /* Seta maior. Repouso = inclinada (↗) via rotate(-45deg); hover = aponta pra
