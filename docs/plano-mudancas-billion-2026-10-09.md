@@ -56,7 +56,7 @@ Este é o controle operacional. A tabela acima mostra **prioridade e impacto**; 
 - [ ] **C03 · Remover os cartões de categoria relacionada nas três rotas (V2/P2/L2).** Dificuldade baixa; conferir que os blocos de cobertura e cortesia continuam completos.
 - [x] ~~C04 · Atualizar o hero da home (H1). Dificuldade baixa de código; inserir pino, título e apoio, mantendo carro, fundo e CTA. Verificar que "no mesmo lugar." não se divide e que a copy foi aprovada.~~ — concluída em 09/10/2026, commit `6b538b3`; copy aplicada conforme pacote autorizado pelo Victor, carro e sombra ajustados após comparação com os prints; conferido em 390, 1440 e 1920 px, sem quebra da frase azul.
 - [x] ~~C05 · Atualizar os cards da home (H3). Dificuldade média; ordem, ícones, foto, descrição, botão visual e seis links. Verificar em 390 px e 1440 px.~~ — concluída em 09/10/2026, commits `6b538b3` e `40f3c8a`; mosaico, enquadramentos, hover, setas e transição de rota do site canônico preservados; ícone e nome abaixo da foto, seguidos por descrição e botão visual no mesmo link; seis rotas conferidas em 390 e 1440 px. Variação de teste pedida pelo Victor: ícones azuis sem fundo, commit `b750606`.
-- [x] ~~C06 · Mudar a ordem da home e do menu (H2). Dificuldade média; mover Círculo + Serviços antes de Sobre. Verificar âncoras, animações sticky e transição claro/escuro em desktop e celular.~~ — concluída em 09/10/2026, commits `6b538b3` e `40f3c8a`; ordem, menu, índice de Quem somos e passagens entre seções conferidos em desktop e celular; o Círculo continua oculto no celular conforme decisão anterior e o texto da animação permanece nítido, sem filtro de desfoque.
+- [x] ~~C06 · Mudar a ordem da home e do menu (H2). Dificuldade média; mover Círculo + Serviços antes de Sobre. Verificar âncoras, animações sticky e transição claro/escuro em desktop e celular.~~ — concluída em 09/10/2026, commits `6b538b3`, `40f3c8a` e `396b9be`; ordem, menu, rodapé, índice de Quem somos e passagens entre seções conferidos em desktop e celular; o Círculo continua oculto no celular conforme decisão anterior e o texto da animação permanece nítido, sem filtro de desfoque.
 
 ### B. Páginas de serviço
 
@@ -98,7 +98,7 @@ Este é o controle operacional. A tabela acima mostra **prioridade e impacto**; 
 ### Home
 
 - H1: novo título e apoio, pino "Simonésia – MG"; carro, fundo e botão "Avaliação gratuita" permanecem.
-- H2: ordem final Hero → Posicionamento → Círculo (desktop) → Serviços → Quem somos → Processo → Depoimentos → Contato. Menu: Início, Serviços, Quem somos, Processo.
+- H2: ordem final Hero → Posicionamento → Círculo (desktop) → Serviços → Quem somos → Processo → Depoimentos → Contato. Menu e rodapé: Início, Serviços, Quem somos, Processo.
 - H3: cards na ordem Vitrificação, Polimento, Higienização, Bancos, Motor e Vidros; foto superior, ícone azul, nome, descrição e botão visual "Ver mais". O card inteiro é o link.
 
 ### Vitrificação
