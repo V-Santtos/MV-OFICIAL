@@ -131,10 +131,6 @@ export function Servicos() {
                     <span className={styles.scrim} aria-hidden="true" />
                     <span className={styles.tint} aria-hidden="true" />
                     <div className={styles.meta}>
-                      <div className={styles.name}>
-                        <span className={styles.icon}><ServiceIcon slug={s.slug} /></span>
-                        <h3 className={styles.label}>{s.title}</h3>
-                      </div>
                       <span className={styles.arrow} aria-hidden="true">
                         <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 12h14" />
@@ -144,6 +140,10 @@ export function Servicos() {
                     </div>
                   </div>
                   <div className={styles.details}>
+                    <div className={styles.name}>
+                      <span className={styles.icon}><ServiceIcon slug={s.slug} /></span>
+                      <h3 className={styles.label}>{s.title}</h3>
+                    </div>
                     <p className={styles.description}>{s.desc}</p>
                     <span className={styles.more}>Ver mais <span aria-hidden="true">→</span></span>
                   </div>

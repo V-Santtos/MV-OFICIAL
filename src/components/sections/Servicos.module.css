@@ -240,8 +240,7 @@
   opacity: 1;
 }
 
-/* Grupo topo-direito: título + seta logo ABAIXO dele, alinhados à direita,
-   como a referência. pointer-events none pra não competir com o link do card. */
+/* Seta sobre a foto; ícone e título ficam no painel abaixo dela. */
 .meta {
   position: absolute;
   top: 1.15rem;
@@ -259,7 +258,7 @@
 .name {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.65rem;
 }
 
@@ -288,7 +287,6 @@
   font-size: 1.2rem;
   letter-spacing: 0.01em;
   line-height: 1.2;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
 }
 
 .details {
@@ -297,7 +295,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  min-height: 10.5rem;
+  min-height: 13rem;
   padding: 1.15rem 1.25rem 1.25rem;
 }
 

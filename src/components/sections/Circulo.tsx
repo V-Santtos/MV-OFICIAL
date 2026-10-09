@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
-  useMotionTemplate,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -51,11 +50,10 @@ export function Circulo() {
   const lift = useTransform(scrollYProgress, circuloReveal.liftInput, circuloReveal.liftOutput);
   const textClip = useTransform(scale, (value) => `circle(${75 * value}vmax at 50% 50%)`);
 
-  // Mobile — SAÍDA da frase por FADE + BLUR (Victor, 2026-07-24). No desktop a
+  // Mobile — SAÍDA da frase por FADE, sem desfoque. No desktop a
   // frase saía só por scroll físico, e por isso o título de Serviços esperava
   // (margem -45%) pra não aparecer junto com "Do cuidado ao resultado". No mobile
-  // a frase SOME visualmente aqui (borra e esvazia — a MESMA linguagem do título
-  // do Processo), o que libera apertar o gatilho de Serviços sem os dois se
+  // a frase SOME visualmente aqui, o que libera apertar o gatilho de Serviços sem os dois se
   // cruzarem, encurtando o vão escuro.
   // ⚠️ Amarrado a um `useScroll` SEPARADO de SAÍDA — não ao `scrollYProgress` da
   // seção, que TRAVA em 1.0 enquanto o palco ainda está pinado (aí a frase apagava
@@ -67,8 +65,6 @@ export function Circulo() {
     offset: ["end end", "end start"],
   });
   const headExitOpacity = useTransform(exitProgress, [0.15, 0.45], [1, 0]);
-  const headExitBlur = useTransform(exitProgress, [0.15, 0.45], [0, 5]);
-  const headExitFilter = useMotionTemplate`blur(${headExitBlur}px)`;
 
   return (
     <section ref={ref} aria-label="Transição" className={styles.section}>
@@ -89,9 +85,8 @@ export function Circulo() {
             style={{
               y: reduced || isMobile ? 0 : lift,
               clipPath: reduced ? "none" : textClip,
-              // Fade+blur de saída SÓ no mobile; desktop segue sem (sai por scroll).
+              // Fade de saída só no mobile; o texto permanece nítido.
               opacity: isMobile && !reduced ? headExitOpacity : 1,
-              filter: isMobile && !reduced ? headExitFilter : undefined,
             }}
           >
             {circulo.title} <span className={styles.emphasis}>{circulo.emphasis}</span>
