@@ -186,13 +186,8 @@ export const navLinks: readonly NavLink[] = [
   { href: "/#processo", label: "Processo" },
 ] as const;
 
-/** Nav do rodapé (âncoras válidas, prefixadas p/ funcionar nas subpáginas). */
-export const footerNavLinks: readonly NavLink[] = [
-  { href: "/#servicos", label: "Serviços" },
-  { href: "/#processo", label: "Processo" },
-  { href: "/#depoimentos", label: "Clientes" },
-  { href: "/#contato", label: "Contato" },
-] as const;
+/** Rodapé acompanha a mesma ordem do menu em todas as rotas (H2). */
+export const footerNavLinks: readonly NavLink[] = navLinks;
 
 /** Copy do Hero, atualizada conforme H1 do pacote Billion (09/10/2026). */
 export const hero = {
