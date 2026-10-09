@@ -294,8 +294,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  min-height: 13rem;
-  padding: 1.15rem 1.25rem 1.25rem;
+  padding: 1.15rem 1.25rem 1.5rem;
 }
 
 .description {
@@ -309,12 +308,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
+  /* `auto` só age quando o card estica pra igualar o vizinho de linha; o piso
+     de 0.35rem é o respiro fixo entre a descrição e o botão. */
   margin-top: auto;
-  padding: 0.65rem 1.05rem;
+  padding: 0.9rem 1.45rem;
   border-radius: 999px;
   background: #fff;
   color: #161616;
-  font-size: 0.84rem;
+  font-size: 0.95rem;
   font-weight: 650;
   line-height: 1;
   transition: background 0.3s var(--easing-out), transform 0.3s var(--easing-out);
