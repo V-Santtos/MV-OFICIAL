@@ -123,6 +123,7 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${inter.variable} ${birthstone.variable} h-full antialiased`}
+      data-intro-every-load=""
       suppressHydrationWarning
     >
       {/* suppressHydrationWarning: extensões de navegador (ex.: ColorZilla →

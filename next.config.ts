@@ -2,6 +2,13 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Oculta o botão flutuante do Next.js durante o desenvolvimento.
+  devIndicators: false,
+
+  // Só em dev: libera o túnel ngrok (validação no celular fora de casa).
+  // Sem isso o Next bloqueia os assets de dev vindos de outro host.
+  allowedDevOrigins: ["*.ngrok-free.app"],
+
   // Fixa a raiz do workspace nesta pasta. Sem isso, o Next detecta um
   // package-lock.json perdido em C:\Users\victo e infere o root errado.
   turbopack: {

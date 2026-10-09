@@ -59,6 +59,7 @@ export function IntroReveal() {
     if (!overlay || !svg) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const replayEveryLoad = document.documentElement.hasAttribute("data-intro-every-load");
     const body = document.body;
     const prevOverflow = body.style.overflow;
     body.style.overflow = "hidden";
@@ -71,7 +72,7 @@ export function IntroReveal() {
     // Sem cortina: reduced-motion, ou a intro já tocou nesta aba. Revela na
     // hora e avisa `instant` — sem isso, as cascatas do Hero e da Navbar ficam
     // esperando um painel que não vai subir (tela parada por ~1s).
-    if (prefersReduced || alreadyPlayed()) {
+    if (prefersReduced || (!replayEveryLoad && alreadyPlayed())) {
       emitIntroReveal({ instant: true });
       finish();
       return () => {

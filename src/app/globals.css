@@ -100,7 +100,9 @@ html.lenis body {
 /* Intro já tocada nesta aba (script inline do `layout.tsx` carimba o atributo):
    esconde a cortina ANTES do primeiro paint. Sem isto, cargas seguintes piscam
    o painel escuro por um frame até o React removê-lo. Par: `IntroReveal`. */
-html[data-intro-done] .mv-intro-overlay {
+/* MODO APRESENTAÇÃO: `data-intro-every-load` faz a logo tocar novamente
+   em cada refresh, mesmo quando a sessão já havia marcado a intro como vista. */
+html[data-intro-done]:not([data-intro-every-load]) .mv-intro-overlay {
   display: none !important;
 }
 
