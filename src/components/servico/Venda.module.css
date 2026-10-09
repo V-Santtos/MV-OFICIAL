@@ -383,13 +383,20 @@
   color: var(--text-3);
 }
 
-/* Legenda ÚNICA do conjunto: centralizada (cai sob a foto do meio no desktop)
-   e em branco, porque passa a identificar a seção inteira, não uma foto. */
+/* Legenda ÚNICA do conjunto, sob a foto do meio: centralizada e em branco,
+   porque passa a identificar a seção inteira, não uma foto. No celular ganha
+   um respiro embaixo pra não colar na foto seguinte da pilha. */
 .fotosCap {
-  margin: 1.1rem 0 0;
+  margin: 1rem 0 0;
   font-size: 0.95rem;
   text-align: center;
   color: var(--text-1);
+}
+
+@media (max-width: 47.99rem) {
+  .fotosCap {
+    margin-bottom: 0.6rem;
+  }
 }
 
 /* ---- PREÇO ------------------------------------------------- */
