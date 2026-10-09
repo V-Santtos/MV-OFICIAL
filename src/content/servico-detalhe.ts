@@ -358,11 +358,13 @@ const higienizacaoInterna: ServicoDetalhe = {
     note: "Não sabe o que o seu carro precisa? Na avaliação a gente monta isso junto — sem compromisso.",
     // 7ª linha do menu (não mais caixa separada): título curto no padrão das
     // outras linhas; a seta é o sinal de que leva à categoria irmã.
-    crossLink: {
-      label: "Bancos e estofados",
-      desc: "Cuidado próprio — couro e tecido pedem hidratação e revitalização dedicadas. Conheça a categoria.",
-      slug: "bancos-e-estofados",
-    },
+    // 🔕 OCULTO (pacote Billion, 2026-10-09): o cartão de categoria relacionada
+    // saiu desta rota.
+    // crossLink: {
+    //   label: "Bancos e estofados",
+    //   desc: "Cuidado próprio — couro e tecido pedem hidratação e revitalização dedicadas. Conheça a categoria.",
+    //   slug: "bancos-e-estofados",
+    // },
   },
 
   beneficios: {
@@ -422,6 +424,33 @@ const higienizacaoInterna: ServicoDetalhe = {
     heading: "Alguns trabalhos",
     subheading: "Interiores tratados na MV — cada um no seu estado de origem.",
     items: [
+      // 🔝 PRIMEIRO da fila (pacote Billion, L4, 2026-10-09): o vídeo abre o
+      // reel; Chevrolet e Hilux vêm depois.
+      // CASE 2 — REAL, EM VÍDEO (Victor, 2026-08-03). RAM Rampage — emblema
+      // "RAM"/"RAMPAGE" conferido em zoom nos frames pra não afirmar sem
+      // critério. É a "Lavagem externa" do `cobre` acima (mesma linguagem:
+      // espuma, rodas, caixa de roda), não interior — por isso entra aqui na
+      // Higienização Completa, e não no Polimento.
+      // Montagem editada fora do site (FFmpeg), 11,97s. Antes/durante (7 takes)
+      // ALTERNAM ritmo — 2 rápidos (0,53s) + 1 no ritmo anterior (1,2s), repete —
+      // pra não ficar metronômico. Depois (3 takes) intocado, 2,3s cada, corte
+      // seco, mudo, 1080×1920. Vídeo só carrega ao abrir a galeria — o card
+      // mostra a `capa.jpg` (frame do "depois") como qualquer outro, com o
+      // selo "Vídeo" no lugar da contagem de fotos.
+      {
+        id: "rampage-lavagem",
+        title: "RAM Rampage · lavagem externa",
+        summary: "Lataria e rodas encardidas tratadas na pré-lavagem com espuma, do sujo ao brilho.",
+        fotos: [
+          {
+            tipo: "video",
+            src: "/assets/cases/rampage-lavagem/montagem.mp4",
+            poster: "/assets/cases/rampage-lavagem/capa.jpg",
+            posterVideo: "/assets/cases/rampage-lavagem/montagem-poster.webp",
+            alt: "Vídeo da RAM Rampage antes, durante e depois da lavagem externa na MV: rodas e lataria encardidas, espuma aplicada em toda a carroceria e o resultado com a pintura em brilho.",
+          },
+        ],
+      },
       /* TODO(modelo-chevrolet): o dono da estética ainda precisa confirmar o
          modelo deste veículo. Quando chegar, atualizar somente o `title` abaixo
          para "Chevrolet [MODELO] · higienização interna".
@@ -492,31 +521,6 @@ const higienizacaoInterna: ServicoDetalhe = {
           },
         ],
       },
-      // CASE 2 — REAL, EM VÍDEO (Victor, 2026-08-03). RAM Rampage — emblema
-      // "RAM"/"RAMPAGE" conferido em zoom nos frames pra não afirmar sem
-      // critério. É a "Lavagem externa" do `cobre` acima (mesma linguagem:
-      // espuma, rodas, caixa de roda), não interior — por isso entra aqui na
-      // Higienização Completa, e não no Polimento.
-      // Montagem editada fora do site (FFmpeg), 11,97s. Antes/durante (7 takes)
-      // ALTERNAM ritmo — 2 rápidos (0,53s) + 1 no ritmo anterior (1,2s), repete —
-      // pra não ficar metronômico. Depois (3 takes) intocado, 2,3s cada, corte
-      // seco, mudo, 1080×1920. Vídeo só carrega ao abrir a galeria — o card
-      // mostra a `capa.jpg` (frame do "depois") como qualquer outro, com o
-      // selo "Vídeo" no lugar da contagem de fotos.
-      {
-        id: "rampage-lavagem",
-        title: "RAM Rampage · lavagem externa",
-        summary: "Lataria e rodas encardidas tratadas na pré-lavagem com espuma, do sujo ao brilho.",
-        fotos: [
-          {
-            tipo: "video",
-            src: "/assets/cases/rampage-lavagem/montagem.mp4",
-            poster: "/assets/cases/rampage-lavagem/capa.jpg",
-            posterVideo: "/assets/cases/rampage-lavagem/montagem-poster.webp",
-            alt: "Vídeo da RAM Rampage antes, durante e depois da lavagem externa na MV: rodas e lataria encardidas, espuma aplicada em toda a carroceria e o resultado com a pintura em brilho.",
-          },
-        ],
-      },
       { id: "hi-1", title: "Sedan · interior completo", summary: "Bancos, forro e tapetes tratados na origem.", placeholder: true },
       { id: "hi-2", title: "SUV · bancos e estofados", summary: "Extração profunda nos assentos e no carpete.", placeholder: true },
       { id: "hi-3", title: "Hatch · pós-obra e pet", summary: "Pelos e poeira fina removidos de todos os vãos.", placeholder: true },
@@ -557,6 +561,120 @@ const higienizacaoInterna: ServicoDetalhe = {
   cta: {
     title: "Seu interior merece esse cuidado.",
     body: "Chame no WhatsApp, conte o estado atual do veículo e receba uma avaliação gratuita — sem compromisso.",
+  },
+
+  // Seções de venda — copy do pacote Billion (2026-10-09), aplicada como veio.
+  // Cobertura, trabalhos (cases) e FAQ desta rota são os que já existiam, só
+  // reposicionados; sem `resultado`, porque os trabalhos fazem esse papel.
+  // 🚩 Aguardando a revisão do C07: o preço "a partir de R$ 800" não diz se
+  // cobre só o interior, só a lavagem externa ou os dois — e a página oferece
+  // as três opções.
+  venda: {
+    hero: {
+      local: "Simonésia – MG",
+      title: "O interior do seu carro",
+      titleAccent: "como você nunca viu antes.",
+      body: "Limpeza de verdade por dentro, sem cheiro nem poeira escondida, com mais conforto no dia a dia. A higienização completa trata o interior em profundidade: tecidos, bancos, painéis, ar-condicionado e as frestas onde a sujeira se acumula.",
+      cta: "Quero meu carro higienizado",
+      image: "/assets/servicos/higienizacao-console.jpg",
+      imageAlt:
+        "Console central e painel de um veículo após higienização interna, sem poeira nas frestas e nos comandos",
+    },
+    dores: {
+      eyebrow: "Antes de higienizar",
+      title: "Você se reconhece em alguma dessas?",
+      items: [
+        {
+          q: "Fiz uma higienização e o cheiro voltou.",
+          a: "Perfume e spray só disfarçam. Aqui os odores são tratados na origem: higienizamos o interior em profundidade e neutralizamos o cheiro de cigarro, mofo e alimento.",
+        },
+        {
+          q: "O ar-condicionado está com cheiro de mofo.",
+          a: "A higienização do sistema de ar faz parte do serviço, junto com a neutralização de odores, para você usar o ar-condicionado sem desconforto.",
+        },
+        {
+          q: "Comprei um carro usado e veio com o cheiro do dono anterior.",
+          a: "Extração profunda no assoalho e nos tapetes, limpeza do teto e das colunas e neutralização de odores deixam o interior como se fosse seu desde o primeiro dia.",
+        },
+        {
+          q: "Barro e poeira de estrada entram em tudo.",
+          a: "Poeira de estrada de terra impregnada no assoalho, no painel e nos bancos sai com extração profunda e limpeza nas frestas, nas saídas de ar e nos comandos.",
+        },
+      ],
+    },
+    processo: {
+      eyebrow: "O que é feito no carro",
+      title: "O processo,",
+      titleAccent: "etapa por etapa.",
+      etapas: [
+        {
+          title: "Avaliação e combinado",
+          desc: "Olhamos o estado do veículo por dentro e por fora, o que precisa de mais atenção (manchas, odores, poeira) e combinamos o que faz sentido para o seu carro: só o interior, só a lavagem externa ou os dois.",
+        },
+        {
+          title: "Proteção dos componentes elétricos",
+          desc: "Antes de qualquer limpeza, protegemos os componentes elétricos, e essa proteção continua durante todo o processo.",
+        },
+        {
+          title: "Painel, volante e plásticos",
+          desc: "Cada material recebe produto e técnica adequados. Painel, console, portas, volante, manopla e botões são limpos e ficam com acabamento, sem brilho artificial.",
+        },
+        {
+          title: "Carpetes, teto e forros",
+          desc: "Extração profunda no assoalho e nos tapetes e limpeza do teto e das colunas, respeitando cada material.",
+        },
+        {
+          title: "Ar-condicionado, frestas e odores",
+          desc: "Higienização do sistema de ar, limpeza das saídas de ar, botões, trilhos e cantos onde a sujeira se esconde e neutralização de odores como cigarro, mofo e alimento.",
+        },
+        {
+          title: "Lavagem externa",
+          desc: "Quando faz parte do serviço: pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e\u00a0maçanetas.",
+        },
+      ],
+    },
+    // 🚩 Preço NO SITE é decisão do pacote. Valor confirmado em 09/10/2026,
+    // conforme o material da Billion; aparece só nesta seção, não no hero.
+    preco: {
+      eyebrow: "Quanto custa",
+      title: "Quanto custa a",
+      titleAccent: "higienização completa.",
+      badge: "Aproveite",
+      cardTitle: "Higienização completa",
+      cardDesc: "Tecidos, bancos, painéis, ar-condicionado e frestas tratados em profundidade, com neutralização de odores.",
+      priceLabel: "A partir de:",
+      price: "R$ 800",
+      note: "O orçamento completo, com o valor final fechado, sai só na avaliação presencial na estética, que não tem nenhum custo.",
+      cta: "Quero meu carro higienizado",
+      aviso: {
+        label: "Por que o valor fechado só na avaliação:",
+        text: "o preço muda com o tamanho do carro e o estado do interior, e a gente só define depois de ver o veículo.",
+      },
+    },
+    porque: {
+      eyebrow: "Por que a MV",
+      title: "Limpeza que chega",
+      titleAccent: "onde a comum não chega.",
+      items: [
+        {
+          title: "Cada material com a técnica certa",
+          desc: "Painel, couro, tecido, plástico e carpete recebem produto e técnica adequados, e não o mesmo tratamento para tudo.",
+        },
+        {
+          title: "Cuidado com a parte elétrica",
+          desc: "Os componentes elétricos são protegidos durante todo o processo, para o carro voltar para você como saiu, só que limpo.",
+        },
+        {
+          title: "Você escolhe o que fazer",
+          desc: "A higienização completa cobre as duas frentes, mas você escolhe o que faz sentido para o seu carro: só o interior, só a lavagem externa ou os dois.",
+        },
+        {
+          title: "Avaliação antes de começar",
+          desc: "Olhamos o estado do seu carro, explicamos o que dá para fazer e o que não dá (manchas e odores muito antigos podem pedir tratamento extra) e só então passamos o orçamento. A avaliação não tem custo.",
+        },
+      ],
+    },
+    servicoForm: "Higienização completa",
   },
 };
 
