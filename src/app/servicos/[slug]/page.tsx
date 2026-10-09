@@ -79,7 +79,12 @@ export default async function ServicoPage({
         // Conteúdo controlado (content/*.ts), sem input de usuário.
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
-            servicoJsonLd(servico, detalhe?.cobre.items, detalhe?.seoDescription),
+            servicoJsonLd(
+              servico,
+              detalhe?.cobre.items,
+              detalhe?.seoDescription,
+              detalhe?.venda?.preco.priceFrom,
+            ),
           ),
         }}
       />

@@ -137,6 +137,9 @@ export type ServicoVenda = {
     cardDesc: string;
     priceLabel: string;
     price: string;
+    /** O mesmo valor de `price`, em número (reais): alimenta o preço mínimo
+     *  nos dados estruturados da rota. Mudou um, muda o outro. */
+    priceFrom: number;
     note: string;
     cta: string;
     /** Limite honesto do serviço, logo abaixo do card. */
@@ -644,6 +647,7 @@ const higienizacaoInterna: ServicoDetalhe = {
       cardDesc: "Tecidos, bancos, painéis, ar-condicionado e frestas tratados em profundidade, com neutralização de odores.",
       priceLabel: "A partir de:",
       price: "R$ 800",
+      priceFrom: 800,
       note: "O orçamento completo, com o valor final fechado, sai só na avaliação presencial na estética, que não tem nenhum custo.",
       cta: "Quero meu carro higienizado",
       aviso: {
@@ -1062,6 +1066,7 @@ const polimento: ServicoDetalhe = {
       cardDesc: "Lavagem, descontaminação, correção da pintura em etapas, refino e proteção do resultado.",
       priceLabel: "A partir de:",
       price: "R$ 1.100",
+      priceFrom: 1100,
       note: "O valor final depende do tamanho do carro e do estado da pintura, e sai na avaliação presencial, que não tem nenhum custo.",
       cta: "Quero meu carro espelhado",
       aviso: {
@@ -1934,6 +1939,7 @@ const vitrificacao: ServicoDetalhe = {
       cardDesc: "Lavagem, descontaminação, polimento técnico em etapas e vitrificação por último.",
       priceLabel: "A partir de:",
       price: "R$ 1.800",
+      priceFrom: 1800,
       note: "O valor final depende do tamanho do carro e do estado da pintura, e sai na avaliação presencial, que não tem nenhum custo.",
       cta: "Quero meu carro vitrificado",
       aviso: {

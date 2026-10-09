@@ -90,6 +90,13 @@ export function servicoJsonLd(
   cobre?: readonly CobreItem[],
   /** Descrição de SERP da rota; sem ela, cai no texto do card do mosaico. */
   description?: string,
+  /**
+   * Preço "a partir de" da rota, em reais (pacote Billion, 2026-10-09). Só
+   * entra quando a página MOSTRA o valor na seção "Quanto custa": schema que
+   * declara preço ausente da tela é dado fabricado. `minPrice` (e não `price`)
+   * porque é piso — o valor final sai na avaliação presencial.
+   */
+  precoMinimo?: number,
 ) {
   return {
     "@context": "https://schema.org",
@@ -104,6 +111,20 @@ export function servicoJsonLd(
       "@type": "AdministrativeArea",
       name: `${brand.city} e região, ${brand.state}`,
     },
+    ...(precoMinimo
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: `${siteUrl}/servicos/${servico.slug}`,
+            priceCurrency: "BRL",
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              minPrice: precoMinimo,
+              priceCurrency: "BRL",
+            },
+          },
+        }
+      : {}),
     ...(cobre?.length
       ? {
           hasOfferCatalog: {
