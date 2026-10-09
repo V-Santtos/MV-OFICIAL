@@ -54,9 +54,9 @@ Este é o controle operacional. A tabela acima mostra **prioridade e impacto**; 
 - [x] ~~C01 · Conferir documento, código, assets e prints do pacote.~~ — concluída em 09/10/2026; os arquivos separados de código e assets coincidem com o protótipo, e os 106 prints cobrem as quatro páginas em desktop e celular. A avaliação crítica está registrada nas decisões abaixo.
 - [ ] **C02 · Reordenar os trabalhos da Higienização (L4).** Dificuldade baixa; impacto limitado a uma rota. Vídeo da RAM Rampage primeiro, depois Chevrolet e Hilux. Verificar reel e lightbox.
 - [ ] **C03 · Remover os cartões de categoria relacionada nas três rotas (V2/P2/L2).** Dificuldade baixa; conferir que os blocos de cobertura e cortesia continuam completos.
-- [ ] **C04 · Atualizar o hero da home (H1).** Dificuldade baixa de código; inserir pino, título e apoio, mantendo carro, fundo e CTA. Verificar que "no mesmo lugar." não se divide e que a copy foi aprovada.
-- [ ] **C05 · Atualizar os cards da home (H3).** Dificuldade média; ordem, ícones, foto, descrição, botão visual e seis links. Verificar em 390 px e 1440 px.
-- [ ] **C06 · Mudar a ordem da home e do menu (H2).** Dificuldade média; mover Círculo + Serviços antes de Sobre. Verificar âncoras, animações sticky e transição claro/escuro em desktop e celular.
+- [x] ~~C04 · Atualizar o hero da home (H1). Dificuldade baixa de código; inserir pino, título e apoio, mantendo carro, fundo e CTA. Verificar que "no mesmo lugar." não se divide e que a copy foi aprovada.~~ — concluída em 09/10/2026, commit `6b538b3`; copy aplicada conforme pacote autorizado pelo Victor, carro e sombra ajustados após comparação com os prints; conferido em 390, 1440 e 1920 px, sem quebra da frase azul.
+- [x] ~~C05 · Atualizar os cards da home (H3). Dificuldade média; ordem, ícones, foto, descrição, botão visual e seis links. Verificar em 390 px e 1440 px.~~ — concluída em 09/10/2026, commit `6b538b3`; mosaico, enquadramentos, hover, setas e transição de rota do site canônico preservados; ícones, descrições e botão visual incluídos no mesmo link; seis rotas conferidas em 390 e 1440 px.
+- [x] ~~C06 · Mudar a ordem da home e do menu (H2). Dificuldade média; mover Círculo + Serviços antes de Sobre. Verificar âncoras, animações sticky e transição claro/escuro em desktop e celular.~~ — concluída em 09/10/2026, commit `6b538b3`; ordem, menu, índice de Quem somos e passagens entre seções conferidos em desktop e celular; o Círculo continua oculto no celular conforme decisão anterior.
 
 ### B. Páginas de serviço
 
@@ -132,14 +132,15 @@ Este é o controle operacional. A tabela acima mostra **prioridade e impacto**; 
 ## Decisões e materiais pendentes
 
 1. **Destino deste plano:** confirmado pelo Victor em 09/10/2026: somente dentro da pasta/projeto MV.
-2. **Política de privacidade:** o pacote traz uma frase curta e aponta a página/texto completo como pendente. Definir conteúdo e local antes de publicar o formulário.
-3. **Critério do evento Lead:** decidir se os CTAs diretos de WhatsApp continuam como Lead ou se apenas o formulário o dispara, conforme R1. Registrar a regra para evitar duplicidade.
-4. **Copy com afirmações fortes:** revisar antes de publicar, sobretudo "10 vezes mais espelhada", "100% protegido", "todo carro vale", "sem desgastar o verniz", prazos e escopo técnico. O documento atribui preços ao Matheus; verificar se o Victor mantém essa aprovação para publicação.
-5. **Fotos de antes/depois:** aguardadas para expansão posterior da seção Resultado; não bloqueiam a primeira entrega.
-6. **Nota do Google:** opcional e não necessária agora.
-7. **Preço da Higienização:** esclarecer se o valor inicial de R$ 800 se refere ao interior, ao exterior ou ao conjunto. A página oferece as três opções.
-8. **Formulário do protótipo:** a máscara sugere celular com 11 dígitos, mas aceita 10; a captura de UTMs só acontece quando o formulário monta, podendo perder a campanha de quem entra pela home; os campos opcionais sem valor não são enviados, embora o documento peça enviá-los vazios. Corrigir na integração.
-9. **Rastreamento e confirmação de registro:** `no-cors` não permite saber pela resposta se a planilha gravou o lead. A verificação precisa consultar a planilha. O protótipo não inclui os componentes globais de analytics/consentimento do site atual e marca páginas como `noindex`.
+2. **Integração da home:** H1–H3 foram implementados sobre o site canônico, usando o protótipo como referência visual. A estrutura e os efeitos dos cards da MV foram preservados por orientação explícita do Victor; não foi copiado o componente de card do protótipo.
+3. **Política de privacidade:** o pacote traz uma frase curta e aponta a página/texto completo como pendente. Definir conteúdo e local antes de publicar o formulário.
+4. **Critério do evento Lead:** decidir se os CTAs diretos de WhatsApp continuam como Lead ou se apenas o formulário o dispara, conforme R1. Registrar a regra para evitar duplicidade.
+5. **Copy com afirmações fortes:** revisar antes de publicar, sobretudo "10 vezes mais espelhada", "100% protegido", "todo carro vale", "sem desgastar o verniz", prazos e escopo técnico. O documento atribui preços ao Matheus; verificar se o Victor mantém essa aprovação para publicação.
+6. **Fotos de antes/depois:** aguardadas para expansão posterior da seção Resultado; não bloqueiam a primeira entrega.
+7. **Nota do Google:** opcional e não necessária agora.
+8. **Preço da Higienização:** esclarecer se o valor inicial de R$ 800 se refere ao interior, ao exterior ou ao conjunto. A página oferece as três opções.
+9. **Formulário do protótipo:** a máscara sugere celular com 11 dígitos, mas aceita 10; a captura de UTMs só acontece quando o formulário monta, podendo perder a campanha de quem entra pela home; os campos opcionais sem valor não são enviados, embora o documento peça enviá-los vazios. Corrigir na integração.
+10. **Rastreamento e confirmação de registro:** `no-cors` não permite saber pela resposta se a planilha gravou o lead. A verificação precisa consultar a planilha. O protótipo não inclui os componentes globais de analytics/consentimento do site atual e marca páginas como `noindex`.
 
 ## Critérios de conclusão da futura implementação
 
