@@ -36,9 +36,11 @@ O ajuste do rodapé foi encontrado na auditoria final da home e corrigido no com
 O Victor definiu em 09/10/2026 trabalhar **categoria por categoria, na ordem dos cards**: Vitrificação → Polimento → Higienização.
 
 - **Modelo compartilhado (C08) pronto.** `src/components/servico/VendaSecoes.tsx` e `Venda.module.css` trazem hero com foto, dores, processo, resultado, preço e "por que a MV". Uma rota entra no modelo novo ao ganhar a chave `venda` em `src/content/servico-detalhe.ts`; sem ela, segue no template anterior. Cobertura, cases e FAQ são os componentes que já existiam, reposicionados. As faixas claras trocam tokens CSS (classe `.light`), então o FAQ lê em fundo claro sem ter sido reescrito.
-- **Vitrificação (C09) montada**, aguardando a conferência visual do Victor. Fotos de resultado em `public/assets/vitrificacao/`.
-- **CTAs de venda são provisórios:** abrem o WhatsApp enquanto o formulário (C14) não existe. A troca é uma linha (`ctaProps` em `VendaSecoes.tsx`).
-- O FAQ claro encosta no rodapé, que também é `#f4f4f2`; a faixa escura do formulário vai separá-los quando entrar.
+- **Vitrificação (C09) montada** e ajustada com o Victor (sombra dos cards claros, FAQ animado). Fotos de resultado em `public/assets/vitrificacao/`.
+- **Formulário de avaliação (C14) pronto** e compartilhado: `FormLead.tsx` fecha toda rota que tem `venda`, com o nome do serviço em `venda.servicoForm`. Os CTAs de venda levam a `#avaliacao`.
+- **Registro do lead (C15) implementado, sem prova real.** `Lead` do Pixel só no envio do formulário, com `eventID = lead_id`; cliques diretos de WhatsApp viraram `Contact`. O endpoint da planilha veio do pacote e está só no `.env.local`. Todo teste até aqui interceptou planilha, Meta e wa.me — **nenhum lead de teste foi gravado**. Faltam: variável na Vercel e o teste real descrito em R1.
+- **FAQ:** abre e fecha com GSAP, uma pergunta por vez (vale para as seis rotas). Hero de venda abre com a cascata GSAP encadeada à intro.
+- Teste do formulário: script em Playwright com `channel: "msedge"` e `route()` para `script.google.com`, `facebook.*` e `wa.me`; ele não ficou no repositório.
 - Prints: o Playwright dos probes está sem navegador baixado. Funciona lançar com `chromium.launch({ channel: "msedge" })`, que usa o Edge instalado.
 - A copy da Vitrificação foi aplicada como veio no pacote; os pontos ainda sem revisão estão anotados em C07.
 

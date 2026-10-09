@@ -148,6 +148,10 @@ export type ServicoVenda = {
     titleAccent: string;
     items: readonly CobreItem[];
   };
+  /** Nome do serviço no formulário de avaliação: vai pra planilha (coluna
+   *  `servico`) e pra mensagem do WhatsApp. Textos do formulário são os
+   *  mesmos nas três rotas e moram em `content/formulario.ts`. */
+  servicoForm: string;
 };
 
 export type ServicoDetalhe = {
@@ -1727,6 +1731,7 @@ const vitrificacao: ServicoDetalhe = {
         },
       ],
     },
+    servicoForm: "Vitrificação com polimento",
   },
 };
 

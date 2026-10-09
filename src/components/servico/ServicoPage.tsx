@@ -24,6 +24,7 @@ import { OQueEBlock } from "./OQueEBlock";
 import { CoberturaBlock } from "./CoberturaBlock";
 import { CasesReel } from "./CasesReel";
 import { FaqBlock } from "./FaqBlock";
+import { FormLead } from "./FormLead";
 import { HeroVenda, Dores, ProcessoVenda, Resultado, Preco, PorQue, FaixaClara } from "./VendaSecoes";
 import styles from "./ServicoPage.module.css";
 
@@ -79,7 +80,7 @@ export function ServicoDetalhePage({
   // preço e "por que a MV", em faixas alternadas escuro/claro. Cobertura, cases
   // e FAQ são os MESMOS componentes do template anterior, só reposicionados.
   // Ordem: hero > dores > o que cobre > processo > resultado/trabalhos > preço >
-  // por que a MV > perguntas.
+  // por que a MV > perguntas > formulário.
   if (venda) {
     return (
       <article className={styles.page}>
@@ -94,6 +95,7 @@ export function ServicoDetalhePage({
         <FaixaClara>
           <FaqBlock faq={faq} />
         </FaixaClara>
+        <FormLead servico={venda.servicoForm} />
       </article>
     );
   }

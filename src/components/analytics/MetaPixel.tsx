@@ -17,7 +17,7 @@ import {
  *    validar com o Meta Pixel Helper no localhost. Os únicos freios são o
  *    consentimento e o formato do ID.
  * 2. **Listener de WhatsApp PRÓPRIO.** O `generate_lead` mora dentro do
- *    componente do GA, que não monta em dev — pendurar o `Lead` do Pixel lá
+ *    componente do GA, que não monta em dev — pendurar o evento do Pixel lá
  *    deixaria o evento morto justamente onde ele precisa ser testado, e
  *    acoplaria os dois componentes. A leitura do `<a>` mais próximo é replicada
  *    aqui, com a mesma lógica.
@@ -109,10 +109,19 @@ export function MetaPixel({ pixelId }: { pixelId: string }) {
   }, [allowed, pathname]);
 
   /**
-   * `Lead` no clique de WhatsApp. Delegação em CAPTURA, igual ao GA: os 4 CTAs
+   * `Contact` no clique de WhatsApp. Delegação em CAPTURA, igual ao GA: os CTAs
    * (Hero, Contato, CTA final de serviço, trilho do FAQ) saem todos do mesmo
    * `Button` polimórfico como `<a href>`, então um listener no document cobre
-   * os quatro — e cobre qualquer CTA novo, sem instrumentar componente.
+   * todos — e cobre qualquer CTA novo, sem instrumentar componente.
+   *
+   * 🚩 Era `Lead` até 2026-10-09. O pacote Billion (R1) reserva o `Lead` ao
+   * ENVIO DO FORMULÁRIO (`lib/lead/enviar.ts`), que sai com `eventID` e casa
+   * com a API de Conversões; a campanha otimiza por esse lead. Um `Lead` solto
+   * no clique de WhatsApp não tem `eventID`, não deduplica e inflaria a conta.
+   * O clique direto continua medido, só que como `Contact`.
+   *
+   * `data-lead-registrado`: o botão "Abrir o WhatsApp" da tela de pedido
+   * enviado. Quem chega nele já gerou o `Lead` — não conta outra vez.
    */
   useEffect(() => {
     if (!allowed) return;
@@ -122,8 +131,8 @@ export function MetaPixel({ pixelId }: { pixelId: string }) {
       if (!(target instanceof Element)) return;
 
       const anchor = target.closest<HTMLAnchorElement>("a[href]");
-      if (anchor && isWhatsAppLink(anchor)) {
-        getPixelWindow().fbq?.("track", "Lead");
+      if (anchor && isWhatsAppLink(anchor) && !anchor.hasAttribute("data-lead-registrado")) {
+        getPixelWindow().fbq?.("track", "Contact");
       }
     };
 

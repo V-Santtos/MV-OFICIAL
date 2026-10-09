@@ -11,6 +11,7 @@ import { brand } from "@/content";
 import { siteConfig, siteUrl, localBusinessJsonLd } from "@/lib/seo";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
+import { AtribuicaoCaptura } from "@/components/analytics/AtribuicaoCaptura";
 import { CookieConsentBanner } from "@/components/analytics/CookieConsentBanner";
 import "./globals.css";
 
@@ -159,6 +160,7 @@ export default function RootLayout({
           }}
         />
         <SmoothScroll />
+        <AtribuicaoCaptura />
         <IntroReveal />
         {/* Cortina de troca de ROTA (a logo se desenhando, como na abertura).
             Envolve Navbar/main/Footer porque quem dispara mora nos dois: os

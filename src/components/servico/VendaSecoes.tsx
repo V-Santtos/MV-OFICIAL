@@ -17,24 +17,38 @@ import { useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { motion, useInView } from "framer-motion";
-import { contact } from "@/content";
 import type { ServicoVenda } from "@/content";
 import { Button } from "@/components/ui";
+// Import DIRETO (não pelo barrel `@/components/layout`): o barrel reexporta o
+// Footer, que é Server Component.
+import { getLenis } from "@/components/layout/SmoothScroll";
 import { heroCascade, introDelay, onIntroReveal } from "@/lib/animation";
 import { revealHeadingVariants, staggerCard } from "@/lib/animation/motion";
 import v from "./Venda.module.css";
 
 /**
- * Destino dos CTAs de venda. 🚩 PROVISÓRIO: o pacote aponta pra `#avaliacao`
- * (formulário de quatro etapas, C14), que ainda não existe. Até lá o botão
- * abre o WhatsApp, como o resto do site. Quando o formulário entrar, trocar
- * por `{ href: "#avaliacao" }`.
+ * CTA de venda: leva ao formulário de avaliação (`#avaliacao`, FormLead) no
+ * fim da página. Continua sendo um `<a href>` de verdade; o clique só entrega
+ * a rolagem ao Lenis, que é quem dirige o scroll do site — o salto nativo de
+ * âncora brigaria com ele. Sem Lenis (reduced-motion), vale o salto nativo.
  */
-const ctaProps = {
-  href: contact.whatsapp,
-  target: "_blank",
-  rel: "noopener noreferrer",
-} as const;
+function CtaAvaliacao({ children }: { children: ReactNode }) {
+  return (
+    <Button
+      href="#avaliacao"
+      arrow
+      onClick={(e) => {
+        const lenis = getLenis();
+        const alvo = document.getElementById("avaliacao");
+        if (!lenis || !alvo) return;
+        e.preventDefault();
+        lenis.scrollTo(alvo);
+      }}
+    >
+      {children}
+    </Button>
+  );
+}
 
 function useReveal<T extends HTMLElement>(amount: number) {
   const ref = useRef<T>(null);
@@ -155,9 +169,7 @@ export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
             {data.body}
           </p>
           <div className={v.heroCta} data-reveal>
-            <Button {...ctaProps} arrow>
-              {data.cta}
-            </Button>
+            <CtaAvaliacao>{data.cta}</CtaAvaliacao>
           </div>
         </div>
       </div>
@@ -257,9 +269,7 @@ export function Preco({ data }: { data: ServicoVenda["preco"] }) {
             <p className={v.precoFrom}>{data.priceLabel}</p>
             <p className={v.precoValor}>{data.price}</p>
             <p className={v.precoNote}>{data.note}</p>
-            <Button {...ctaProps} arrow>
-              {data.cta}
-            </Button>
+            <CtaAvaliacao>{data.cta}</CtaAvaliacao>
           </div>
           <p className={v.aviso}>
             <strong>{data.aviso.label}</strong> {data.aviso.text}

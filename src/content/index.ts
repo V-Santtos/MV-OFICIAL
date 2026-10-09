@@ -8,6 +8,7 @@ export * from "./sobre";
 export * from "./circulo";
 export * from "./servicos";
 export * from "./servico-detalhe";
+export * from "./formulario";
 export * from "./processo";
 export * from "./stats";
 export * from "./depoimentos";
