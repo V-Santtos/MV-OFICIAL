@@ -13,12 +13,15 @@ fora da fronteira do git e nunca subiam.
 | **`ANEXO-MEMORIA.md`** | Estado vivo: o que está feito, o que está em andamento, o próximo passo, decisões pendentes. |
 | **`regras/ANEXO-REGRAS.md`** | Índice das regras duráveis. Aponta pras fichas por área. |
 | **`regras/*.md`** | Uma ficha por área (`sec-hero`, `sec-sobre`, `mobile`, `copy`, `01-stack-arquitetura`…) com o **porquê** de cada decisão travada e os erros que já custaram retrabalho. |
+| **`CONTINUIDADE-PACOTE-BILLION.md`** | Estado atualizado do pacote de outubro de 2026: o que foi implementado, como validar e como retomar. |
+| **`plano-mudancas-billion-2026-10-09.md`** | Escopo, ranking, decisões pendentes e checklist operacional do pacote. |
 
 ## Como ler
 
-1. `CLAUDE.md` — as regras que valem sempre.
-2. `ANEXO-MEMORIA.md` — onde o trabalho parou.
-3. `regras/ANEXO-REGRAS.md` → abrir a ficha da área só quando a tarefa pedir.
+1. `CLAUDE.md` — as regras gerais que valem sempre.
+2. `CONTINUIDADE-PACOTE-BILLION.md` e `plano-mudancas-billion-2026-10-09.md` — estado e checklist atuais do pacote.
+3. `ANEXO-MEMORIA.md` — contexto histórico, atualizado até agosto de 2026.
+4. `regras/ANEXO-REGRAS.md` → abrir a ficha da área só quando a tarefa pedir.
 
 ## ⚠️ Duas ressalvas
 
@@ -30,6 +33,10 @@ aqui é `docs/regras/mobile.md`.
 **2. Isto é cópia, não fonte.** A fonte segue em `MV-OFICIAL/`. Se você editar um
 arquivo aqui, ele pode ser sobrescrito na próxima sincronização — leve a alteração
 para a fonte também, ou avise o Victor.
+
+**Exceção:** os dois documentos do pacote Billion listados acima foram criados e
+mantidos neste repositório em outubro de 2026. Para o estado desse pacote, eles
+são mais recentes que a cópia de `ANEXO-MEMORIA.md`.
 
 ## O que NÃO está aqui
 

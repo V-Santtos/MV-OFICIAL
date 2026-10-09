@@ -1,5 +1,7 @@
 # Plano de mudanças do site MV — pacote Billion (09/10/2026)
 
+**Para retomar o trabalho:** ler primeiro [CONTINUIDADE-PACOTE-BILLION.md](CONTINUIDADE-PACOTE-BILLION.md). Este plano contém o checklist operacional; H1–H3 da home estão concluídos, e os itens das páginas de serviço, formulário e integrações permanecem abertos.
+
 ## Estado e ponto de retorno
 
 - Projeto: `MV-OFICIAL/site-mv` (este diretório é a raiz Git; `MV-OFICIAL` não é).
