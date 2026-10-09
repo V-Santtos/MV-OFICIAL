@@ -901,8 +901,16 @@
   height: 14px;
 }
 
-.faqItem[open] .faqIcon::after {
+/* `data-aberto` e não `[open]`: o atributo nativo só sai no FIM da animação de
+   fechar (ver FaqBlock), e o ícone precisa responder no clique. */
+.faqItem[data-aberto="true"] .faqIcon::after {
   transform: rotate(90deg);
+}
+
+/* Invólucro da resposta — é ELE que o GSAP anima em altura. O padding fica no
+   <p> de dentro, então a altura vai a zero de verdade, sem sobra. */
+.faqAnswer {
+  overflow: hidden;
 }
 
 .faqItem p {

@@ -11,14 +11,101 @@
  * "Seu interior merece esse cuidado" foi removido; o fecho global fica no rodapé).
  */
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { motion, useInView } from "framer-motion";
 import { contact, contactSection } from "@/content";
 import { Button, WhatsAppIcon } from "@/components/ui";
-import { revealHeadingVariants, staggerCard } from "@/lib/animation/motion";
+import { faqAccordion, revealHeadingVariants, staggerCard } from "@/lib/animation/motion";
 import styles from "./ServicoPage.module.css";
 
 type FaqItem = { q: string; a: string };
+
+/**
+ * Uma pergunta. Continua sendo `<details>/<summary>` de verdade (teclado,
+ * leitor de tela, busca na página e a resposta no HTML do servidor); o GSAP só
+ * assume o MOVIMENTO de abrir e fechar, que no nativo é um corte seco.
+ *
+ * Quem decide qual está aberta é o FaqBlock (só UMA por vez); aqui o efeito
+ * reage à troca de `aberto`. O atributo `open` é dirigido à mão: ao abrir ele
+ * entra ANTES da animação (o conteúdo precisa existir pra ter altura) e ao
+ * fechar só sai DEPOIS dela. Por isso o ícone +/− lê `data-aberto`, que vira
+ * na hora do clique, e não `[open]`.
+ */
+function Pergunta({
+  item,
+  index,
+  aberto,
+  onAlternar,
+}: {
+  item: FaqItem;
+  index: number;
+  aberto: boolean;
+  onAlternar: (abrir: boolean) => void;
+}) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const respostaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const details = detailsRef.current;
+    const resposta = respostaRef.current;
+    if (!details || !resposta || details.open === aberto) return;
+
+    // Reduced-motion: troca seca, como o <details> nativo.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      details.open = aberto;
+      return;
+    }
+
+    gsap.killTweensOf(resposta);
+    if (aberto) {
+      details.open = true;
+      gsap.fromTo(
+        resposta,
+        { height: 0, opacity: 0 },
+        { height: "auto", opacity: 1, ...faqAccordion.open, clearProps: "height,opacity" },
+      );
+    } else {
+      gsap.to(resposta, {
+        height: 0,
+        opacity: 0,
+        ...faqAccordion.close,
+        onComplete: () => {
+          details.open = false;
+          gsap.set(resposta, { clearProps: "height,opacity" });
+        },
+      });
+    }
+  }, [aberto]);
+
+  return (
+    <motion.details
+      ref={detailsRef}
+      className={styles.faqItem}
+      data-aberto={aberto}
+      // Abertura que não passa pelo clique (ex.: a busca do navegador abrindo
+      // o <details> pra mostrar um trecho): avisa o bloco, que fecha a anterior.
+      onToggle={(e) => {
+        if (e.currentTarget.open && !aberto) onAlternar(true);
+      }}
+      variants={staggerCard}
+      custom={index + 1}
+    >
+      <summary
+        onClick={(e) => {
+          e.preventDefault();
+          onAlternar(!aberto);
+        }}
+      >
+        {item.q}
+        <span className={styles.faqIcon} aria-hidden="true" />
+      </summary>
+      <div ref={respostaRef} className={styles.faqAnswer}>
+        <p>{item.a}</p>
+      </div>
+    </motion.details>
+  );
+}
 
 export function FaqBlock({
   faq,
@@ -28,6 +115,9 @@ export function FaqBlock({
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const revealState = inView ? "visible" : "hidden";
+  // Só UMA pergunta aberta por vez (Victor, 2026-10-09): abrir outra fecha a
+  // anterior; clicar na aberta fecha ela.
+  const [abertaIdx, setAbertaIdx] = useState<number | null>(null);
 
   return (
     <motion.section
@@ -60,18 +150,13 @@ export function FaqBlock({
 
         <div className={styles.faqList}>
           {faq.items.map((item, i) => (
-            <motion.details
+            <Pergunta
               key={item.q}
-              className={styles.faqItem}
-              variants={staggerCard}
-              custom={i + 1}
-            >
-              <summary>
-                {item.q}
-                <span className={styles.faqIcon} aria-hidden="true" />
-              </summary>
-              <p>{item.a}</p>
-            </motion.details>
+              item={item}
+              index={i}
+              aberto={abertaIdx === i}
+              onAlternar={(abrir) => setAbertaIdx(abrir ? i : null)}
+            />
           ))}
         </div>
       </div>

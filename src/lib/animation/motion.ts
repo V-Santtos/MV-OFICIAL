@@ -502,3 +502,14 @@ export const navCascade = {
     delay: intro.lift.duration,
   },
 } as const;
+
+/**
+ * Accordion do FAQ das rotas de serviço — GSAP (Victor, 2026-10-09). O
+ * `<details>` nativo abre em corte seco; aqui a resposta ganha altura + fade.
+ * Abrir é um pouco mais longo que fechar: quem abre quer VER o conteúdo
+ * chegando, quem fecha só quer que ele saia do caminho.
+ */
+export const faqAccordion = {
+  open: { duration: 0.5, ease: "power3.out" },
+  close: { duration: 0.35, ease: "power2.inOut" },
+};
