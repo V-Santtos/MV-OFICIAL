@@ -2,6 +2,48 @@
 
 Atualizado em **09/10/2026**. Este documento é o ponto de entrada para continuar a implementação do pacote. Para tarefas concretas e decisões pendentes, usar também o [plano e checklist](plano-mudancas-billion-2026-10-09.md). O `docs/ANEXO-MEMORIA.md` é uma cópia histórica do estado de agosto de 2026; não descreve o andamento deste pacote.
 
+## 📌 Estado ao fechar a sessão de 09/10/2026 — LER PRIMEIRO
+
+**O pacote Billion está implementado e publicado.** O Victor encerrou a sessão aguardando o retorno do cliente; o próximo trabalho deve nascer desse retorno, não de pendência de código.
+
+### Feito
+- **Home** (H1–H3): hero, ordem das seções, menu e rodapé, seis cards. Ajuste posterior: botão "Ver mais" maior e sem o respiro grande.
+- **Vitrificação, Polimento e Higienização** no modelo de venda: hero com foto, dores, cobertura sem "Categoria relacionada", processo, resultado ou trabalhos, preço, "Por que a MV", FAQ em fundo claro e formulário.
+- **Formulário de avaliação** em quatro etapas, compartilhado; `Lead` do Pixel só no envio, com `eventID`; cliques diretos de WhatsApp viraram `Contact`; UTMs capturadas na página de entrada.
+- **SEO:** títulos, descrições, canonical e indexação preservados; FAQPage da Vitrificação com as perguntas novas; preço mínimo nos dados estruturados das três rotas.
+- **Publicação:** GitHub atualizado e deploy manual na Vercel do Atlas (detalhes na seção "Publicado").
+
+### Testado
+- Texto a texto contra o documento da Billion: 157 trechos conferidos, todos iguais.
+- Página inteira das três rotas e da home em 1440 e 390 px (emulação): sem rolagem horizontal, sem erro de console, sem palavra isolada no fim de linha (uma exceção, abaixo).
+- Formulário, automatizado: validação das etapas, máscara, voltar, mensagem do WhatsApp, os 18 campos da planilha, comportamento com cookies recusados e com falha da planilha.
+- Formulário, pelo Victor: envio em localhost e em produção; WhatsApp abriu e o `Lead` saiu para a Meta nos dois.
+- Desempenho no build de produção local, perfil de celular lento: conteúdo principal em 1,3 a 1,5 s na home, Vitrificação e Higienização, 2,6 s no Polimento; zero salto de layout.
+
+### NÃO testado
+- Gravação na planilha: ninguém do nosso lado tem acesso a ela.
+- `Lead` visível dentro do Gerenciador de Eventos da Meta.
+- Celular de verdade (tudo foi emulação) e PageSpeed no domínio real.
+- Galeria e vídeo dos trabalhos abrindo; chegada às páginas pela transição de rota dos cards da home.
+
+### Em aberto
+| O quê | Depende de |
+| --- | --- |
+| Confirmar na planilha as duas linhas de teste ("TESTE Victor", localhost, `lead_id 2a4c21a2-ad04-4588-b085-75508e84f305`; "Victor Teste", produção) | Billion ou Matheus |
+| Retorno do cliente sobre o site publicado | Cliente |
+| Política de privacidade completa (C12); hoje só a frase curta do pacote | Decisão do Victor/cliente |
+| Título "Quanto custa a higienização completa." no celular: "completa." fica sozinha na última linha | Sim ou não do Victor |
+| Título do hero do Polimento no desktop em quatro linhas curtas | Sim ou não do Victor |
+| Reindexação das quatro páginas no Search Console; PageSpeed no domínio real | Victor (Search Console aberto) |
+| Fotos de antes/depois (C17) e nota do Google (C18) | Material do Matheus |
+| 🔔 **Navegação agêntica 2/3** no relatório do PageSpeed/Lighthouse: falha "A árvore de acessibilidade não está bem estruturada" (print do Victor, 09/10/2026, sem a lista dos elementos apontados). **O Victor pediu para ser lembrado disto na próxima rodada de modificações**; abrir o detalhe da auditoria para ver quais elementos ela acusa antes de mexer | Próxima rodada de mudanças |
+
+### Onde o site difere do documento, por decisão do Victor
+Telefone só com 11 dígitos (o documento aceita 10); legenda única sob a foto do meio no Resultado (o documento põe uma por foto); ícones azuis sem fundo nos cards da home; botões do formulário empilhados no celular. Acréscimos fora do documento: FAQ animado com uma pergunta por vez e tela de "Pedido enviado".
+
+### Estado do ambiente local
+`NEXT_PUBLIC_LEAD_ENDPOINT` está **ativa** no `.env.local`: enviar o formulário em localhost grava linha real na planilha do cliente. O servidor de produção local usado na medição foi encerrado; existe a configuração `site-mv-prod` em `MV-OFICIAL/.claude/launch.json` para subir de novo.
+
 ## 🚀 Publicado em 09/10/2026
 
 - **GitHub:** `main` enviada até o commit `a58c3d0` (`V-Santtos/MV-OFICIAL`). O GitHub **não** dispara deploy: são coisas separadas.
@@ -16,8 +58,8 @@ Atualizado em **09/10/2026**. Este documento é o ponto de entrada para continua
 
 - A raiz Git e do app é **`MV-OFICIAL/site-mv`**, na branch `main`. A pasta `MV-OFICIAL` acima dela não é a raiz Git.
 - **O site atual é a base canônica.** O pacote e o protótipo da Billion são referências de conteúdo, ordem, aparência e comportamento. Integrar no código existente; não substituir a aplicação pelo ZIP.
-- **Home H1, H2 e H3 concluídas e conferidas.** Nas páginas de serviço, o modelo compartilhado e a Vitrificação estão montados (ver "Páginas de serviço — andamento"); Polimento, Higienização, formulário, planilha e Pixel ainda não. Ver o checklist antes de marcar qualquer coisa como feita.
-- O trabalho está salvo em commits **locais**. Em 09/10/2026, a branch estava 10 commits à frente de `origin/main` antes deste registro; não houve push nem publicação nesta sessão. A tag local `mv-baseline-2026-10-09` guarda a versão anterior ao pacote.
+- **Home e as três páginas de serviço do pacote estão concluídas e publicadas.** Bancos, Motor e Vidros seguem no template anterior, fora do escopo. O estado atual está na seção "Estado ao fechar a sessão", no topo.
+- O trabalho está no GitHub (`main`) e em produção. A tag `mv-baseline-2026-10-09` guarda a versão anterior ao pacote, mas é **local**: não foi enviada ao GitHub.
 - O Victor pediu que o plano e o contexto deste **site** fiquem neste projeto MV. Não criar uma segunda lista de tarefas paralela: atualizar o checklist existente ao concluir cada item.
 
 ## Material de referência
@@ -59,7 +101,7 @@ O Victor definiu em 09/10/2026 trabalhar **categoria por categoria, na ordem dos
 
 Decisão do Victor em 09/10/2026: a planilha é a que a Billion já montou e documentou (R1); não há nada a criar. O código do site já envia tudo no formato pedido. **Quando o site estiver 100% implementado**, e não antes, fazer nesta ordem:
 
-1. Religar `NEXT_PUBLIC_LEAD_ENDPOINT` no `.env.local` (a linha está comentada; o valor é o do `D: -LEIA-ME.txt` / R1) e cadastrar a mesma variável na Vercel, em Production e Preview.
+1. Religar `NEXT_PUBLIC_LEAD_ENDPOINT` no `.env.local` (a linha está comentada; o valor é o do `D:-LEIA-ME.txt` / R1) e cadastrar a mesma variável na Vercel, em Production e Preview.
    Na mesma hora, conferir na Vercel se `NEXT_PUBLIC_META_PIXEL_ID` está cadastrada (o Victor deixou essa conferência para o momento do deploy, 09/10/2026). O Victor cadastrou `NEXT_PUBLIC_LEAD_ENDPOINT` pela tela da Vercel nesse dia; confirmar que ficou salva em Production e Preview.
 2. **Mandar um preenchimento de teste pelo formulário, identificado como TESTE, para a Billion ver que chegou.** O Victor pediu para ser lembrado disto.
 3. Pedir a confirmação da linha na planilha. O documento só traz o endereço de envio, não o link da planilha, e o `fetch` usa `no-cors`: só quem abre a planilha (Billion ou Matheus) confirma a gravação.
