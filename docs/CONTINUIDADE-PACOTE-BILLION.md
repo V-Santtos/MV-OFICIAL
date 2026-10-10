@@ -97,11 +97,11 @@ O Victor definiu em 09/10/2026 trabalhar **categoria por categoria, na ordem dos
 - Prints: o Playwright dos probes está sem navegador baixado. Funciona lançar com `chromium.launch({ channel: "msedge" })`, que usa o Edge instalado.
 - **Copy do pacote: aplicar exatamente como veio.** Decisão do Victor em 09/10/2026: o cliente pediu essas alterações, então não se valida, não se suaviza e não se reabre o assunto a cada rota. C07 está encerrada.
 
-## 🔔 Etapa final: ligar a planilha e mandar o lead de TESTE (lembrar o Victor)
+## Histórico: etapa final da planilha e do lead de TESTE (concluída em 09/10/2026, exceto a confirmação da linha)
 
 Decisão do Victor em 09/10/2026: a planilha é a que a Billion já montou e documentou (R1); não há nada a criar. O código do site já envia tudo no formato pedido. **Quando o site estiver 100% implementado**, e não antes, fazer nesta ordem:
 
-1. Religar `NEXT_PUBLIC_LEAD_ENDPOINT` no `.env.local` (a linha está comentada; o valor é o do `D:-LEIA-ME.txt` / R1) e cadastrar a mesma variável na Vercel, em Production e Preview.
+1. Religar `NEXT_PUBLIC_LEAD_ENDPOINT` no `.env.local` (o valor é o do `D:\00-LEIA-ME.txt` / R1; em 09/10/2026 ela já foi religada e cadastrada) e cadastrar a mesma variável na Vercel, em Production e Preview.
    Na mesma hora, conferir na Vercel se `NEXT_PUBLIC_META_PIXEL_ID` está cadastrada (o Victor deixou essa conferência para o momento do deploy, 09/10/2026). O Victor cadastrou `NEXT_PUBLIC_LEAD_ENDPOINT` pela tela da Vercel nesse dia; confirmar que ficou salva em Production e Preview.
 2. **Mandar um preenchimento de teste pelo formulário, identificado como TESTE, para a Billion ver que chegou.** O Victor pediu para ser lembrado disto.
 3. Pedir a confirmação da linha na planilha. O documento só traz o endereço de envio, não o link da planilha, e o `fetch` usa `no-cors`: só quem abre a planilha (Billion ou Matheus) confirma a gravação.
