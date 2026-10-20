@@ -75,6 +75,11 @@ export function Hero() {
                  silenciosamente pra 75 — o ar já servia nessa qualidade. */
               preload
               fetchPriority="high"
+              /* `sync` (o padrão do Next é `async`): o navegador só apresenta o
+                 quadro com o carro já decodificado. Em `async` a recarga PISCAVA
+                 — carro some por ~30 ms e volta (quadros gravados em 20/10/2026,
+                 probes/carro-quadros.mjs). A tela de abertura escondia isso. */
+              decoding="sync"
             />
           </div>
         </div>

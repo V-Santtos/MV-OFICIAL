@@ -155,6 +155,9 @@ export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
             sizes="(max-width: 56rem) 100vw, 45vw"
             preload
             fetchPriority="high"
+            // `sync`: mesma correção do carro da home (Hero.tsx). Em `async` a
+            // foto faltava no 1º quadro e entrava em seguida — um pisca.
+            decoding="sync"
           />
         </figure>
         <div ref={txtRef} className={v.heroTxt}>
