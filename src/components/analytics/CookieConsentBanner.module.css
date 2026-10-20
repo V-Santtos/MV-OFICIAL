@@ -41,9 +41,10 @@
   color: var(--text-2);
 }
 
+/* Um botão só ("Entendi") desde o pacote de 19/10/2026: uma coluna. */
 .actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0.625rem;
 }
 
@@ -67,12 +68,6 @@
   outline-offset: 3px;
 }
 
-.reject {
-  color: var(--text-1);
-  background: transparent;
-  border: 1px solid var(--border-strong);
-}
-
 .accept {
   color: #ffffff;
   background: var(--accent);
@@ -83,11 +78,6 @@
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
     transform: translateY(-1px);
-  }
-
-  .reject:hover {
-    background: var(--bg-3);
-    border-color: rgba(255, 255, 255, 0.28);
   }
 
   .accept:hover {
@@ -110,7 +100,7 @@
 
   .actions {
     flex: 0 0 auto;
-    grid-template-columns: repeat(2, minmax(7rem, 1fr));
+    grid-template-columns: minmax(9rem, auto);
   }
 }
 

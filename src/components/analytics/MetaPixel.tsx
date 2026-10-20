@@ -2,11 +2,7 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import {
-  ANALYTICS_CONSENT_EVENT,
-  hasAnalyticsConsent,
-} from "./analyticsConsent";
+import { useEffect, useRef } from "react";
 
 /**
  * Meta Pixel — espelho do `GoogleAnalytics.tsx`, com DUAS diferenças
@@ -14,20 +10,22 @@ import {
  *
  * 1. **Carrega também em DEV.** O `layout.tsx` gateia o GA com
  *    `NODE_ENV === "production"`; o Pixel NÃO herda esse portão, pra dar pra
- *    validar com o Meta Pixel Helper no localhost. Os únicos freios são o
- *    consentimento e o formato do ID.
+ *    validar com o Meta Pixel Helper no localhost. O único freio é o formato
+ *    do ID.
  * 2. **Listener de WhatsApp PRÓPRIO.** O `generate_lead` mora dentro do
  *    componente do GA, que não monta em dev — pendurar o evento do Pixel lá
  *    deixaria o evento morto justamente onde ele precisa ser testado, e
  *    acoplaria os dois componentes. A leitura do `<a>` mais próximo é replicada
  *    aqui, com a mesma lógica.
  *
- * Consentimento: reaproveita `analyticsConsent.ts` inteiro — mesma chave de
- * localStorage, mesmo evento, mesmo respeito a GPC/DNT. Nada novo foi criado.
+ * 🚩 SEM TRAVA DE CONSENTIMENTO desde o pacote Billion de 19/10/2026 (item 1).
+ * Até ali só carregava depois do "Aceitar" (e nunca com GPC/DNT). Quem chega
+ * pelo anúncio quase nunca toca no aviso: em 5 dias, 3 pedidos na planilha e 1
+ * `Lead` na Meta. Decisão da Billion com o Matheus (19/10), responsabilidade
+ * deles; o aviso de cookies virou só informativo.
  *
- * Sem `<img>` de `<noscript>`: este componente só existe no cliente e só sob
- * consentimento. Com JS desligado ele nunca renderiza (o fallback não
- * apareceria); e um pixel que dispara antes do "Aceitar" contraria o desenho.
+ * Sem `<img>` de `<noscript>`: este componente só existe no cliente. Com JS
+ * desligado ele nunca renderiza, então o fallback não apareceria.
  */
 
 /** `fbq` é função E fila — o snippet carimba `queue`/`loaded`/`version` nela. */
@@ -64,39 +62,16 @@ function isWhatsAppLink(anchor: HTMLAnchorElement): boolean {
 }
 
 export function MetaPixel({ pixelId }: { pixelId: string }) {
-  const [allowed, setAllowed] = useState(false);
   const pathname = usePathname();
   /** Último pathname JÁ contabilizado. `null` = ainda não houve PageView. */
   const lastTrackedPath = useRef<string | null>(null);
-
-  useEffect(() => {
-    const syncConsent = () => setAllowed(hasAnalyticsConsent());
-
-    syncConsent();
-    window.addEventListener("storage", syncConsent);
-    window.addEventListener(ANALYTICS_CONSENT_EVENT, syncConsent);
-
-    return () => {
-      window.removeEventListener("storage", syncConsent);
-      window.removeEventListener(ANALYTICS_CONSENT_EVENT, syncConsent);
-    };
-  }, []);
 
   /**
    * PageView nas TROCAS de rota (o site tem 7). A 1ª passada só ANOTA o
    * pathname e sai: o `fbq('track','PageView')` do snippet de init já contou
    * essa — sem o early-return, a rota de entrada sairia duplicada.
-   *
-   * O reset pra `null` quando o consentimento cai é parte do mesmo cuidado:
-   * reconsentir remonta o snippet (novo PageView de init), então o marcador
-   * precisa voltar ao estado "ainda não contei nada".
    */
   useEffect(() => {
-    if (!allowed) {
-      lastTrackedPath.current = null;
-      return;
-    }
-
     if (lastTrackedPath.current === null) {
       lastTrackedPath.current = pathname;
       return;
@@ -106,7 +81,7 @@ export function MetaPixel({ pixelId }: { pixelId: string }) {
 
     lastTrackedPath.current = pathname;
     getPixelWindow().fbq?.("track", "PageView");
-  }, [allowed, pathname]);
+  }, [pathname]);
 
   /**
    * `Contact` no clique de WhatsApp. Delegação em CAPTURA, igual ao GA: os CTAs
@@ -124,8 +99,6 @@ export function MetaPixel({ pixelId }: { pixelId: string }) {
    * enviado. Quem chega nele já gerou o `Lead` — não conta outra vez.
    */
   useEffect(() => {
-    if (!allowed) return;
-
     const handleClick = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -138,9 +111,9 @@ export function MetaPixel({ pixelId }: { pixelId: string }) {
 
     document.addEventListener("click", handleClick, true);
     return () => document.removeEventListener("click", handleClick, true);
-  }, [allowed]);
+  }, []);
 
-  if (!allowed || !PIXEL_ID_PATTERN.test(pixelId)) return null;
+  if (!PIXEL_ID_PATTERN.test(pixelId)) return null;
 
   const serializedId = JSON.stringify(pixelId);
 

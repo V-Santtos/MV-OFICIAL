@@ -1,12 +1,8 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useReportWebVitals } from "next/web-vitals";
-import {
-  ANALYTICS_CONSENT_EVENT,
-  hasAnalyticsConsent,
-} from "./analyticsConsent";
 
 type Gtag = (...args: unknown[]) => void;
 
@@ -62,30 +58,13 @@ function linkEvent(anchor: HTMLAnchorElement) {
   return null;
 }
 
+/**
+ * GA4. 🚩 SEM TRAVA DE CONSENTIMENTO desde o pacote Billion de 19/10/2026
+ * (item 1): carrega com a página, como o Pixel (ver `MetaPixel.tsx`). Eventos
+ * de clique e Web Vitals seguem iguais.
+ */
 export function GoogleAnalytics({ measurementId }: { measurementId: string }) {
-  const [allowed, setAllowed] = useState(false);
-  const allowedRef = useRef(false);
-
   useEffect(() => {
-    const syncConsent = () => {
-      const nextAllowed = hasAnalyticsConsent();
-      allowedRef.current = nextAllowed;
-      setAllowed(nextAllowed);
-    };
-
-    syncConsent();
-    window.addEventListener("storage", syncConsent);
-    window.addEventListener(ANALYTICS_CONSENT_EVENT, syncConsent);
-
-    return () => {
-      window.removeEventListener("storage", syncConsent);
-      window.removeEventListener(ANALYTICS_CONSENT_EVENT, syncConsent);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!allowed) return;
-
     const handleClick = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -109,11 +88,9 @@ export function GoogleAnalytics({ measurementId }: { measurementId: string }) {
 
     document.addEventListener("click", handleClick, true);
     return () => document.removeEventListener("click", handleClick, true);
-  }, [allowed]);
+  }, []);
 
   const reportWebVital = useCallback((metric: WebVitalMetric) => {
-    if (!allowedRef.current) return;
-
     queueGtag("event", metric.name, {
       value: Math.round(metric.name === "CLS" ? metric.value * 1000 : metric.value),
       event_label: metric.id,
@@ -123,7 +100,7 @@ export function GoogleAnalytics({ measurementId }: { measurementId: string }) {
 
   useReportWebVitals(reportWebVital);
 
-  if (!allowed || !/^G-[A-Z0-9]+$/i.test(measurementId)) return null;
+  if (!/^G-[A-Z0-9]+$/i.test(measurementId)) return null;
 
   const serializedId = JSON.stringify(measurementId);
 

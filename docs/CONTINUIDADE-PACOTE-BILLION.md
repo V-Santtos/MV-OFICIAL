@@ -6,8 +6,8 @@ Atualizado em **09/10/2026**. Este documento é o ponto de entrada para continua
 
 Plano e checklist em [plano-mudancas-billion-2026-10-19.md](plano-mudancas-billion-2026-10-19.md).
 
-- **Feito, commitado, NÃO publicado:** Vitrificação a partir de R$ 2.200 com até 3 anos; Higienização com a lavagem externa inclusa; abertura com a logo desligada (entrada do topo em CSS, sem pisca); Navegação agêntica da home de 2/3 para 3/3.
-- **Aguardando o Victor:** item 1, rastreamento sem esperar o aceite. Ele quer entender os pontos antes de dar o aval.
+- **Feito, commitado, NÃO publicado:** Vitrificação a partir de R$ 2.200 com até 3 anos; Higienização com a lavagem externa inclusa; abertura com a logo desligada (entrada do topo em CSS, sem pisca); Navegação agêntica da home de 2/3 para 3/3; Pixel e GA sem esperar o aceite, aviso de cookies só informativo, formulário mandando `fbp`/`fbc`/`fbclid`/`user_agent` sempre, `Contact` mantido no clique do WhatsApp.
+- **Nada vai ao GitHub nem à Vercel até o Victor indicar** (pedido dele em 20/10). A responsabilidade sobre o site vai passar para a Billion depois.
 - **Planilha confirmada:** as linhas de teste de 09/10 chegaram (Victor, 20/10). C15 deixa de depender disso; falta só o `Lead` visto no Gerenciador de Eventos.
 - O que está abaixo é o fechamento de 09/10.
 

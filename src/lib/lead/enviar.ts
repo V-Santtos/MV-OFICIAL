@@ -12,7 +12,6 @@
  * WhatsApp do mesmo jeito.
  */
 
-import { hasAnalyticsConsent } from "@/components/analytics/analyticsConsent";
 import { lerAtribuicao } from "./atribuicao";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_LEAD_ENDPOINT ?? "";
@@ -43,16 +42,16 @@ export function novoLeadId(): string {
  * Linha da planilha. TODOS os campos vão no POST, mesmo vazios (o pacote pede:
  * a planilha é o backlog de leads e as colunas são fixas).
  *
- * 🔒 Consentimento: os identificadores de anúncio (`fbclid`, `fbp`, `fbc`) e o
- * `user_agent` existem pra casar o lead com a Meta na API de Conversões. Sem
- * o "Aceitar" do banner eles vão VAZIOS — mandá-los por fora seria rastrear
- * quem recusou o rastreamento. Nome, telefone, carro e UTMs seguem: é o que a
- * pessoa digitou pra ser atendida e de qual campanha a visita veio.
+ * Os identificadores de anúncio (`fbclid`, `fbp`, `fbc`) e o `user_agent`
+ * existem pra casar o lead com a Meta na API de Conversões (Apps Script da
+ * Billion). 🚩 Iam VAZIOS sem o "Aceitar" do banner até o pacote de 19/10/2026;
+ * desde então o Pixel carrega sem esperar o aceite (decisão da Billion e da MV)
+ * e eles seguem sempre — senão a API de Conversões ficaria sem eles justamente
+ * para quem não toca no aviso, que é a maioria.
  */
 export function montarLead(dados: DadosLead, leadId: string): Record<string, string> {
   const atribuicao = lerAtribuicao();
-  const rastreavel = hasAnalyticsConsent();
-  const fbclid = rastreavel ? (atribuicao.fbclid ?? "") : "";
+  const fbclid = atribuicao.fbclid ?? "";
 
   return {
     nome: dados.nome.trim(),
@@ -69,14 +68,14 @@ export function montarLead(dados: DadosLead, leadId: string): Record<string, str
     utm_content: atribuicao.utm_content ?? "",
     utm_term: atribuicao.utm_term ?? "",
     fbclid,
-    fbp: rastreavel ? lerCookie("_fbp") : "",
-    fbc: rastreavel ? lerCookie("_fbc") || (fbclid ? `fb.1.${Date.now()}.${fbclid}` : "") : "",
-    user_agent: rastreavel ? window.navigator.userAgent : "",
+    fbp: lerCookie("_fbp"),
+    fbc: lerCookie("_fbc") || (fbclid ? `fb.1.${Date.now()}.${fbclid}` : ""),
+    user_agent: window.navigator.userAgent,
     url: window.location.href.split("#")[0],
   };
 }
 
-/** `Lead` no Pixel. Sem consentimento o Pixel nem carrega: `fbq` não existe. */
+/** `Lead` no Pixel, com o mesmo `lead_id` da planilha como `eventID` (deduplica com a API de Conversões). */
 export function dispararLeadPixel(servico: string, leadId: string): void {
   try {
     (window as FbqWindow).fbq?.("track", "Lead", { content_name: servico }, { eventID: leadId });

@@ -24,7 +24,8 @@ const googleAnalyticsId =
 /**
  * ⚠️ NÃO gateado por `NODE_ENV`, ao contrário do GA acima: o Pixel precisa
  * carregar em dev pra ser validado no Meta Pixel Helper. O freio dele é o
- * consentimento + o formato do ID, dentro do próprio `MetaPixel`.
+ * formato do ID, dentro do próprio `MetaPixel` (sem trava de consentimento
+ * desde o pacote Billion de 19/10/2026; o aviso de cookies é só informativo).
  */
 const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
 const showCookieConsent =

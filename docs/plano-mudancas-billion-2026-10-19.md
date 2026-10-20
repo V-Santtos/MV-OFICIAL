@@ -23,7 +23,7 @@ Rodada aberta em **20/10/2026**. Complementa o pacote de 09/10 (ver `plano-mudan
 1. Vitrificação (item 3): texto.
 2. Higienização (item 4): texto.
 3. Tela de abertura (item 2): código simples, mas desfaz algo aprovado pelo Victor.
-4. Rastreamento (item 1): médio, com decisões. **Deixado por último por pedido do Victor (20/10), aguardando o aval dele.**
+4. Rastreamento (item 1): médio, com decisões. Deixado por último por pedido do Victor (20/10); aval dado no mesmo dia.
 5. Navegação agêntica 2/3 do PageSpeed (lembrete do Victor desde 09/10).
 
 ## Checklist
@@ -32,9 +32,16 @@ Rodada aberta em **20/10/2026**. Complementa o pacote de 09/10 (ver `plano-mudan
 - [x] ~~D01 · Vitrificação V1–V6.~~ Commit `28c6a23`. Texto literal do pacote; `priceFrom` 1800 → 2200 também, que alimenta o `minPrice` do JSON-LD (o pacote não sabia dele). Conferido no HTML servido: nenhum "1.800" nem "2 anos"; "R$ 2.200", "Proteção de até 3 anos", "por até três anos" presentes. O hero e o "O que é" antigos ainda dizem "dois anos", mas são do template de agosto e não renderizam nesta rota (modelo de venda).
 - [x] ~~D02 · Higienização L1–L8.~~ Mesmo commit `28c6a23`. As oito trocas conferidas no HTML servido; o OfferCatalog e o FAQPage do JSON-LD saem das próprias listas e acompanham.
 - [x] ~~D03 · Tela de abertura.~~ Commit `c2a7686`. Desligada pela chave `INTRO_ATIVA` (`lib/animation/introSignal.ts`), sem apagar a animação: para voltar, `true`. **Desvio do pacote:** só desligar a cortina deixava um pisca no topo (o texto vinha visível no HTML, o `gsap.set` zerava e só depois subia; medido com `probes/abertura-timing.mjs`). A entrada da Navbar e dos heros passou para CSS (`html[data-entrada-css]` no `globals.css`), com o mesmo desenho das cascatas GSAP, rodando na 1ª pintura. Medido: título da home 100% visível em ~1,4 s desde a navegação, sem cortina e sem pisca; CLS 0.
-- [ ] **D04 · Rastreamento (item 1). Aguardando o Victor.** Decisões em aberto: manter o `Contact` no clique do WhatsApp (recomendação) ou tirar; tirar a trava de consentimento também do `lib/lead/enviar.ts`; banner informativo com "Entendi"; a biblioteca de consentimento fica sem uso, sem ser apagada.
+- [x] ~~D04 · Rastreamento (item 1).~~ Aval do Victor em 20/10 ("pode fazer mesmo"; a responsabilidade sobre o site vai passar para a Billion). Feito:
+  - `MetaPixel` e `GoogleAnalytics` carregam sem esperar o aceite (sai a trava e o respeito a DNT/GPC). PageView por troca de rota mantido.
+  - **Clique no WhatsApp segue como `Contact`** (recomendação aceita); a referência deles apagava esse disparo. O `Lead` continua só no formulário, com `eventID = lead_id`.
+  - **Furo do pacote fechado:** `lib/lead/enviar.ts` passa a mandar `fbclid`, `fbp`, `fbc` e `user_agent` sempre (antes iam vazios sem o "Aceitar"), para a API de Conversões da Billion.
+  - Aviso de cookies só informativo: texto do pacote, botão único "Entendi", mesma chave `mv:analytics-consent` (quem já tocou não vê de novo). CSS com uma coluna.
+  - `analyticsConsent.ts` mantido, com `hasAnalyticsConsent`/`hasBrowserPrivacySignal` sem uso.
+  - Verificado (`probes/rastreamento-sem-aceite.mjs`, Meta/Google/planilha/WhatsApp interceptados, nada saiu de verdade): sem tocar no aviso, `fbevents.js` carrega e o cookie `_fbp` nasce; o aviso mostra o texto novo e não volta depois do "Entendi"; o formulário monta a linha da planilha com `fbclid=teste`, `fbp`, `fbc` e `user_agent` preenchidos. No navegador do app, o Pixel `1734207877833519` inicializado e com a configuração baixada, sem aceite.
+  - **Não deu para ver localmente:** o PageView/`Contact` saindo para a Meta a partir de `localhost` (nenhuma chamada `tr/` apareceu, nem no navegador do app) e o GA, cujo ID não está no `.env.local` (só na Vercel). O código de disparo é o mesmo que já roda no ar após o "Aceitar"; a prova fica para o "Testar eventos" depois do deploy (checklist do LEIA-ME deles).
 - [x] ~~D05 · Navegação agêntica.~~ Commit `fc10e7f`. Lighthouse 13.5 no domínio real: só a home tinha 2/3, por um único defeito (`aria-prohibited-attr`): `aria-label` nas estrelas dos depoimentos, numa `div` sem papel. Com `role="img"`, a home local fica com 3/3. As páginas de serviço já estavam com 3/3.
-- [ ] D06 · Publicar (push + `vercel deploy --prod --yes`), avisar o horário ao Davi e rodar a conferência do LEIA-ME deles.
+- [ ] D06 · Publicar (push + `vercel deploy --prod --yes`), avisar o horário ao Davi e rodar a conferência do LEIA-ME deles. **Só quando o Victor indicar** (pedido dele em 20/10).
 
 ## Sobra apontada pelo Lighthouse, fora do pacote
 
