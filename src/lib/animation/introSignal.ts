@@ -13,6 +13,18 @@
  * inteira toda vez, decisão do Victor).
  */
 
+/**
+ * 🔕 Chave da abertura com a logo. DESLIGADA no pacote Billion de 19/10/2026
+ * (item 2): no 4G a cortina segurava a página por até ~3,9 s. A animação segue
+ * inteira em `IntroReveal`; pra voltar, `true`.
+ *
+ * Desligada, a entrada da Navbar e dos heros passa a ser em CSS
+ * (`html[data-entrada-css]` no `globals.css`), que roda na 1ª pintura sem
+ * esperar o JavaScript. Em GSAP ela PISCAVA: o texto vinha visível no HTML, o
+ * `gsap.set` zerava e só então subia (medido em 20/10/2026, probes/abertura-timing).
+ */
+export const INTRO_ATIVA = false;
+
 const EVENT = "mv:intro-reveal";
 
 let revealed = false;

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { intro, emitIntroReveal } from "@/lib/animation";
+import { intro, emitIntroReveal, INTRO_ATIVA } from "@/lib/animation";
 import { MV_LOGO } from "@/components/ui/logo";
 import styles from "./IntroReveal.module.css";
 
@@ -48,7 +48,25 @@ function markPlayed(): void {
   }
 }
 
+/**
+ * Abertura com a logo, ligada/desligada por `INTRO_ATIVA` (lib/animation/introSignal).
+ * Desligada, não desenha nada (sem overlay no HTML: a página aparece na 1ª
+ * pintura) e só emite o sinal `instant`, que libera quem espera por ele.
+ */
+
 export function IntroReveal() {
+  return INTRO_ATIVA ? <IntroRevealAnimada /> : <IntroRevealInstantanea />;
+}
+
+function IntroRevealInstantanea() {
+  useEffect(() => {
+    emitIntroReveal({ instant: true });
+  }, []);
+
+  return null;
+}
+
+function IntroRevealAnimada() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [done, setDone] = useState(false);

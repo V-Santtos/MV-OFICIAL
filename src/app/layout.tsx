@@ -8,6 +8,7 @@ import {
   RouteTransitionProvider,
 } from "@/components/layout";
 import { brand } from "@/content";
+import { INTRO_ATIVA } from "@/lib/animation/introSignal";
 import { siteConfig, siteUrl, localBusinessJsonLd } from "@/lib/seo";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
@@ -125,6 +126,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} ${birthstone.variable} h-full antialiased`}
       data-intro-every-load=""
+      // Sem a abertura (pacote Billion, 19/10/2026), a entrada da Navbar e dos
+      // heros é em CSS, já na 1ª pintura. Ver `INTRO_ATIVA` e o globals.css.
+      data-entrada-css={INTRO_ATIVA ? undefined : ""}
       suppressHydrationWarning
     >
       {/* suppressHydrationWarning: extensões de navegador (ex.: ColorZilla →

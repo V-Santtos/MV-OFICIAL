@@ -106,6 +106,41 @@ html[data-intro-done]:not([data-intro-every-load]) .mv-intro-overlay {
   display: none !important;
 }
 
+/* ENTRADA EM CSS da Navbar e dos heros (home e rotas de venda), usada quando
+   a abertura com a logo está desligada (`INTRO_ATIVA`, pacote Billion de
+   19/10/2026). Mesmo desenho das cascatas GSAP (`navCascade`/`heroCascade`):
+   fade + deslize, em stagger pela ordem de `data-reveal`. Em CSS porque roda
+   na 1ª pintura: em GSAP o texto vinha visível no HTML, sumia no `gsap.set` e
+   voltava — um pisca bem visível no 4G, onde o JS demora. `translate` (e não
+   `transform`) pra não brigar com transform próprio dos itens.
+   `cubic-bezier(.5,1,.89,1)` ≈ `power2.out`. Reduced-motion: sem entrada. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-entrada-css] nav [data-reveal] {
+    animation: mv-entra-nav 0.55s cubic-bezier(0.5, 1, 0.89, 1) both;
+  }
+  html[data-entrada-css] main [data-reveal] {
+    animation: mv-entra-hero 1s cubic-bezier(0.5, 1, 0.89, 1) both;
+  }
+  html[data-entrada-css] nav [data-reveal="1"] { animation-delay: 0.08s; }
+  html[data-entrada-css] nav [data-reveal="2"] { animation-delay: 0.16s; }
+  html[data-entrada-css] nav [data-reveal="3"] { animation-delay: 0.24s; }
+  html[data-entrada-css] nav [data-reveal="4"] { animation-delay: 0.32s; }
+  html[data-entrada-css] nav [data-reveal="5"] { animation-delay: 0.4s; }
+  html[data-entrada-css] nav [data-reveal="6"] { animation-delay: 0.48s; }
+  html[data-entrada-css] nav [data-reveal="7"] { animation-delay: 0.56s; }
+  html[data-entrada-css] main [data-reveal="1"] { animation-delay: 0.2s; }
+  html[data-entrada-css] main [data-reveal="2"] { animation-delay: 0.4s; }
+  html[data-entrada-css] main [data-reveal="3"] { animation-delay: 0.6s; }
+}
+
+@keyframes mv-entra-nav {
+  from { opacity: 0; translate: 0 -14px; }
+}
+
+@keyframes mv-entra-hero {
+  from { opacity: 0; translate: 0 30px; }
+}
+
 /* ❌ Boot skeleton azul (#__boot) REMOVIDO (Victor, 2026-08-03) — o painel que
    pintava a status bar do iOS de azul na 1ª pintura. Decisão: status bar fica
    no default do sistema; o sumiço do painel era o provável "flick azul" aberto

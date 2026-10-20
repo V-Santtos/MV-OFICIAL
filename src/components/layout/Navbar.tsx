@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { assets, brand, navLinks } from "@/content";
-import { introDelay, navCascade, onIntroReveal } from "@/lib/animation";
+import { introDelay, navCascade, onIntroReveal, INTRO_ATIVA } from "@/lib/animation";
 import { Button } from "@/components/ui";
 import { MobileMenu } from "./MobileMenu";
 import { ehCliqueSimples, useRouteTransition } from "./RouteTransition";
@@ -108,6 +108,9 @@ export function Navbar() {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
 
+    // Sem abertura, a entrada é a do CSS (`html[data-entrada-css]`, globals.css).
+    if (!INTRO_ATIVA) return;
+
     let off = () => {};
     const ctx = gsap.context(() => {
       gsap.set(items, navCascade.from);
@@ -148,7 +151,7 @@ export function Navbar() {
             aria-label={`${brand.name} — início`}
             className={styles.logo}
             onClick={voltarPraHome}
-            data-reveal
+            data-reveal="0"
           >
             {/* ⚠️ PNG de propósito, NÃO trocar pelo SVG de `ui/logo.ts`
                 (tentado e revertido em 2026-08-01). O vetor NÃO é fiel ao
@@ -173,8 +176,8 @@ export function Navbar() {
           </a>
 
           <ul className={styles.links}>
-            {navLinks.map(({ href, label }) => (
-              <li key={href} data-reveal>
+            {navLinks.map(({ href, label }, i) => (
+              <li key={href} data-reveal={i + 1}>
                 {/* Só "Início" passa pela cortina (e só fora da home). Os
                     demais são ÂNCORAS da home e seguem como estavam. */}
                 <a
@@ -188,7 +191,7 @@ export function Navbar() {
             ))}
           </ul>
 
-          <div className={styles.cta} data-reveal>
+          <div className={styles.cta} data-reveal={navLinks.length + 1}>
             <Button href="/#contato" variant="light" className={styles.ctaBtn}>
               Contato
             </Button>
@@ -204,7 +207,7 @@ export function Navbar() {
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             aria-controls="mobile-drawer"
-            data-reveal
+            data-reveal="1"
           >
             <span className={styles.burgerTop} data-open={open} />
             <span className={styles.burgerMid} data-open={open} />

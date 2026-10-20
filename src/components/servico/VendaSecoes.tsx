@@ -22,7 +22,7 @@ import { Button } from "@/components/ui";
 // Import DIRETO (não pelo barrel `@/components/layout`): o barrel reexporta o
 // Footer, que é Server Component.
 import { getLenis } from "@/components/layout/SmoothScroll";
-import { heroCascade, introDelay, onIntroReveal } from "@/lib/animation";
+import { heroCascade, introDelay, onIntroReveal, INTRO_ATIVA } from "@/lib/animation";
 import { revealHeadingVariants, staggerCard } from "@/lib/animation/motion";
 import v from "./Venda.module.css";
 
@@ -127,6 +127,9 @@ export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
     // Reduced-motion: conteúdo já visível (default do CSS), sem cascata.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // Sem abertura, a entrada é a do CSS (`html[data-entrada-css]`, globals.css).
+    if (!INTRO_ATIVA) return;
+
     let off = () => {};
     const ctx = gsap.context(() => {
       gsap.set(items, heroCascade.from);
@@ -155,20 +158,20 @@ export function HeroVenda({ data }: { data: ServicoVenda["hero"] }) {
           />
         </figure>
         <div ref={txtRef} className={v.heroTxt}>
-          <p className={v.local} data-reveal>
+          <p className={v.local} data-reveal="0">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z" />
               <circle cx="12" cy="10" r="2.5" />
             </svg>
             {data.local}
           </p>
-          <h1 className={v.heroTitle} data-reveal>
+          <h1 className={v.heroTitle} data-reveal="1">
             {data.title} <span className={v.accent}>{data.titleAccent}</span>
           </h1>
-          <p className={v.heroBody} data-reveal>
+          <p className={v.heroBody} data-reveal="2">
             {data.body}
           </p>
-          <div className={v.heroCta} data-reveal>
+          <div className={v.heroCta} data-reveal="3">
             <CtaAvaliacao>{data.cta}</CtaAvaliacao>
           </div>
         </div>

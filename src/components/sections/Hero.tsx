@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { hero, contact, assets } from "@/content";
-import { heroCascade, introDelay, onIntroReveal } from "@/lib/animation";
+import { heroCascade, introDelay, onIntroReveal, INTRO_ATIVA } from "@/lib/animation";
 import { Button } from "@/components/ui";
 import styles from "./Hero.module.css";
 
@@ -25,6 +25,9 @@ export function Hero() {
     // Reduced-motion: conteúdo já visível (default do CSS), sem cascata.
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
+
+    // Sem abertura, a entrada é a do CSS (`html[data-entrada-css]`, globals.css).
+    if (!INTRO_ATIVA) return;
 
     let off = () => {};
     const ctx = gsap.context(() => {
@@ -80,22 +83,22 @@ export function Hero() {
       </div>
 
       <div ref={innerRef} className={styles.inner}>
-        <p className={styles.location} data-reveal>
+        <p className={styles.location} data-reveal="0">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
             <circle cx="12" cy="10" r="2.5" />
           </svg>
           {hero.location}
         </p>
-        <h1 className={styles.headline} data-reveal>
+        <h1 className={styles.headline} data-reveal="1">
           {hero.title} <span className={styles.headlineAccent}>{hero.titleAccent}</span>
         </h1>
 
-        <p className={styles.subtitle} data-reveal>
+        <p className={styles.subtitle} data-reveal="2">
           {hero.subtitle}
         </p>
 
-        <div className={styles.ctas} data-reveal>
+        <div className={styles.ctas} data-reveal="3">
           <Button href={contact.whatsapp} target="_blank" rel="noopener noreferrer" arrow>
             {hero.primaryCta}
           </Button>
