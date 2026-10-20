@@ -50,3 +50,21 @@ Contraste do `©` no rodapé (`Footer .copy`), em todas as páginas. Não mexido
 ## Verificação feita em 20/10/2026 (build de produção local, porta 3010)
 
 Build ok; lint com os mesmos 2 avisos preexistentes. Lighthouse local (mobile): home com performance 0,89, acessibilidade 0,96, navegação agêntica 1; Vitrificação com 0,91 / 0,96 / 1. FCP 1,5 s, CLS 0 nas duas.
+
+## Revisão completa contra o pacote (20/10/2026, pedida pelo Victor)
+
+- **Texto a texto:** os 232 trechos dos dois `conteudo.ts` do pacote existem no nosso conteúdo (script de comparação). Os 10 que não batiam na busca direta são o mesmo texto em outro formato: título da aba e `og:title` (gerados em `page.tsx`), `areaServed` e "O que entra em…" (gerados em `lib/seo/jsonld.ts`) e o aviso do preço dividido em `label` + `text`.
+- **Componentes de referência:** o nosso `MetaPixel` e o `GoogleAnalytics` fazem o mesmo que os deles; a única diferença é o `Contact` no clique do WhatsApp, mantido por decisão do Victor. O `IntroReveal` deles também zera a cortina; o nosso faz o mesmo e ainda leva a entrada para CSS (sem pisca).
+- **Efeitos colaterais da abertura:** só Navbar, Hero e hero de venda dependiam do sinal; os três tratados. Chegando por card da home, a cortina de rota sobe e o título do hero da rota nova aparece entrando (medido com `probes/rota-entrada-timing.mjs`).
+- **Conferência do LEIA-ME simulada** (`probes/conferencia-billion-1910.mjs`, build local com o GA `G-Q8GBPQ89K8` só para o teste, celular, aba limpa, sem tocar no aviso; chamadas a `fbq` espionadas na página e Meta/Google/planilha/WhatsApp abortados):
+  1. Vitrificação sem tela de abertura; `fbq('init','1734207877833519')` + `PageView` antes de qualquer toque. ✅
+  2. Home → Higienização pelo card: exatamente 1 `PageView` novo. ✅
+  3. GA carregado sem aceite e enviando `page_view`, Web Vitals, `service_open`, `generate_lead`, `form_start`. ✅ (o "Tempo real" do GA4 só no ar)
+  4. Vitrificação: "R$ 2.200", "até 3 anos" no FAQ e no cartão, nenhum "1.800"/"2 anos". ✅
+  5. Higienização: cartão de preço, "Do volante ao carro inteiro" e FAQ nova. ✅
+  6. Aviso aparece uma vez e some no toque, Pixel já carregado antes. ✅ (com "Recusar"/"Aceitar", não "Entendi", por decisão do Victor)
+  7. Formulário com `?fbclid=teste`: `Lead` com `eventID` igual ao `lead_id` da linha da planilha; a linha leva `fbclid`, `fbp`, `fbc` e `user_agent` preenchidos, 18 campos. ✅
+  - Clique no WhatsApp: `Contact`, nenhum `Lead`. ✅
+- **Sobras anotadas, sem mexer:** `llms.txt` ainda diz "higienização interna" e descreve a Higienização só pelo interior (mesma descrição do card da home, que o pacote manda manter). O aviso de cookies mantido diz "Eles só serão ativados se você aceitar", o que deixou de ser verdade com o item 1 — texto mantido por decisão do Victor.
+- **Só no ar dá para provar:** o `PageView`/`Lead` chegando ao "Testar eventos" da Meta e a visita no "Tempo real" do GA4.
+
