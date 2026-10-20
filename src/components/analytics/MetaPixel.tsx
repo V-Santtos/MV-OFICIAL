@@ -22,7 +22,7 @@ import { useEffect, useRef } from "react";
  * Até ali só carregava depois do "Aceitar" (e nunca com GPC/DNT). Quem chega
  * pelo anúncio quase nunca toca no aviso: em 5 dias, 3 pedidos na planilha e 1
  * `Lead` na Meta. Decisão da Billion com o Matheus (19/10), responsabilidade
- * deles; o aviso de cookies virou só informativo.
+ * deles; o aviso de cookies ficou só visual (Recusar e Aceitar só fecham).
  *
  * Sem `<img>` de `<noscript>`: este componente só existe no cliente. Com JS
  * desligado ele nunca renderiza, então o fallback não apareceria.

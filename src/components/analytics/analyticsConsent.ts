@@ -1,10 +1,10 @@
 /**
  * Chave e evento do aviso de cookies.
  *
- * 🔕 Desde o pacote Billion de 19/10/2026 o aviso é só informativo: o Pixel e o
- * GA carregam sem esperar o aceite. Daqui só o banner usa a chave (pra aparecer
- * uma vez). `hasAnalyticsConsent` e `hasBrowserPrivacySignal` ficaram sem uso,
- * mantidos caso a trava precise voltar.
+ * 🔕 Desde o pacote Billion de 19/10/2026 o aviso é só visual: o Pixel e o GA
+ * carregam sem esperar a escolha. Daqui só o banner usa a chave (pra aparecer
+ * uma vez e sumir no Recusar/Aceitar). `hasAnalyticsConsent` ficou sem uso,
+ * mantida caso a trava precise voltar.
  */
 export const ANALYTICS_CONSENT_KEY = "mv:analytics-consent";
 export const ANALYTICS_CONSENT_EVENT = "mv:analytics-consent-change";
