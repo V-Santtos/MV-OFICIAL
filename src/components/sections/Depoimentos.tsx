@@ -8,9 +8,12 @@ import { StarIcon } from "@/components/ui/icons";
 import { columnCascade } from "@/lib/animation";
 import styles from "./Depoimentos.module.css";
 
+// `role="img"`: aria-label numa div sem papel é proibido pelo ARIA e derrubava a
+// "Navegação agêntica" do PageSpeed na home (20/10/2026). Com o papel, o leitor
+// anuncia as cinco estrelas como uma imagem só, pelo rótulo.
 function Stars() {
   return (
-    <div className={styles.stars} aria-label="Avaliação 5 de 5 estrelas">
+    <div className={styles.stars} role="img" aria-label="Avaliação 5 de 5 estrelas">
       {Array.from({ length: 5 }, (_, i) => (
         <StarIcon key={i} size={12} className={styles.star} />
       ))}
