@@ -2,6 +2,15 @@
 
 Atualizado em **09/10/2026**. Este documento é o ponto de entrada para continuar a implementação do pacote. Para tarefas concretas e decisões pendentes, usar também o [plano e checklist](plano-mudancas-billion-2026-10-09.md). O `docs/ANEXO-MEMORIA.md` é uma cópia histórica do estado de agosto de 2026; não descreve o andamento deste pacote.
 
+## 🔄 Rodada de 20/10/2026 (pacote Billion de 19/10) — LER ANTES DO RESTO
+
+Plano e checklist em [plano-mudancas-billion-2026-10-19.md](plano-mudancas-billion-2026-10-19.md).
+
+- **Feito, commitado, NÃO publicado:** Vitrificação a partir de R$ 2.200 com até 3 anos; Higienização com a lavagem externa inclusa; abertura com a logo desligada (entrada do topo em CSS, sem pisca); Navegação agêntica da home de 2/3 para 3/3.
+- **Aguardando o Victor:** item 1, rastreamento sem esperar o aceite. Ele quer entender os pontos antes de dar o aval.
+- **Planilha confirmada:** as linhas de teste de 09/10 chegaram (Victor, 20/10). C15 deixa de depender disso; falta só o `Lead` visto no Gerenciador de Eventos.
+- O que está abaixo é o fechamento de 09/10.
+
 ## 📌 Estado ao fechar a sessão de 09/10/2026 — LER PRIMEIRO
 
 **O pacote Billion está implementado e publicado.** O Victor encerrou a sessão aguardando o retorno do cliente; o próximo trabalho deve nascer desse retorno, não de pendência de código.
