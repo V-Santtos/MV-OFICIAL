@@ -16,7 +16,7 @@ Subir o build de produção local, de dentro de `site-mv/`: `npm run build` e de
 - [x] ~~**Vitrificação**~~ validado pelo Victor em 20/10 (`/servicos/vitrificacao`): "R$ 2.200" na seção Quanto custa; "até 3 anos" no FAQ e no cartão "Proteção de até 3 anos" de Por que a MV. Ctrl+F: nenhum "1.800", nenhum "2 anos".
 - [x] ~~**Higienização**~~ validado pelo Victor em 20/10 (`/servicos/higienizacao-completa`): "A lavagem externa já vem inclusa." no hero; "com a parte externa inclusa" em Do volante ao carro inteiro; "A parte externa (lavagem externa) já está inclusa." no cartão de preço; resposta nova em "Dá pra fazer só a parte interna ou só a externa?".
 - [x] ~~**Aviso de cookies**~~ validado pelo Victor em 20/10: igual ao de antes ("Recusar" e "Aceitar"), só visual: qualquer botão fecha e não volta.
-- [ ] **Polimento e home** sem mudança de conteúdo.
+- [x] ~~**Polimento e home** sem mudança de conteúdo.~~ Validado pelo Victor em 20/10; etapa 1 completa e publicação autorizada ("pode fazer").
 
 ## Etapa 2 · Publicar (só com o "pode" do Victor)
 
