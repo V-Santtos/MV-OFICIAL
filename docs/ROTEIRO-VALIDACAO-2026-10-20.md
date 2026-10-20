@@ -13,7 +13,7 @@ Subir o build de produção local, de dentro de `site-mv/`: `npm run build` e de
 ⚠️ Enviar o formulário em localhost **grava linha real na planilha do cliente** (`NEXT_PUBLIC_LEAD_ENDPOINT` ativa no `.env.local`). Nesta etapa, não enviar.
 
 - [x] ~~**Home sem a tela da logo.**~~ Validado pelo Victor em 20/10. Ele viu o **carro piscando** ao abrir/recarregar: sem a cortina, a imagem (`decoding="async"`, padrão do Next) faltava no 1º quadro e entrava em seguida. Corrigido com `decoding="sync"` no carro da home e na foto do hero das rotas de venda (que tinha o mesmo pisca); conferido quadro a quadro (`probes/carro-quadros.mjs`), desktop e celular, com e sem cache. (Voltar a abertura = `INTRO_ATIVA = true` em `src/lib/animation/introSignal.ts`.)
-- [ ] **Vitrificação** (`/servicos/vitrificacao`): "R$ 2.200" na seção Quanto custa; "até 3 anos" no FAQ e no cartão "Proteção de até 3 anos" de Por que a MV. Ctrl+F: nenhum "1.800", nenhum "2 anos".
+- [x] ~~**Vitrificação**~~ validado pelo Victor em 20/10 (`/servicos/vitrificacao`): "R$ 2.200" na seção Quanto custa; "até 3 anos" no FAQ e no cartão "Proteção de até 3 anos" de Por que a MV. Ctrl+F: nenhum "1.800", nenhum "2 anos".
 - [ ] **Higienização** (`/servicos/higienizacao-completa`): "A lavagem externa já vem inclusa." no hero; "com a parte externa inclusa" em Do volante ao carro inteiro; "A parte externa (lavagem externa) já está inclusa." no cartão de preço; resposta nova em "Dá pra fazer só a parte interna ou só a externa?".
 - [ ] **Aviso de cookies** igual ao de antes ("Recusar" e "Aceitar"), só visual: qualquer botão fecha e não volta.
 - [ ] **Polimento e home** sem mudança de conteúdo.
