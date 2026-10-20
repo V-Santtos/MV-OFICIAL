@@ -260,8 +260,11 @@ export type ServicoDetalhe = {
  * Validar esta página primeiro; as outras 5 replicam a estrutura depois.
  */
 const higienizacaoInterna: ServicoDetalhe = {
+  // L1 do pacote de 19/10/2026 sem o "antes do serviço" final (Victor, 20/10): o
+  // texto do pacote tinha 176 caracteres e o Google corta perto de 155-160.
+  // Fecha igual à Vitrificação ("Avaliação gratuita.").
   seoDescription:
-    "Higienização completa em Simonésia, MG: painel, carpetes, teto, ar-condicionado e odores tratados na origem, com a lavagem externa inclusa. Avaliação gratuita antes do serviço.",
+    "Higienização completa em Simonésia, MG: painel, carpetes, teto, ar-condicionado e odores tratados na origem, com a lavagem externa inclusa. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Interior",
     // Título e subtítulo lapidados em conjunto com o Victor (2026-08-03):

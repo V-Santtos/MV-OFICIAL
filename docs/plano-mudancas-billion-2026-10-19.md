@@ -68,3 +68,11 @@ Build ok; lint com os mesmos 2 avisos preexistentes. Lighthouse local (mobile): 
 - **Sobras anotadas, sem mexer:** `llms.txt` ainda diz "higienização interna" e descreve a Higienização só pelo interior (mesma descrição do card da home, que o pacote manda manter). O aviso de cookies mantido diz "Eles só serão ativados se você aceitar", o que deixou de ser verdade com o item 1 — texto mantido por decisão do Victor.
 - **Só no ar dá para provar:** o `PageView`/`Lead` chegando ao "Testar eventos" da Meta e a visita no "Tempo real" do GA4.
 
+## Passada de SEO (20/10/2026)
+
+Conferido no HTML servido das duas rotas alteradas: description, `og:description`, canonical, `index, follow`, JSON-LD `Service` (descrição igual à meta, `minPrice` 2200 e 800, catálogo com a lavagem externa "inclusa"), `FAQPage` com as respostas novas, JSON válido. Ajustes feitos com o aval do Victor:
+
+- **Descrição da Higienização:** sem o "antes do serviço" final (176 → 159 caracteres, perto do corte do Google). Fecha igual à Vitrificação ("Avaliação gratuita."). Único desvio deliberado do texto literal do pacote.
+- **Cartão do X nas seis rotas de serviço:** `twitter:title`/`twitter:description` saíam com os da home (defeito antigo, já no ar), porque o `openGraph`/`twitter` da rota substituem os do layout por inteiro. Agora seguem a rota; de quebra voltaram `og:site_name` e `og:locale`, que também se perdiam. Home intocada.
+- **Depois de publicar:** pedir reindexação de `/servicos/vitrificacao` e `/servicos/higienizacao-completa` no Search Console; opcional, Teste de pesquisa aprimorada nas duas.
+

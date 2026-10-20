@@ -15,7 +15,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { brand, servicos, servicosDetalhe } from "@/content";
-import { servicoJsonLd, faqJsonLd, breadcrumbJsonLd } from "@/lib/seo";
+import { servicoJsonLd, faqJsonLd, breadcrumbJsonLd, siteConfig } from "@/lib/seo";
 import { ServicoDetalhePage, ServicoResumoPage } from "@/components/servico";
 
 export const dynamicParams = false;
@@ -43,12 +43,24 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/servicos/${slug}` },
+    // ⚠️ `openGraph` e `twitter` daqui SUBSTITUEM os do layout por inteiro (o
+    // Next mescla metadata só no 1º nível). Por isso repetem `siteName`,
+    // `locale` e `card`: sem isso a rota perdia `og:site_name`/`og:locale` e o
+    // cartão do X saía com o título e o texto da HOME (corrigido em 20/10/2026).
     openGraph: {
       title,
       description,
       url: `/servicos/${slug}`,
       type: "website",
+      siteName: brand.name,
+      locale: siteConfig.locale,
       images: [{ url: servico.image }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [servico.image],
     },
   };
 }
