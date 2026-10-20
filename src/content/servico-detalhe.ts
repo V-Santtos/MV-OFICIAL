@@ -261,7 +261,7 @@ export type ServicoDetalhe = {
  */
 const higienizacaoInterna: ServicoDetalhe = {
   seoDescription:
-    "Higienização interna em Simonésia, MG: painel, carpetes, teto, ar-condicionado e odores tratados na origem. Avaliação gratuita antes do serviço.",
+    "Higienização completa em Simonésia, MG: painel, carpetes, teto, ar-condicionado e odores tratados na origem, com a lavagem externa inclusa. Avaliação gratuita antes do serviço.",
   hero: {
     eyebrow: "Estética automotiva · Interior",
     // Título e subtítulo lapidados em conjunto com o Victor (2026-08-03):
@@ -317,7 +317,7 @@ const higienizacaoInterna: ServicoDetalhe = {
     // sugere passo, e os itens são frentes paralelas). Texto longo anterior:
     // "A higienização pode ser completa — num nível simples ou detalhado — ou
     //  avulsa: dá pra cuidar só do painel, só do volante, só dos carpetes..."
-    intro: "É isto que entra quando você faz a higienização completa.",
+    intro: "É isto que entra quando você faz a higienização completa, com a parte externa inclusa.",
     items: [
       {
         title: "Painel e plásticos",
@@ -353,7 +353,7 @@ const higienizacaoInterna: ServicoDetalhe = {
         // slot aberto pela fusão de "Carpetes e tapetes" + "Teto e forros".
         // Texto escrito pelo Victor, itens vindos do catálogo real da MV.
         title: "Lavagem externa",
-        desc: "Pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e maçanetas.",
+        desc: "Inclusa no valor anunciado: pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e maçanetas.",
       },
     ],
     // Nota com trabalho PRÓPRIO (a versão anterior repetia a intro): fecha a
@@ -544,7 +544,7 @@ const higienizacaoInterna: ServicoDetalhe = {
         // corpo do "O que é" agora diz que dá pra escolher interior, exterior
         // ou os dois — sem essa pergunta, nenhum FAQ confirmava isso na prática.
         q: "Dá pra fazer só a parte interna ou só a externa?",
-        a: "Dá sim. A higienização completa cobre as duas frentes, mas você escolhe o que faz sentido pro seu carro — só o interior, só a lavagem externa, ou os dois juntos.",
+        a: "Dá sim. O valor anunciado, a partir de R$ 800, é da higienização completa, com o interior e a parte externa (lavagem externa) inclusos. Se você quiser só o interior ou só a lavagem externa, também fazemos — o valor sai na avaliação.",
       },
       {
         q: "Remove qualquer mancha ou odor?",
@@ -577,7 +577,7 @@ const higienizacaoInterna: ServicoDetalhe = {
       local: "Simonésia – MG",
       title: "O interior do seu carro",
       titleAccent: "como você nunca viu antes.",
-      body: "Limpeza de verdade por dentro, sem cheiro nem poeira escondida, com mais conforto no dia a dia. A higienização completa trata o interior em profundidade: tecidos, bancos, painéis, ar-condicionado e as frestas onde a sujeira se acumula.",
+      body: "Limpeza de verdade por dentro, sem cheiro nem poeira escondida, com mais conforto no dia a dia. A higienização completa trata o interior em profundidade: tecidos, bancos, painéis, ar-condicionado e as frestas onde a sujeira se acumula. A lavagem externa já vem inclusa.",
       cta: "Quero meu carro higienizado",
       image: "/assets/servicos/higienizacao-console.jpg",
       imageAlt:
@@ -632,7 +632,7 @@ const higienizacaoInterna: ServicoDetalhe = {
         },
         {
           title: "Lavagem externa",
-          desc: "Quando faz parte do serviço: pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e\u00a0maçanetas.",
+          desc: "Já inclusa na higienização completa: pré-lavagem com espuma automotiva, rodas e caixas de roda, grades, retrovisores e\u00a0maçanetas.",
         },
       ],
     },
@@ -644,7 +644,7 @@ const higienizacaoInterna: ServicoDetalhe = {
       titleAccent: "higienização completa.",
       badge: "Aproveite",
       cardTitle: "Higienização completa",
-      cardDesc: "Tecidos, bancos, painéis, ar-condicionado e frestas tratados em profundidade, com neutralização de odores.",
+      cardDesc: "Tecidos, bancos, painéis, ar-condicionado e frestas tratados em profundidade, com neutralização de odores. A parte externa (lavagem externa) já está inclusa.",
       priceLabel: "A partir de:",
       price: "R$ 800",
       priceFrom: 800,
@@ -670,7 +670,7 @@ const higienizacaoInterna: ServicoDetalhe = {
         },
         {
           title: "Você escolhe o que fazer",
-          desc: "A higienização completa cobre as duas frentes, mas você escolhe o que faz sentido para o seu carro: só o interior, só a lavagem externa ou os dois.",
+          desc: "A higienização completa já inclui o interior e a lavagem externa. Se fizer mais sentido para o seu carro, dá para fazer só uma das duas, e o valor sai na avaliação.",
         },
         {
           title: "Avaliação antes de começar",
@@ -1609,9 +1609,9 @@ const limpezaDeMotor: ServicoDetalhe = {
  */
 const vitrificacao: ServicoDetalhe = {
   // 2ª rodada: passa a citar os plásticos (o 2º serviço do agrupamento) e o
-  // prazo real de 2 anos, que é o que diferencia numa lista de resultados.
+  // prazo real (até 3 anos desde 19/10/2026), que é o que diferencia numa lista de resultados.
   seoDescription:
-    "Vitrificação em Simonésia, MG: camada cerâmica na pintura e nos plásticos externos, com proteção de até 2 anos. Avaliação gratuita.",
+    "Vitrificação em Simonésia, MG: camada cerâmica na pintura e nos plásticos externos, com proteção de até 3 anos. Avaliação gratuita.",
   hero: {
     eyebrow: "Estética automotiva · Proteção",
     // 🔑 2ª rodada (2026-08-03, flyers reais da MV): a rota passa a FUNDIR dois
@@ -1816,7 +1816,7 @@ const vitrificacao: ServicoDetalhe = {
     items: [
       {
         q: "Quanto tempo dura a vitrificação?",
-        a: "A proteção dura até 2 anos, dependendo de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá para esperar no seu caso, antes de fechar.",
+        a: "A proteção dura até 3 anos, dependendo de como o veículo é usado e lavado. Na avaliação a gente te diz o que dá para esperar no seu caso, antes de fechar.",
       },
       {
         q: "Meu carro não é zero. Vale a pena vitrificar?",
@@ -1936,10 +1936,10 @@ const vitrificacao: ServicoDetalhe = {
       titleAccent: "vitrificação com polimento.",
       badge: "Aproveite",
       cardTitle: "Vitrificação com polimento",
-      cardDesc: "Lavagem, descontaminação, polimento técnico em etapas e vitrificação por último.",
+      cardDesc: "Lavagem, descontaminação, polimento técnico em etapas e vitrificação por último, com proteção de até 3 anos.",
       priceLabel: "A partir de:",
-      price: "R$ 1.800",
-      priceFrom: 1800,
+      price: "R$ 2.200",
+      priceFrom: 2200,
       note: "O valor final depende do tamanho do carro e do estado da pintura, e sai na avaliação presencial, que não tem nenhum custo.",
       cta: "Quero meu carro vitrificado",
       aviso: {
@@ -1965,8 +1965,8 @@ const vitrificacao: ServicoDetalhe = {
           desc: "Olhamos o estado da sua pintura, explicamos o que dá para fazer e o que não dá, e só então passamos o orçamento. A avaliação não tem custo.",
         },
         {
-          title: "Proteção de até 2 anos",
-          desc: "A camada protege a pintura por até dois anos, e a orientação de como conservar o resultado entra junto com a entrega do carro.",
+          title: "Proteção de até 3 anos",
+          desc: "A camada protege a pintura por até três anos, e a orientação de como conservar o resultado entra junto com a entrega do carro.",
         },
       ],
     },
